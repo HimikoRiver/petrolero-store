@@ -967,7 +967,49 @@ export default function PetroleroHero() {
   };
 
   return (
-    <div
+    <>
+      {/* Временная заглушка для телефонов и планшетов. Десктопный сайт не меняем. */}
+      <section className="petrolero-device-placeholder" aria-label="Султан, мобильная версия Petrolero в разработке">
+        <div className="petrolero-device-placeholder__halo" aria-hidden="true" />
+        <header className="petrolero-device-placeholder__brand">
+          <span className="petrolero-device-placeholder__brand-letter">P</span>
+          <span>petrolero</span>
+        </header>
+
+        <main className="petrolero-device-placeholder__main">
+          <div className="petrolero-device-placeholder__emblem" aria-hidden="true">
+            <div className="petrolero-device-placeholder__emblem-ring">
+              <svg viewBox="0 0 64 64" width="58" height="58" fill="none">
+                <path
+                  d="M32 7C23 20 15 29 15 39a17 17 0 0 0 34 0C49 29 41 20 32 7Z"
+                  stroke="currentColor"
+                  strokeWidth="1.65"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M23 40c0 5 4 9 9 9"
+                  stroke="currentColor"
+                  strokeWidth="1.65"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <p className="petrolero-device-placeholder__eyebrow">PETROLERO · PREMIUM MOTOR OIL</p>
+          <h1>СУЛТАН, МОБИЛЬНАЯ ВЕРСИЯ<br /><span>В РАЗРАБОТКЕ</span></h1>
+          <p className="petrolero-device-placeholder__description">
+            Я готовлю сайт для телефонов и планшетов.
+            Пока полная версия доступна на компьютере.
+          </p>
+          <div className="petrolero-device-placeholder__rule" aria-hidden="true" />
+          <span className="petrolero-device-placeholder__soon">СКОРО ЗДЕСЬ</span>
+        </main>
+
+        <footer className="petrolero-device-placeholder__footer">© PETROLERO</footer>
+      </section>
+
+      <div
       ref={scrollRef}
       className="petrolero-page-scroll"
       tabIndex={0}
@@ -1246,6 +1288,141 @@ export default function PetroleroHero() {
       </div>
 
       <style jsx global>{`
+
+        /* =============================================================
+           MOBILE/TABLET PLACEHOLDER — only at narrow screens / tablets
+           ============================================================= */
+        .petrolero-device-placeholder {
+          display: none;
+          position: relative;
+          isolation: isolate;
+          width: 100%;
+          min-height: 100vh;
+          min-height: 100svh;
+          overflow: hidden;
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: center;
+          padding: clamp(20px, 5vw, 44px);
+          color: #f6efdf;
+          background:
+            radial-gradient(ellipse 70% 47% at 50% 44%, rgba(136, 85, 30, 0.17), transparent 79%),
+            linear-gradient(155deg, #11100d 0%, #040404 54%, #0d0b08 100%);
+          text-align: center;
+          font-family: Arial, Helvetica, sans-serif;
+        }
+        .petrolero-device-placeholder::before {
+          content: "";
+          position: absolute;
+          z-index: -1;
+          inset: 14px;
+          border: 1px solid rgba(223, 177, 98, 0.11);
+          pointer-events: none;
+        }
+        .petrolero-device-placeholder__halo {
+          position: absolute;
+          z-index: -1;
+          top: 50%;
+          left: 50%;
+          width: 75vmin;
+          height: 75vmin;
+          max-width: 500px;
+          max-height: 500px;
+          border: 1px solid rgba(204, 145, 58, 0.075);
+          border-radius: 50%;
+          transform: translate(-50%, -50%);
+          box-shadow: 0 0 0 80px rgba(183, 125, 48, 0.016), 0 0 0 160px rgba(183, 125, 48, 0.012);
+          pointer-events: none;
+        }
+        .petrolero-device-placeholder__brand {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          font-size: 22px;
+          font-weight: 800;
+          letter-spacing: -0.055em;
+        }
+        .petrolero-device-placeholder__brand-letter { color: #e2bd77; }
+        .petrolero-device-placeholder__main {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          max-width: 660px;
+          padding: 22px 0;
+        }
+        .petrolero-device-placeholder__emblem {
+          display: grid;
+          place-items: center;
+          width: clamp(144px, 29vmin, 188px);
+          height: clamp(144px, 29vmin, 188px);
+          margin-bottom: clamp(26px, 5vh, 46px);
+          border: 1px solid rgba(219, 170, 92, 0.15);
+          border-radius: 50%;
+          box-shadow: 0 0 70px rgba(208, 146, 60, 0.11);
+          animation: petrolero-device-placeholder-breathe 6s ease-in-out infinite;
+        }
+        .petrolero-device-placeholder__emblem-ring {
+          display: grid;
+          place-items: center;
+          width: 74%;
+          height: 74%;
+          border: 1px solid rgba(227, 174, 85, 0.43);
+          border-radius: 50%;
+          color: #d5ab67;
+          background: radial-gradient(circle, rgba(221, 160, 71, 0.06), transparent 78%);
+        }
+        .petrolero-device-placeholder__eyebrow,
+        .petrolero-device-placeholder__soon {
+          color: #d7ad6b;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.24em;
+        }
+        .petrolero-device-placeholder h1 {
+          margin: 20px 0 18px;
+          font-size: clamp(25px, 5.5vw, 46px);
+          font-weight: 850;
+          letter-spacing: -0.04em;
+          line-height: 1.16;
+          text-wrap: balance;
+        }
+        .petrolero-device-placeholder h1 span {
+          color: #d5b179;
+        }
+        .petrolero-device-placeholder__description {
+          max-width: 440px;
+          margin: 0;
+          color: rgba(245, 238, 224, 0.69);
+          font-size: clamp(13px, 2.2vw, 16px);
+          line-height: 1.75;
+          text-wrap: pretty;
+        }
+        .petrolero-device-placeholder__rule {
+          width: 54px;
+          height: 1px;
+          margin: 28px 0 21px;
+          background: linear-gradient(90deg, transparent, #d5b179, transparent);
+        }
+        .petrolero-device-placeholder__footer {
+          color: rgba(239, 192, 119, 0.55);
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.28em;
+        }
+        @keyframes petrolero-device-placeholder-breathe {
+          0%, 100% { transform: scale(1); box-shadow: 0 0 70px rgba(208, 146, 60, 0.11); }
+          50% { transform: scale(1.04); box-shadow: 0 0 90px rgba(208, 146, 60, 0.17); }
+        }
+        @media (max-width: 1199px), (hover: none) and (pointer: coarse) and (max-width: 1366px) {
+          .petrolero-page-scroll { display: none !important; }
+          .petrolero-device-placeholder { display: flex; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .petrolero-device-placeholder__emblem { animation: none; }
+        }
+
         .petrolero-page-scroll {
           height: 100vh;
           height: 100svh;
@@ -2119,5 +2296,6 @@ export default function PetroleroHero() {
         }
       `}</style>
     </div>
+    </>
   );
 }
