@@ -186,11 +186,14 @@ function MolecularCanvas({
 
     if (!container || !canvas) return;
 
-    const ctx = canvas.getContext("2d", {
+    const context = canvas.getContext("2d", {
       alpha: true,
     });
 
-    if (!ctx) return;
+    if (!context) return;
+
+    // Context type is non-null in nested canvas animation callbacks.
+    const ctx: CanvasRenderingContext2D = context;
 
     let width = 0;
     let height = 0;
