@@ -92,20 +92,17 @@
 
 .liquid-demo-brand[data-phase="2"],
 .liquid-demo-brand[data-phase="3"] {
-  top: 45px;
+  top: 52px;
   left: clamp(22px, 3.8vw, 64px);
   opacity: 1;
   filter: blur(0);
   transform: translate(0, -50%) scale(0.33);
 }
 
-.liquid-demo-mark {
-  display: block;
-  flex: 0 0 auto;
-  width: clamp(50px, 6.1vw, 98px);
-  height: auto;
-  overflow: visible;
-  filter: drop-shadow(0 0 23px rgba(235, 171, 74, 0.26));
+.liquid-demo-brand .petrolero-logo {
+  width: clamp(240px, 35vw, 520px);
+  color: #e7bf83;
+  filter: drop-shadow(0 0 21px rgba(211, 152, 78, 0.18));
 }
 
 .liquid-demo-navigation {
@@ -254,8 +251,8 @@
 
   .liquid-demo-brand[data-phase="2"],
   .liquid-demo-brand[data-phase="3"] {
-    top: 37px;
-    transform: translate(0, -50%) scale(0.54);
+    top: 48px;
+    transform: translate(0, -50%) scale(0.33);
   }
 
   .liquid-demo-navigation {
@@ -286,13 +283,13 @@
     gap: 8px;
   }
 
-  .liquid-demo-mark {
-    width: 47px;
+  .liquid-demo-brand .petrolero-logo {
+    width: clamp(185px, 58vw, 340px);
   }
 
   .liquid-demo-brand[data-phase="2"],
   .liquid-demo-brand[data-phase="3"] {
-    top: 32px;
+    top: 36px;
     left: 15px;
     transform: translate(0, -50%) scale(0.55);
   }
