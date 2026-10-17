@@ -19,7 +19,7 @@ if errorlevel 1 (
 )
 
 echo Creating a forward-reverse seamless oil loop...
-ffmpeg -y -i "%INPUT%" -filter_complex "[0:v]split=2[forward][backward];[backward]reverse,trim=start_frame=1,setpts=PTS-STARTPTS[rev];[forward]setpts=PTS-STARTPTS[fwd];[fwd][rev]concat=n=2:v=1:a=0,format=yuv420p[v]" -map "[v]" -an -c:v libvpx-vp9 -b:v 0 -crf 30 -deadline good -cpu-used 3 -row-mt 1 "%OUTPUT%"
+ffmpeg -y -i "%INPUT%" -filter_complex "[0:v]split=2[forward][backward];[backward]reverse,trim=start_frame=1,setpts=PTS-STARTPTS[rev];[forward]setpts=PTS-STARTPTS[fwd];[fwd][rev]concat=n=2:v=1:a=0,format=yuv420p[v]" -map "[v]" -an -c:v libvpx-vp9 -b:v 0 -crf 18 -deadline good -cpu-used 3 -row-mt 1 "%OUTPUT%"
 
 if errorlevel 1 (
   echo ERROR: Video processing failed.
