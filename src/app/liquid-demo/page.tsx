@@ -39,84 +39,107 @@ const FRAGMENT_SHADER = `
   }
 
   float noise2(vec2 p) {
-    vec2 i = floor(p);
+    vec2 cell = floor(p);
     vec2 f = fract(p);
     f = f * f * (3.0 - 2.0 * f);
     return mix(
-      mix(hash21(i), hash21(i + vec2(1.0, 0.0)), f.x),
-      mix(hash21(i + vec2(0.0, 1.0)), hash21(i + 1.0), f.x),
+      mix(hash21(cell), hash21(cell + vec2(1.0, 0.0)), f.x),
+      mix(hash21(cell + vec2(0.0, 1.0)), hash21(cell + vec2(1.0, 1.0)), f.x),
       f.y
     );
   }
 
-  float fbm(vec2 p) {
-    float total = 0.0;
-    float weight = 0.5;
-    for (int i = 0; i < 5; i++) {
-      total += noise2(p) * weight;
-      p = p * 2.03 + vec2(11.4, 4.9);
-      weight *= 0.5;
-    }
-    return total;
+  float oilHeight(vec2 p, float t) {
+    // The oil is a smooth height field. Colour comes from reflections below.
+    vec2 drift = vec2(t * 0.028, -t * 0.012);
+    float warpA = noise2(p * 1.65 + drift);
+    float warpB = noise2(p * 1.95 - drift * 0.55 + vec2(5.7, 11.2));
+    vec2 flow = p + vec2(warpA - 0.5, warpB - 0.5) * 0.29;
+    float major = noise2(flow * 2.4 + vec2(t * 0.017, -t * 0.021));
+    float minor = noise2(flow * 5.1 - vec2(t * 0.035, t * 0.011));
+    float ribbons = sin(flow.x * 7.8 + flow.y * 3.6 + major * 4.2);
+    float waves = sin(flow.y * 5.8 - flow.x * 3.3 + warpB * 2.8);
+    return major * 0.14 + minor * 0.024 + ribbons * 0.038 + waves * 0.022;
+  }
+
+  float softRect(vec2 uv, vec2 center, vec2 extent, float softness) {
+    vec2 delta = max(abs(uv - center) - extent, vec2(0.0));
+    return exp(-dot(delta, delta) / (softness * softness));
   }
 
   void main() {
+    // Aspect correction prevents pointer ripples from becoming ovals.
     vec2 p = (vUv - 0.5) * vec2(uAspect, 1.0);
-    float time = uTime * 0.055;
-    float waveLight = 0.0;
+    float time = uTime;
+    vec2 rippleDisplacement = vec2(0.0);
+    vec2 rippleSlope = vec2(0.0);
 
-    // Impulses are tracked along the pointer trajectory, not just at its tip.
     for (int i = 0; i < 12; i++) {
       vec4 hit = uRipples[i];
-      float age = uTime - hit.z;
-      float alive = step(0.0, age) * exp(-max(age, 0.0) * 1.65) * hit.w;
-      vec2 center = (hit.xy - 0.5) * vec2(uAspect, 1.0);
-      vec2 delta = p - center;
-      float distanceToHit = length(delta);
-      float wake = sin(distanceToHit * 42.0 - age * 8.0)
-                 * exp(-distanceToHit * 5.5) * alive;
-      p += delta / max(distanceToHit, 0.0001) * wake * 0.011;
-      waveLight += abs(wake) * 0.13;
+      float age = max(time - hit.z, 0.0);
+      float active = step(0.0, time - hit.z) * hit.w;
+      vec2 origin = (hit.xy - 0.5) * vec2(uAspect, 1.0);
+      vec2 offset = p - origin;
+      float radius = max(length(offset), 0.0001);
+      vec2 direction = offset / radius;
+      float expandingRing = radius - age * 0.27;
+      float falloff = exp(-expandingRing * expandingRing * 34.0) *
+                      exp(-age * 1.35) * active;
+      float oscillation = sin(expandingRing * 24.0);
+      rippleDisplacement += direction * oscillation * falloff * 0.027;
+      // A ripple changes both the oil's position and its reflected light.
+      rippleSlope += direction * cos(expandingRing * 24.0) * falloff * 0.34;
     }
 
-    // Domain warping makes the fine golden folds follow the larger oil currents.
-    vec2 drift = vec2(time * 0.19, -time * 0.12);
-    float low = fbm(p * 1.65 + drift);
-    float medium = fbm(p * 3.25 + vec2(low * 2.1, -low * 1.8) - drift * 0.65);
-    vec2 q = p + vec2(low - 0.48, medium - 0.50) * 0.24;
+    vec2 position = p + rippleDisplacement;
+    float height = oilHeight(position, time);
+    float eps = 0.006;
+    vec2 slope = vec2(
+      oilHeight(position + vec2(eps, 0.0), time) - height,
+      oilHeight(position + vec2(0.0, eps), time) - height
+    ) / eps;
+    vec3 normal = normalize(vec3(-slope * 1.30 - rippleSlope, 1.0));
 
-    float folds = sin(q.x * 9.0 + q.y * 3.5 + low * 8.3 + medium * 1.8);
-    float swirls = sin(q.x * 14.0 - q.y * 10.0 + low * 11.5 + medium * 4.2);
-    float heavyGold = pow(clamp(folds * 0.5 + 0.5, 0.0, 1.0), 8.0);
-    float hairlineGold = pow(clamp(swirls * 0.5 + 0.5, 0.0, 1.0), 23.0);
-    float bronze = smoothstep(0.36, 0.78, low * 0.64 + medium * 0.40);
-    float glassReflection = pow(
-      clamp(sin(q.y * 18.0 + low * 13.0) * 0.5 + 0.5, 0.0, 1.0),
-      17.0
+    // Black polished oil reflecting long, restrained studio light sources.
+    // No emissive contour stripes or diffuse orange cloud texture.
+    vec3 reflected = reflect(vec3(0.0, 0.0, -1.0), normal);
+    vec2 env = reflected.xy * 1.05 + vec2(-0.06, 0.12);
+    vec2 rotated = vec2(
+      env.x * 0.86 + env.y * 0.51,
+      -env.x * 0.51 + env.y * 0.86
     );
 
-    vec3 black = vec3(0.005, 0.006, 0.009);
-    vec3 darkBronze = vec3(0.115, 0.055, 0.014);
-    vec3 gold = vec3(1.00, 0.51, 0.105);
-    vec3 paleGold = vec3(1.00, 0.82, 0.46);
+    float amberKey = softRect(rotated, vec2(-0.16, 0.25), vec2(0.03, 0.24), 0.09);
+    float warmStrip = softRect(rotated, vec2(0.48, -0.19), vec2(0.01, 0.42), 0.035);
+    float ivoryEdge = softRect(rotated, vec2(-0.59, 0.13), vec2(0.006, 0.45), 0.025);
+    float coolReflection = softRect(rotated, vec2(0.07, -0.43), vec2(0.28, 0.02), 0.09);
 
-    vec3 color = mix(black, darkBronze, bronze * 0.72);
-    color += darkBronze * smoothstep(0.33, 0.88, medium) * 0.55;
-    color += gold * heavyGold * 0.82;
-    color += paleGold * hairlineGold * 0.77;
-    color += gold * glassReflection * 0.28;
-    color += vec3(0.35, 0.18, 0.045) * min(waveLight, 0.75);
+    float depth = noise2(position * 1.75 + vec2(time * 0.008, -time * 0.009));
+    vec3 base = mix(
+      vec3(0.002, 0.003, 0.004),
+      vec3(0.032, 0.017, 0.009),
+      depth * 0.72
+    );
+    vec3 color = base;
+    color += vec3(0.78, 0.35, 0.095) * amberKey * 0.75;
+    color += vec3(1.00, 0.66, 0.28) * warmStrip * 0.85;
+    color += vec3(1.00, 0.88, 0.63) * ivoryEdge * 0.75;
+    color += vec3(0.24, 0.28, 0.31) * coolReflection * 0.27;
 
-    // A soft reflected studio light, not a uniform orange overlay.
-    vec2 softBox = (vUv - vec2(0.66, 0.71)) * vec2(0.9, 1.6);
-    float light = exp(-dot(softBox, softBox) * 8.0);
-    color += vec3(0.15, 0.083, 0.018) * light * (0.4 + heavyGold);
+    float glint = pow(
+      max(dot(normal, normalize(vec3(0.27, 0.48, 1.0))), 0.0),
+      86.0
+    );
+    color += vec3(0.48, 0.29, 0.10) * glint * 0.07;
 
-    float vignette = 1.0 - smoothstep(0.36, 1.12, length((vUv - 0.5) * vec2(uAspect * 0.8, 1.0)));
-    color *= 0.48 + vignette * 0.52;
-    color += (hash21(gl_FragCoord.xy + uTime) - 0.5) / 255.0;
+    float vignette = 1.0 - 0.45 * smoothstep(
+      0.33, 0.91,
+      length((vUv - 0.5) * vec2(0.95, 1.0))
+    );
+    color *= vignette;
 
-    gl_FragColor = vec4(pow(max(color, vec3(0.0)), vec3(0.88)), 1.0);
+    color = 1.0 - exp(-color * 1.16);
+    gl_FragColor = vec4(pow(color, vec3(0.93)), 1.0);
   }
 `;
 
@@ -234,7 +257,7 @@ export default function LiquidDemoPage() {
   const onPointerMove = (event: ReactPointerEvent<HTMLElement>) => {
     if (motionReduced || !surfaceRef.current) return;
     const now = performance.now() * 0.001;
-    if (now - lastPointerRef.current.time < 0.065) return;
+    if (now - lastPointerRef.current.time < 0.045) return;
     const rect = surfaceRef.current.getBoundingClientRect();
     const x = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
     const y = Math.min(1, Math.max(0, 1 - (event.clientY - rect.top) / rect.height));
@@ -243,7 +266,7 @@ export default function LiquidDemoPage() {
       x,
       y,
       time: now,
-      strength: Math.min(1.2, Math.max(0.45, distance * 12)),
+      strength: Math.min(1.4, Math.max(0.65, distance * 15)),
     });
     if (ripplesRef.current.length > MAX_RIPPLES) ripplesRef.current.shift();
     lastPointerRef.current = { x, y, time: now };
@@ -267,7 +290,7 @@ export default function LiquidDemoPage() {
           <Canvas
             orthographic
             camera={{ position: [0, 0, 1], zoom: 1 }}
-            dpr={[1, 1.5]}
+            dpr={[1, 1.25]}
             frameloop={motionReduced ? "demand" : "always"}
             gl={{ alpha: false, antialias: false, powerPreference: "high-performance" }}
           >
