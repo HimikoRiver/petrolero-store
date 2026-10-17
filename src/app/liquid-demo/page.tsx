@@ -289,7 +289,7 @@ export default function LiquidDemoPage() {
 
       <section className={`liquid-demo-copy ${phase === 3 ? "is-visible" : ""}`}>
         <p className="liquid-demo-eyebrow">МОТОРНЫЕ МАСЛА PETROLERO</p>
-        <h1>СИЛА<br />В КАЖДОЙ<br /><em>КАПЛЕ.</em></h1>
+        <h1>ЛУЧШАЯ<br />ЗАЩИТА<br /><em>ДВИГАТЕЛЯ.</em></h1>
         <p className="liquid-demo-description">
           Масло в движении. Проведите курсором по поверхности.
         </p>
