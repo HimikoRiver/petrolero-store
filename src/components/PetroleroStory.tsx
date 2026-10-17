@@ -43,6 +43,12 @@ export default function PetroleroStory({
       const progress = clamp01((viewport - rect.top) / (viewport + rect.height));
 
       section.style.setProperty("--story-progress", progress.toFixed(4));
+      const captionIn = clamp01((progress - 0.06) / 0.13);
+      const captionOut = 1 - clamp01((progress - 0.83) / 0.13);
+      section.style.setProperty(
+        "--story-caption-opacity",
+        (reducedMotion ? 1 : captionIn * captionOut).toFixed(4),
+      );
 
       lineRefs.current.forEach((line, index) => {
         if (!line) return;
@@ -56,7 +62,7 @@ export default function PetroleroStory({
         line.style.setProperty("--line-offset", (1 - revealed).toFixed(4));
       });
 
-      const showcase = progress >= 0.33 && progress < 0.86;
+      const showcase = progress >= 0.61 && progress < 0.89;
       if (showcase !== wasShowcase) {
         wasShowcase = showcase;
         onShowcaseChange(showcase);
