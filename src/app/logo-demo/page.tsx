@@ -18,8 +18,8 @@ export default function LogoDemoPage() {
               Живой логотип
             </h1>
             <p className="mt-3 max-w-[600px] text-sm leading-6 text-white/60">
-              Буква P собирается из трёх деталей. Затем проявляется надпись.
-              Используется оригинальный SVG с сайта Petrolero.
+              Фирменный знак и надпись плавно появляются. Используется
+              оригинальный SVG с сайта Petrolero.
             </p>
           </div>
           <button
