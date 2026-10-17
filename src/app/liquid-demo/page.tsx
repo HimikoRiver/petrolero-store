@@ -71,34 +71,52 @@ const FRAGMENT_SHADER = `
     // Aspect correction prevents pointer ripples from becoming ovals.
     vec2 p = (vUv - 0.5) * vec2(uAspect, 1.0);
     float time = uTime;
-    vec2 rippleDisplacement = vec2(0.0);
     vec2 rippleSlope = vec2(0.0);
+    float rippleLight = 0.0;
+    float rippleDark = 0.0;
 
+    // Each pointer impulse produces concentric, outward-travelling waves.
+    // Only the oil surface normal changes: no artificial image stretching.
     for (int i = 0; i < 12; i++) {
       vec4 hit = uRipples[i];
-      float age = max(time - hit.z, 0.0);
-      float rippleActive = step(0.0, time - hit.z) * hit.w;
+      float age = time - hit.z;
+      if (age < 0.0 || age > 2.4 || hit.w <= 0.0) continue;
+
       vec2 origin = (hit.xy - 0.5) * vec2(uAspect, 1.0);
       vec2 offset = p - origin;
-      float radius = max(length(offset), 0.0001);
-      vec2 direction = offset / radius;
-      float expandingRing = radius - age * 0.27;
-      float falloff = exp(-expandingRing * expandingRing * 34.0) *
-                      exp(-age * 1.35) * rippleActive;
-      float oscillation = sin(expandingRing * 24.0);
-      rippleDisplacement += direction * oscillation * falloff * 0.027;
-      // A ripple changes both the oil's position and its reflected light.
-      rippleSlope += direction * cos(expandingRing * 24.0) * falloff * 0.34;
+      float radius = length(offset);
+      vec2 direction = offset / max(radius, 0.0001);
+
+      float front = age * 0.32;
+      float fromFront = radius - front;
+      float width = 0.155;
+      float envelope = exp(-pow(fromFront / width, 2.0))
+                     * exp(-age * 1.06)
+                     * hit.w;
+
+      // Multiple crests inside the advancing wave packet.
+      float phase = fromFront * 67.0;
+      float crest = sin(phase);
+      float radialDerivative = 67.0 * cos(phase)
+                            - (2.0 * fromFront / (width * width)) * crest;
+
+      // Analytic height gradient creates realistic circular normal changes.
+      rippleSlope += direction * envelope * radialDerivative * 0.0032;
+
+      // A subtle paired highlight/shadow keeps complete rings readable even
+      // on near-black parts of the surface without neon outlines.
+      rippleLight += envelope * max(cos(phase), 0.0);
+      rippleDark += envelope * max(-cos(phase), 0.0);
     }
 
-    vec2 position = p + rippleDisplacement;
+    vec2 position = p;
     float height = oilHeight(position, time);
     float eps = 0.006;
     vec2 slope = vec2(
       oilHeight(position + vec2(eps, 0.0), time) - height,
       oilHeight(position + vec2(0.0, eps), time) - height
     ) / eps;
-    vec3 normal = normalize(vec3(-slope * 1.30 - rippleSlope, 1.0));
+    vec3 normal = normalize(vec3(-(slope * 1.30 + rippleSlope), 1.0));
 
     // Black polished oil reflecting long, restrained studio light sources.
     // No emissive contour stripes or diffuse orange cloud texture.
@@ -131,6 +149,17 @@ const FRAGMENT_SHADER = `
       86.0
     );
     color += vec3(0.48, 0.29, 0.10) * glint * 0.07;
+
+    // Ring crests catch soft warm reflections; troughs are slightly darker.
+    // This stays tied to the same physically expanding waves as the normals.
+    float reflectedLight = clamp(
+      amberKey * 0.40 + warmStrip * 0.55 + ivoryEdge * 0.20,
+      0.0, 1.0
+    );
+    color *= 1.0 - min(rippleDark, 1.4) * 0.19;
+    color += vec3(0.52, 0.37, 0.23)
+           * min(rippleLight, 1.6)
+           * (0.11 + reflectedLight * 0.20);
 
     float vignette = 1.0 - 0.45 * smoothstep(
       0.33, 0.91,
@@ -220,7 +249,7 @@ function BrandMark() {
 export default function LiquidDemoPage() {
   const surfaceRef = useRef<HTMLElement>(null);
   const ripplesRef = useRef<Ripple[]>([]);
-  const lastPointerRef = useRef({ x: 0.5, y: 0.5, time: 0 });
+  const lastPointerRef = useRef({ x: -1, y: -1, time: -1 });
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const [hasWebGL, setHasWebGL] = useState(false);
   const [motionReduced, setMotionReduced] = useState(false);
@@ -241,6 +270,7 @@ export default function LiquidDemoPage() {
     timersRef.current.forEach(clearTimeout);
     timersRef.current = [];
     ripplesRef.current = [];
+    lastPointerRef.current = { x: -1, y: -1, time: -1 };
     if (motionReduced) {
       setPhase(3);
       return;
@@ -254,22 +284,41 @@ export default function LiquidDemoPage() {
     return () => timersRef.current.forEach(clearTimeout);
   }, [run, motionReduced]);
 
-  const onPointerMove = (event: ReactPointerEvent<HTMLElement>) => {
+  const emitRipple = (event: ReactPointerEvent<HTMLElement>, force = false) => {
     if (motionReduced || !surfaceRef.current) return;
     const now = performance.now() * 0.001;
-    if (now - lastPointerRef.current.time < 0.045) return;
     const rect = surfaceRef.current.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+
     const x = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
     const y = Math.min(1, Math.max(0, 1 - (event.clientY - rect.top) / rect.height));
-    const distance = Math.hypot(x - lastPointerRef.current.x, y - lastPointerRef.current.y);
+    const previous = lastPointerRef.current;
+    const movedPx = previous.time < 0
+      ? 0
+      : Math.hypot((x - previous.x) * rect.width, (y - previous.y) * rect.height);
+    const elapsed = now - previous.time;
+
+    // Space impulses out along the cursor path so rings remain distinguishable.
+    if (!force && previous.time >= 0 && (elapsed < 0.13 || movedPx < 16)) return;
+    if (force && previous.time >= 0 && elapsed < 0.06) return;
+
     ripplesRef.current.push({
       x,
       y,
       time: now,
-      strength: Math.min(1.4, Math.max(0.65, distance * 15)),
+      strength: force ? 1.35 : Math.min(1.15, 0.85 + movedPx / 220),
     });
     if (ripplesRef.current.length > MAX_RIPPLES) ripplesRef.current.shift();
     lastPointerRef.current = { x, y, time: now };
+  };
+
+  const onPointerMove = (event: ReactPointerEvent<HTMLElement>) => {
+    emitRipple(event);
+  };
+
+  const onPointerDown = (event: ReactPointerEvent<HTMLElement>) => {
+    if (event.target instanceof Element && event.target.closest("button, a")) return;
+    emitRipple(event, true);
   };
 
   const skipIntro = () => {
@@ -283,6 +332,7 @@ export default function LiquidDemoPage() {
       ref={surfaceRef}
       className="liquid-demo"
       onPointerMove={onPointerMove}
+      onPointerDown={onPointerDown}
       aria-label="Интерактивное интро Petrolero"
     >
       <div className="liquid-demo-surface" aria-hidden="true">
