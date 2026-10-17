@@ -7,8 +7,7 @@ import type { OilRipple } from "@/components/OilVideoSurface";
 import "./liquid-demo.css";
 
 const MAX_RIPPLES = 12;
-const PRIMARY_VIDEO_SRC = "/home/video/oil-loop.webm";
-const FALLBACK_VIDEO_SRC = "/home/video/oil.webm";
+const VIDEO_SRC = "/home/video/oil.webm";
 
 function BrandMark() {
   return (
@@ -32,7 +31,6 @@ export default function LiquidDemoPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoElement, setVideoElement] = useState<HTMLVideoElement | null>(null);
   const [videoReady, setVideoReady] = useState(false);
-  const [videoSource, setVideoSource] = useState(PRIMARY_VIDEO_SRC);
   const lastPointerRef = useRef({ x: -1, y: -1, time: -1 });
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const [hasWebGL, setHasWebGL] = useState(false);
@@ -60,7 +58,7 @@ export default function LiquidDemoPage() {
         // Browser autoplay policies may pause the background until interaction.
       });
     }
-  }, [motionReduced, videoSource, videoReady]);
+  }, [motionReduced, videoReady]);
 
   useEffect(() => {
     timersRef.current.forEach(clearTimeout);
@@ -138,19 +136,14 @@ export default function LiquidDemoPage() {
             if (node && videoElement !== node) setVideoElement(node);
           }}
           className="liquid-demo-video"
-          src={videoSource}
+          src={VIDEO_SRC}
           autoPlay
           muted
           loop
           playsInline
           preload="auto"
           onLoadedData={() => setVideoReady(true)}
-          onError={() => {
-            setVideoReady(false);
-            if (videoSource === PRIMARY_VIDEO_SRC) {
-              setVideoSource(FALLBACK_VIDEO_SRC);
-            }
-          }}
+          onError={() => setVideoReady(false)}
         />
         {hasWebGL && videoReady && videoElement && (
           <OilVideoSurface
