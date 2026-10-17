@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import type { CSSProperties } from "react";
 import "./PetroleroStory.css";
 
 type PetroleroStoryProps = {
@@ -55,9 +56,7 @@ export default function PetroleroStory({
         line.style.setProperty("--line-offset", (1 - revealed).toFixed(4));
       });
 
-      const showcase = reducedMotion
-        ? progress >= 0.33 && progress < 0.86
-        : progress >= 0.33 && progress < 0.86;
+      const showcase = progress >= 0.33 && progress < 0.86;
       if (showcase !== wasShowcase) {
         wasShowcase = showcase;
         onShowcaseChange(showcase);
@@ -99,7 +98,7 @@ export default function PetroleroStory({
                 style={{
                   "--line-opacity": 0,
                   "--line-offset": 1,
-                } as React.CSSProperties}
+                } as CSSProperties}
               >
                 {line}
               </span>
