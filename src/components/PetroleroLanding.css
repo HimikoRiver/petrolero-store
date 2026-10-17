@@ -1,0 +1,380 @@
+.petrolero-home {
+  --petrolero-accent: #d7b47c;
+  position: relative;
+  width: 100%;
+  background: #000;
+  color: #fff;
+}
+
+.petrolero-home-hero {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 100svh;
+  min-height: 580px;
+  overflow: hidden;
+  background: #090705;
+}
+
+.petrolero-home-oil,
+.petrolero-home-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.petrolero-home-oil {
+  z-index: 0;
+  background: radial-gradient(ellipse 85% 72% at 64% 44%, #2d1b0e, #080706 72%);
+  overflow: hidden;
+}
+
+.petrolero-home-oil > div {
+  position: absolute !important;
+  inset: 0;
+}
+
+.petrolero-home-video,
+.petrolero-home-oil canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.petrolero-home-video {
+  object-fit: cover;
+}
+
+.petrolero-home-vignette {
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.48) 0%, transparent 28%, transparent 70%, rgba(0,0,0,.59) 100%),
+    radial-gradient(ellipse 80% 74% at center, rgba(0,0,0,.19), rgba(0,0,0,.62) 98%);
+}
+
+.petrolero-home-logo {
+  position: absolute;
+  z-index: 4;
+  top: 46%;
+  left: 50%;
+  width: clamp(225px, 30vw, 475px);
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  pointer-events: none;
+  transition:
+    left 1000ms cubic-bezier(.19,1,.22,1),
+    top 1000ms cubic-bezier(.19,1,.22,1),
+    width 1000ms cubic-bezier(.19,1,.22,1),
+    transform 1000ms cubic-bezier(.19,1,.22,1),
+    opacity 500ms ease;
+}
+
+.petrolero-home-logo[data-phase="0"] {
+  opacity: 0;
+  transform: translate(-50%, -46%) scale(.94);
+}
+
+.petrolero-home-logo[data-phase="2"],
+.petrolero-home-logo[data-phase="3"] {
+  top: 14px;
+  left: clamp(23px, 3.3vw, 58px);
+  width: clamp(115px, 9.7vw, 166px);
+  transform: translate(0,0);
+}
+
+.petrolero-home-logo .petrolero-logo__image {
+  filter: brightness(0) saturate(100%) invert(86%) sepia(22%) saturate(697%) hue-rotate(342deg) brightness(100%) contrast(92%) drop-shadow(0 0 22px rgba(210,154,78,.18));
+}
+
+.petrolero-home-header {
+  position: absolute;
+  z-index: 6;
+  inset: 0 0 auto;
+  height: 90px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 23px clamp(22px, 3.4vw, 60px);
+}
+
+.petrolero-home-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(8px, 1.4vw, 18px);
+}
+
+.petrolero-home-icon-button {
+  position: relative;
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgba(233,196,142,.24);
+  border-radius: 50%;
+  color: #f0dfc4;
+  background: rgba(3,3,3,.22);
+  backdrop-filter: blur(9px);
+  cursor: pointer;
+  transition: color 200ms ease, background 200ms ease, transform 200ms ease, border-color 200ms ease;
+}
+
+.petrolero-home-icon-button:hover,
+.petrolero-home-icon-button:focus-visible,
+.petrolero-home-icon-button[aria-expanded="true"] {
+  color: #fff;
+  background: rgba(200,150,82,.16);
+  border-color: rgba(233,196,142,.70);
+  transform: translateY(-2px);
+}
+
+.petrolero-home-icon-button:focus-visible,
+.petrolero-home-scroll:focus-visible,
+.petrolero-home-panel button:focus-visible,
+.petrolero-home-panel input:focus-visible {
+  outline: 2px solid var(--petrolero-accent);
+  outline-offset: 4px;
+}
+
+.petrolero-home-cart-count {
+  position: absolute;
+  right: -4px;
+  top: -5px;
+  display: grid;
+  width: 17px;
+  height: 17px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--petrolero-accent);
+  color: #120b07;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.petrolero-home-copy {
+  position: absolute;
+  z-index: 3;
+  top: 51%;
+  left: 50%;
+  width: calc(100% - 38px);
+  max-width: 1560px;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, calc(-50% + 30px));
+  transition: opacity 850ms ease, transform 1100ms cubic-bezier(.19,1,.22,1);
+}
+
+.petrolero-home-copy[data-visible="true"] {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.petrolero-home-eyebrow {
+  margin: 0 0 clamp(18px, 3vh, 34px);
+  color: #f1c992;
+  font-size: clamp(10px, .85vw, 13px);
+  font-weight: 700;
+  letter-spacing: clamp(.16em, .32vw, .34em);
+  line-height: 1.6;
+  text-shadow: 0 2px 18px #000;
+}
+
+.petrolero-home-copy h1 {
+  margin: 0;
+  font-size: clamp(44px, 6.3vw, 116px);
+  font-weight: 900;
+  line-height: .97;
+  letter-spacing: -.068em;
+  text-transform: uppercase;
+  text-shadow: 0 5px 55px rgba(0,0,0,.72);
+}
+
+.petrolero-home-copy h1 span {
+  display: block;
+  white-space: nowrap;
+}
+
+.petrolero-home-copy h1 span + span {
+  margin-top: .09em;
+}
+
+.petrolero-home-copy h1 em {
+  color: #ddb67d;
+  font-style: normal;
+}
+
+.petrolero-home-slogan {
+  margin: clamp(25px, 3.2vw, 43px) 0 0;
+  color: rgba(255,250,238,.79);
+  font-size: clamp(9px, 1vw, 13px);
+  font-weight: 600;
+  letter-spacing: .22em;
+  line-height: 1.8;
+  text-shadow: 0 2px 15px #000;
+}
+
+.petrolero-home-scroll {
+  position: absolute;
+  z-index: 4;
+  bottom: clamp(24px, 3vw, 48px);
+  left: 50%;
+  display: grid;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgba(233,196,142,.44);
+  border-radius: 50%;
+  background: rgba(0,0,0,.22);
+  color: var(--petrolero-accent);
+  transform: translateX(-50%);
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease;
+  animation: petrolero-home-arrow 2.5s ease-in-out infinite;
+}
+
+.petrolero-home-scroll:hover {
+  background: rgba(211,158,87,.17);
+  border-color: var(--petrolero-accent);
+}
+
+@keyframes petrolero-home-arrow {
+  0%, 100% { transform: translate(-50%,0); }
+  50% { transform: translate(-50%,7px); }
+}
+
+.petrolero-home-next {
+  display: block;
+  min-height: 100svh;
+  background: #000;
+}
+
+.petrolero-home-panel-backdrop {
+  position: absolute;
+  z-index: 15;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 90px clamp(22px,3.4vw,60px) 22px;
+  background: rgba(0,0,0,.54);
+  backdrop-filter: blur(8px);
+}
+
+.petrolero-home-panel {
+  width: min(440px,100%);
+  padding: 23px clamp(20px,3vw,30px) 30px;
+  border: 1px solid rgba(222,183,124,.33);
+  border-radius: 12px;
+  background: #0d0c0b;
+  box-shadow: 0 30px 80px rgba(0,0,0,.48);
+  color: #fff;
+}
+
+.petrolero-home-panel-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  color: var(--petrolero-accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .2em;
+}
+
+.petrolero-home-panel-top button {
+  padding: 2px 5px;
+  background: transparent;
+  border: 0;
+  color: #fff;
+  font-size: 27px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.petrolero-home-panel-note,
+.petrolero-home-search-form p {
+  margin: 24px 0 0;
+  color: rgba(255,255,255,.68);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.petrolero-home-search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.petrolero-home-search-form label {
+  font-size: 14px;
+}
+
+.petrolero-home-search-form > div {
+  display: flex;
+  gap: 8px;
+}
+
+.petrolero-home-search-form input {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 13px 11px;
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 4px;
+  background: #171615;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+}
+
+.petrolero-home-search-form button {
+  flex: 0 0 auto;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 4px;
+  background: var(--petrolero-accent);
+  color: #160e06;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.petrolero-home-search-form p { margin-top: 0; font-size: 12px; }
+
+@media (max-width: 900px) {
+  .petrolero-home-copy h1 { font-size: clamp(34px, 6.15vw, 74px); }
+  .petrolero-home-copy h1 span { white-space: normal; }
+  .petrolero-home-slogan { letter-spacing: .15em; }
+}
+
+@media (max-width: 520px) {
+  .petrolero-home-hero { min-height: 520px; }
+  .petrolero-home-header { height: 72px; padding: 14px 15px; }
+  .petrolero-home-actions { gap: 7px; }
+  .petrolero-home-icon-button { width: 36px; height: 36px; }
+  .petrolero-home-icon-button svg { width: 19px; height: 19px; }
+  .petrolero-home-logo[data-phase="2"],
+  .petrolero-home-logo[data-phase="3"] {
+    left: 14px;
+    top: 9px;
+    width: 99px;
+  }
+  .petrolero-home-copy { width: calc(100% - 24px); top: 50%; }
+  .petrolero-home-copy h1 { font-size: clamp(28px, 7.3vw, 40px); line-height: 1.04; letter-spacing: -.075em; }
+  .petrolero-home-copy h1 span + span { margin-top: .2em; }
+  .petrolero-home-eyebrow { font-size: 9px; letter-spacing: .13em; margin-bottom: 23px; }
+  .petrolero-home-slogan { margin-top: 25px; font-size: 9px; line-height: 1.8; letter-spacing: .11em; }
+  .petrolero-home-scroll { width: 43px; height: 43px; bottom: 25px; }
+  .petrolero-home-panel-backdrop { padding: 75px 15px 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petrolero-home-logo,
+  .petrolero-home-copy { transition: none !important; }
+  .petrolero-home-scroll { animation: none; }
+}
