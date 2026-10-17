@@ -19,7 +19,7 @@ export default function LogoDemoPage() {
             </h1>
             <p className="mt-3 max-w-[600px] text-sm leading-6 text-white/60">
               Буква P собирается из трёх деталей. Затем проявляется надпись.
-              Оригинальная форма сохранена в векторе.
+              Используется оригинальный SVG с сайта Petrolero.
             </p>
           </div>
           <button
@@ -38,9 +38,9 @@ export default function LogoDemoPage() {
           >
             <PetroleroLogo
               key={`ink-${iteration}`}
+              variant="original"
               animated
               className="max-w-[420px]"
-              style={{ color: "#192630" }}
             />
             <span className="text-[10px] font-medium uppercase tracking-[0.25em] text-[#192630]/55">
               ORIGINAL / DARK INK
@@ -53,9 +53,9 @@ export default function LogoDemoPage() {
           >
             <PetroleroLogo
               key={`gold-${iteration}`}
+              variant="gold"
               animated
               className="max-w-[420px]"
-              style={{ color: "#e5bc79", filter: "drop-shadow(0 0 16px rgba(215,164,95,.15))" }}
             />
             <span className="text-[10px] font-medium uppercase tracking-[0.25em] text-[#d7b47c]/65">
               PREMIUM / WARM GOLD
@@ -67,7 +67,7 @@ export default function LogoDemoPage() {
           <a href="/liquid-demo" className="underline decoration-[#d7b47c] underline-offset-4 hover:text-white">
             Посмотреть в интро масла ↗
           </a>
-          <a href="/home/images/petrolero-logo.svg" target="_blank" rel="noreferrer" className="underline decoration-[#d7b47c] underline-offset-4 hover:text-white">
+          <a href="https://petrolero.ru/upload/iblock/35e/jgc65bilqftol5pq129e204e9ngvhlj3/logo.svg" target="_blank" rel="noreferrer" className="underline decoration-[#d7b47c] underline-offset-4 hover:text-white">
             Открыть самостоятельный SVG ↗
           </a>
         </div>
