@@ -77,14 +77,14 @@ const FRAGMENT_SHADER = `
     for (int i = 0; i < 12; i++) {
       vec4 hit = uRipples[i];
       float age = max(time - hit.z, 0.0);
-      float active = step(0.0, time - hit.z) * hit.w;
+      float rippleActive = step(0.0, time - hit.z) * hit.w;
       vec2 origin = (hit.xy - 0.5) * vec2(uAspect, 1.0);
       vec2 offset = p - origin;
       float radius = max(length(offset), 0.0001);
       vec2 direction = offset / radius;
       float expandingRing = radius - age * 0.27;
       float falloff = exp(-expandingRing * expandingRing * 34.0) *
-                      exp(-age * 1.35) * active;
+                      exp(-age * 1.35) * rippleActive;
       float oscillation = sin(expandingRing * 24.0);
       rippleDisplacement += direction * oscillation * falloff * 0.027;
       // A ripple changes both the oil's position and its reflected light.
