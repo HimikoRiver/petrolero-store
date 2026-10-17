@@ -3,27 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import OilVideoSurface from "@/components/OilVideoSurface";
+import PetroleroLogo from "@/components/PetroleroLogo";
 import type { OilRipple } from "@/components/OilVideoSurface";
 import "./liquid-demo.css";
 
 const MAX_RIPPLES = 12;
 const VIDEO_SRC = "/home/video/oil.webm";
-
-function BrandMark() {
-  return (
-    <svg className="liquid-demo-mark" viewBox="0 0 70 88" fill="none" aria-hidden="true">
-      <defs>
-        <linearGradient id="liquid-gold" x1="7" y1="6" x2="62" y2="81" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#FFF1C6" />
-          <stop offset="0.45" stopColor="#DBA85D" />
-          <stop offset="1" stopColor="#8C5522" />
-        </linearGradient>
-      </defs>
-      <path d="M35 2C29 16 7 38 7 56a28 28 0 0 0 56 0C63 38 41 16 35 2Z" fill="url(#liquid-gold)" />
-      <path d="M36 29C30 40 22 48 22 57c0 8 6 14 14 14 7 0 12-4 14-10-15 3-24-9-14-32Z" fill="#0D0906" />
-    </svg>
-  );
-}
 
 export default function LiquidDemoPage() {
   const surfaceRef = useRef<HTMLElement>(null);
@@ -156,8 +141,7 @@ export default function LiquidDemoPage() {
       <div className="liquid-demo-shade" aria-hidden="true" />
 
       <div className="liquid-demo-brand" data-phase={phase}>
-        <BrandMark />
-        <span>PETROLERO</span>
+        <PetroleroLogo key={run} animated />
       </div>
 
       <div className={`liquid-demo-navigation ${phase === 3 ? "is-visible" : ""}`}>
