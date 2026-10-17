@@ -1,0 +1,53 @@
+.petrolero-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.petrolero-logo--animated .petrolero-logo__bar {
+  animation: petrolero-logo-bar 850ms cubic-bezier(.19, 1, .22, 1) both;
+}
+
+.petrolero-logo--animated .petrolero-logo__dash {
+  animation: petrolero-logo-dash 600ms 250ms cubic-bezier(.19, 1, .22, 1) both;
+}
+
+.petrolero-logo--animated .petrolero-logo__stem {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: petrolero-logo-stem 670ms 340ms cubic-bezier(.19, 1, .22, 1) both;
+}
+
+.petrolero-logo--animated .petrolero-logo__reveal {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: petrolero-logo-reveal 1000ms 520ms cubic-bezier(.19, 1, .22, 1) both;
+}
+
+@keyframes petrolero-logo-bar {
+  from { opacity: 0; transform: translate(-7px, -5px); }
+  to { opacity: 1; transform: translate(0, 0); }
+}
+@keyframes petrolero-logo-dash {
+  from { opacity: 0; transform: translate(-13px, 0); }
+  to { opacity: 1; transform: translate(0, 0); }
+}
+@keyframes petrolero-logo-stem {
+  from { opacity: 0; transform: scaleX(.18); }
+  to { opacity: 1; transform: scaleX(1); }
+}
+@keyframes petrolero-logo-reveal {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petrolero-logo--animated .petrolero-logo__bar,
+  .petrolero-logo--animated .petrolero-logo__dash,
+  .petrolero-logo--animated .petrolero-logo__stem,
+  .petrolero-logo--animated .petrolero-logo__reveal {
+    animation: none;
+  }
+}
