@@ -1,49 +1,44 @@
 "use client";
 
-import { useId } from "react";
-import type { SVGProps } from "react";
+import { useState } from "react";
+import type { HTMLAttributes } from "react";
 import "./PetroleroLogo.css";
 
-type PetroleroLogoProps = SVGProps<SVGSVGElement> & {
+// Official branded SVG served by petrolero.ru (with the original wordmark outlines).
+export const OFFICIAL_PETROLERO_LOGO =
+  "https://petrolero.ru/upload/iblock/35e/jgc65bilqftol5pq129e204e9ngvhlj3/logo.svg";
+const LOCAL_FALLBACK = "/home/images/petrolero-logo.svg";
+
+type PetroleroLogoProps = HTMLAttributes<HTMLSpanElement> & {
   animated?: boolean;
+  variant?: "original" | "gold" | "white";
 };
 
-/**
- * A vector reconstruction of the supplied Petrolero reference.
- * Both the symbol and the lettering are paths, with no runtime font dependency.
- * `color` controls the logo colour; animation honours reduced-motion.
- */
 export default function PetroleroLogo({
   animated = true,
+  variant = "original",
   className = "",
   ...props
 }: PetroleroLogoProps) {
-  const revealId = useId().replace(/:/g, "-");
+  const [source, setSource] = useState(OFFICIAL_PETROLERO_LOGO);
 
   return (
-    <svg
-      viewBox="0 0 132 75"
-      fill="none"
+    <span
       role="img"
-      aria-label="petrolero"
-      className={`petrolero-logo ${animated ? "petrolero-logo--animated" : ""} ${className}`}
+      aria-label="Petrolero"
+      className={`petrolero-logo petrolero-logo--${variant} ${animated ? "petrolero-logo--animated" : ""} ${className}`}
       {...props}
     >
-      <defs>
-        <clipPath id={revealId}>
-          <rect className="petrolero-logo__reveal" x="12" y="46" width="115" height="26" />
-        </clipPath>
-      </defs>
-      <g fill="currentColor">
-        <path className="petrolero-logo__bar" d="M57 13H82.5C88.9 13 93.4 17.1 93.4 22.65C93.4 28.1 88.9 32.5 82.5 32.5H57Z" />
-        <path className="petrolero-logo__dash" d="M52.1 31.8H57V37.2H52.1C49.2 37.2 47 36.2 47 34.5C47 32.9 49.2 31.8 52.1 31.8Z" />
-        <path className="petrolero-logo__stem" d="M57 37.7H74V45.7H57Z" />
-        <g clipPath={`url(#${revealId})`}>
-          <g className="petrolero-logo__word" transform="translate(17 66) scale(0.01175 -0.01175)">
-            <path d="M1124 532Q1124 363 1073.0 234.0Q1022 105 927.0 37.0Q832 -31 700 -31Q526 -31 403 78V-395H145V1049H383V946Q455 1008 534.5 1043.5Q614 1079 717 1079Q916 1079 1020.0 939.0Q1124 799 1124 532ZM858 528Q858 681 805.0 766.5Q752 852 647 852Q584 852 517.5 822.5Q451 793 403 750V291Q444 254 504.5 225.5Q565 197 629 197Q735 197 796.5 287.5Q858 378 858 528ZM1575 457Q1582 317 1643.0 256.0Q1704 195 1835 195Q1911 195 1968.5 214.0Q2026 233 2069 287L2261 150Q2198 59 2097.5 14.0Q1997 -31 1823 -31Q1564 -31 1436.5 105.0Q1309 241 1309 516Q1309 1079 1813 1079Q2037 1079 2154.5 952.5Q2272 826 2272 584V457ZM2016 635Q2016 874 1807 874Q1738 874 1694.0 850.5Q1650 827 1623.5 780.5Q1597 734 1582 635ZM3085 0Q2981 -31 2866 -31Q2684 -31 2604.0 51.0Q2524 133 2524 317V844H2391V1049H2524V1341H2782V1049H3026V844H2782V350Q2782 252 2812.5 217.0Q2843 182 2899 182Q2970 182 3040 211ZM3877 797Q3837 817 3771 817Q3699 817 3634.5 782.5Q3570 748 3502 682V0H3244V1049H3502V899Q3568 971 3644.0 1018.0Q3720 1065 3814 1065Q3894 1065 3928 1044ZM5037 522Q5037 260 4916.0 114.5Q4795 -31 4535 -31Q4031 -31 4031 522Q4031 788 4152.0 933.5Q4273 1079 4535 1079Q4795 1079 4916.0 933.5Q5037 788 5037 522ZM4770 522Q4770 695 4716.0 774.5Q4662 854 4535 854Q4409 854 4353.0 772.5Q4297 691 4297 522Q4297 354 4352.5 274.5Q4408 195 4535 195Q4660 195 4715.0 273.5Q4770 352 4770 522ZM5274 0V1489H5532V0ZM6036 457Q6043 317 6104.0 256.0Q6165 195 6296 195Q6372 195 6429.5 214.0Q6487 233 6530 287L6722 150Q6659 59 6558.5 14.0Q6458 -31 6284 -31Q6025 -31 5897.5 105.0Q5770 241 5770 516Q5770 1079 6274 1079Q6498 1079 6615.5 952.5Q6733 826 6733 584V457ZM6477 635Q6477 874 6268 874Q6199 874 6155.0 850.5Q6111 827 6084.5 780.5Q6058 734 6043 635ZM7599 797Q7559 817 7493 817Q7421 817 7356.5 782.5Q7292 748 7224 682V0H6966V1049H7224V899Q7290 971 7366.0 1018.0Q7442 1065 7536 1065Q7616 1065 7650 1044ZM8759 522Q8759 260 8638.0 114.5Q8517 -31 8257 -31Q7753 -31 7753 522Q7753 788 7874.0 933.5Q7995 1079 8257 1079Q8517 1079 8638.0 933.5Q8759 788 8759 522ZM8492 522Q8492 695 8438.0 774.5Q8384 854 8257 854Q8131 854 8075.0 772.5Q8019 691 8019 522Q8019 354 8074.5 274.5Q8130 195 8257 195Q8382 195 8437.0 273.5Q8492 352 8492 522Z" />
-          </g>
-        </g>
-      </g>
-    </svg>
+      <img
+        className="petrolero-logo__image"
+        src={source}
+        alt=""
+        aria-hidden="true"
+        draggable={false}
+        onError={() => {
+          if (source !== LOCAL_FALLBACK) setSource(LOCAL_FALLBACK);
+        }}
+      />
+    </span>
   );
 }
