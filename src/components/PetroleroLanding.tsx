@@ -9,7 +9,7 @@ import "./PetroleroLanding.css";
 
 const VIDEO_SRC = "/home/video/oil.webm";
 const MAX_RIPPLES = 12;
-type Panel = "search" | "account" | "cart" | null;
+type Panel = "account" | "cart" | null;
 
 function SearchIcon() {
   return (
@@ -44,6 +44,7 @@ export default function PetroleroLanding() {
   const secondRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  const searchWrapRef = useRef<HTMLDivElement>(null);
   const ripplesRef = useRef<OilRipple[]>([]);
   const lastPointerRef = useRef({ x: -1, y: -1, time: -1 });
   const [videoElement, setVideoElement] = useState<HTMLVideoElement | null>(null);
@@ -52,6 +53,7 @@ export default function PetroleroLanding() {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [phase, setPhase] = useState<0 | 1 | 2 | 3>(0);
   const [panel, setPanel] = useState<Panel>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [searchSubmitted, setSearchSubmitted] = useState(false);
 
@@ -99,9 +101,33 @@ export default function PetroleroLanding() {
       if (event.key === "Escape") setPanel(null);
     };
     document.addEventListener("keydown", handleEscape);
-    if (panel === "search") searchRef.current?.focus();
     return () => document.removeEventListener("keydown", handleEscape);
   }, [panel]);
+
+  useEffect(() => {
+    if (!searchOpen) return;
+
+    searchRef.current?.focus();
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSearchOpen(false);
+        searchWrapRef.current?.querySelector("button")?.focus();
+      }
+    };
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (event.target instanceof Node && !searchWrapRef.current?.contains(event.target)) {
+        setSearchOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", closeOnEscape);
+    document.addEventListener("pointerdown", closeOnOutsideClick);
+    return () => {
+      document.removeEventListener("keydown", closeOnEscape);
+      document.removeEventListener("pointerdown", closeOnOutsideClick);
+    };
+  }, [searchOpen]);
 
   const emitRipple = (event: ReactPointerEvent<HTMLElement>, force = false) => {
     if (reducedMotion || !heroRef.current || panel) return;
@@ -136,8 +162,15 @@ export default function PetroleroLanding() {
   };
 
   const openPanel = (next: Exclude<Panel, null>) => {
+    setSearchOpen(false);
     setSearchSubmitted(false);
     setPanel((previous) => previous === next ? null : next);
+  };
+
+  const toggleSearch = () => {
+    setPanel(null);
+    setSearchSubmitted(false);
+    setSearchOpen((current) => !current);
   };
 
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
@@ -184,16 +217,65 @@ export default function PetroleroLanding() {
 
         <header className="petrolero-home-header">
           <nav className="petrolero-home-actions" aria-label="Действия магазина">
-            <button
-              type="button"
-              className="petrolero-home-icon-button"
-              aria-label="Поиск"
-              aria-expanded={panel === "search"}
-              title="Поиск"
-              onClick={() => openPanel("search")}
+            <div
+              ref={searchWrapRef}
+              className="petrolero-home-search"
+              data-open={searchOpen}
             >
-              <SearchIcon />
-            </button>
+              <form
+                id="petrolero-inline-search"
+                className="petrolero-home-search-field"
+                role="search"
+                aria-label="Поиск по каталогу Petrolero"
+                inert={!searchOpen}
+                onSubmit={handleSearch}
+                onPointerDown={(event) => event.stopPropagation()}
+              >
+                <label className="sr-only" htmlFor="petrolero-home-search-field">
+                  Название масла или вязкость
+                </label>
+                <input
+                  ref={searchRef}
+                  id="petrolero-home-search-field"
+                  type="search"
+                  value={search}
+                  onChange={(event) => {
+                    setSearch(event.target.value);
+                    setSearchSubmitted(false);
+                  }}
+                  placeholder="Название масла или вязкость"
+                  autoComplete="off"
+                  tabIndex={searchOpen ? 0 : -1}
+                />
+                <svg
+                  className="petrolero-home-search-outline"
+                  viewBox="0 0 340 44"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <rect className="petrolero-home-search-outline-glow" x="1.5" y="1.5" width="337" height="41" rx="20.5" pathLength={100} />
+                  <rect className="petrolero-home-search-outline-line" x="1.5" y="1.5" width="337" height="41" rx="20.5" pathLength={100} />
+                  <rect className="petrolero-home-search-outline-head" x="1.5" y="1.5" width="337" height="41" rx="20.5" pathLength={100} />
+                </svg>
+                <span className="petrolero-home-search-status" role="status">
+                  {searchSubmitted ? "Поиск заработает после подключения каталога." : ""}
+                </span>
+              </form>
+
+              <button
+                type="button"
+                className="petrolero-home-icon-button petrolero-home-search-button"
+                aria-label={searchOpen ? "Закрыть поиск" : "Открыть поиск"}
+                aria-controls="petrolero-inline-search"
+                aria-expanded={searchOpen}
+                onClick={toggleSearch}
+              >
+                <svg className="petrolero-home-search-ring" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+                  <circle cx="22" cy="22" r="20.5" pathLength={100} />
+                </svg>
+                <SearchIcon />
+              </button>
+            </div>
             <button
               type="button"
               className="petrolero-home-icon-button"
@@ -242,40 +324,27 @@ export default function PetroleroLanding() {
         </button>
 
         {panel && (
-          <div className="petrolero-home-panel-backdrop" onPointerDown={(event) => event.stopPropagation()} onClick={() => setPanel(null)}>
+          <div
+            className="petrolero-home-panel-backdrop"
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={() => setPanel(null)}
+          >
             <section
               className="petrolero-home-panel"
               role="dialog"
               aria-modal="true"
-              aria-label={panel === "search" ? "Поиск" : panel === "account" ? "Личный кабинет" : "Корзина"}
+              aria-label={panel === "account" ? "Личный кабинет" : "Корзина"}
               onClick={(event) => event.stopPropagation()}
             >
               <div className="petrolero-home-panel-top">
-                <span>{panel === "search" ? "ПОИСК" : panel === "account" ? "ЛИЧНЫЙ КАБИНЕТ" : "КОРЗИНА"}</span>
+                <span>{panel === "account" ? "ЛИЧНЫЙ КАБИНЕТ" : "КОРЗИНА"}</span>
                 <button type="button" onClick={() => setPanel(null)} aria-label="Закрыть">×</button>
               </div>
-              {panel === "search" ? (
-                <form onSubmit={handleSearch} className="petrolero-home-search-form">
-                  <label htmlFor="petrolero-home-search-field">Найти моторное масло</label>
-                  <div>
-                    <input
-                      ref={searchRef}
-                      id="petrolero-home-search-field"
-                      value={search}
-                      onChange={(event) => { setSearch(event.target.value); setSearchSubmitted(false); }}
-                      placeholder="Название или вязкость..."
-                    />
-                    <button type="submit">Найти ↗</button>
-                  </div>
-                  <p>{searchSubmitted ? "Поиск по каталогу подключим вместе с товарами." : "Поиск будет подключён после разработки каталога."}</p>
-                </form>
-              ) : (
-                <p className="petrolero-home-panel-note">
-                  {panel === "account"
-                    ? "Авторизация появится после подключения личных кабинетов."
-                    : "В корзине пока нет товаров. Каталог подключим следующим этапом."}
-                </p>
-              )}
+              <p className="petrolero-home-panel-note">
+                {panel === "account"
+                  ? "Авторизация появится после подключения личных кабинетов."
+                  : "В корзине пока нет товаров. Каталог подключим следующим этапом."}
+              </p>
             </section>
           </div>
         )}
