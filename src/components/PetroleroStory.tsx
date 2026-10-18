@@ -52,21 +52,27 @@ export default function PetroleroStory({
       const viewport = window.innerHeight;
       const progress = clamp01((viewport - rect.top) / (viewport + rect.height));
 
-      glyphs.forEach((glyph, index) => {
-        const fraction = index / Math.max(LETTER_COUNT - 1, 1);
-        const start = 0.15 + fraction * 0.35;
-        const brightness = reducedMotion
-          ? 1
-          : clamp01((progress - start) / 0.052);
+      // Mercedes-like reading progress: all copy remains visible in grey.
+      // A narrow leading edge turns individual letters ivory in reading order.
+      // The effect reverses naturally when the scroll moves upwards.
+      const head = clamp01((progress - 0.17) / 0.42) * LETTER_COUNT;
+      const edge = 3.2; // Soft transition across just a few letters.
 
-        // Every character transitions from graphite grey to warm off-white.
-        const red = Math.round(103 + 141 * brightness);
-        const green = Math.round(103 + 137 * brightness);
-        const blue = Math.round(105 + 129 * brightness);
+      glyphs.forEach((glyph, index) => {
+        const lit = reducedMotion ? 1 : clamp01((head - index) / edge);
+        const red = Math.round(143 + 102 * lit);
+        const green = Math.round(143 + 100 * lit);
+        const blue = Math.round(147 + 95 * lit);
         glyph.style.color = `rgb(${red} ${green} ${blue})`;
       });
 
-      const showcase = progress >= 0.57 && progress < 0.83;
+      // The pinned text must disappear BEFORE the section releases its sticky
+      // positioning, so it never slides behind the fixed navigation.
+      const visible = reducedMotion ? 1 : 1 - clamp01((progress - 0.72) / 0.07);
+      section.style.setProperty("--story-visibility", visible.toFixed(4));
+
+      // The logo waits until the sentence is nearly complete before travelling.
+      const showcase = progress >= 0.57 && progress < 0.77;
       if (showcase !== previousShowcase) {
         previousShowcase = showcase;
         onShowcaseChange(showcase);
