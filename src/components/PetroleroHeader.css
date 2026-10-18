@@ -16,10 +16,10 @@
   opacity: 1;
   pointer-events: none;
   transition:
-    left 1250ms cubic-bezier(.19,.82,.24,1),
-    top 1250ms cubic-bezier(.19,.82,.24,1),
-    width 1250ms cubic-bezier(.19,.82,.24,1),
-    transform 1250ms cubic-bezier(.19,.82,.24,1),
+    left 1750ms cubic-bezier(.22,.76,.19,1),
+    top 1750ms cubic-bezier(.22,.76,.19,1),
+    width 1750ms cubic-bezier(.22,.76,.19,1),
+    transform 1750ms cubic-bezier(.22,.76,.19,1),
     opacity 450ms ease;
   will-change: left, top, transform;
 }
@@ -47,7 +47,7 @@
 }
 
 .petrolero-fixed-brand .petrolero-logo__image {
-  filter: brightness(0) saturate(100%) invert(86%) sepia(22%) saturate(697%) hue-rotate(342deg) brightness(100%) contrast(92%) drop-shadow(0 0 20px rgba(210,154,78,.16));
+  filter: brightness(0) saturate(100%) invert(86%) sepia(22%) saturate(697%) hue-rotate(342deg) brightness(100%) contrast(92%);
 }
 
 .petrolero-fixed-actions-area {
