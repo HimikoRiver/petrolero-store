@@ -12,7 +12,7 @@ function NoteIcon({ name }: { name: EngineNote["icon"] }) {
 export default function EngineAnnotations({ revealedCount }: { revealedCount: number }) {
   return (
     <div className="petrolero-tech-annotations" aria-label="Технологические преимущества двигателя">
-      <svg className="petrolero-tech-connections" viewBox="0 0 1200 620" preserveAspectRatio="none" fill="none" aria-hidden="true">
+      <svg className="petrolero-tech-connections" viewBox="0 0 1200 675" preserveAspectRatio="none" fill="none" aria-hidden="true">
         {ENGINE_NOTES.map((note, i) => (
           <g className={`petrolero-tech-connection ${i < revealedCount ? "is-visible" : ""}`} key={note.id}>
             <path d={note.line} pathLength="100" />
