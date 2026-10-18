@@ -9,8 +9,8 @@
   position: sticky;
   top: 0;
   display: flex;
-  align-items: center;
   min-height: 100svh;
+  align-items: center;
   overflow: hidden;
   background: #000;
 }
@@ -18,50 +18,68 @@
 .petrolero-story-content {
   position: relative;
   z-index: 1;
-  width: min(50%, 820px);
+  width: min(51%, 830px);
   margin-left: clamp(26px, 7.4vw, 145px);
-  padding-top: clamp(40px, 9vh, 110px);
-  padding-bottom: clamp(40px, 9vh, 110px);
+  padding-block: clamp(38px, 7vh, 84px);
 }
 
 .petrolero-story-copy {
-  margin: 0;
-  font-size: clamp(18px, 1.85vw, 32px);
+  font-size: clamp(21px, 2vw, 35px);
+  font-weight: 550;
   line-height: 1.26;
-  letter-spacing: -.035em;
-  font-weight: 560;
-  text-transform: none;
+  letter-spacing: -.03em;
 }
 
-.petrolero-story-line {
-  display: block;
-  color: #f3f0e8;
-  opacity: var(--line-opacity, 0);
-  transform: translateY(calc(var(--line-offset, 1) * 18px));
-  will-change: opacity, transform;
-  margin-bottom: .18em;
+.petrolero-story-paragraph {
+  margin: 0;
 }
 
-.petrolero-story-line--gold {
-  color: #d7b47c;
+.petrolero-story-paragraph + .petrolero-story-paragraph {
+  margin-top: clamp(18px, 2.6vh, 34px);
+}
+
+.petrolero-story-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.petrolero-story-glyph {
+  display: inline;
+  color: rgb(103 103 105);
+  will-change: color;
 }
 
 @media (max-width: 900px) {
-  .petrolero-story-content { width: 54%; margin-left: 5vw; }
-  .petrolero-story-copy { font-size: clamp(17px, 2.45vw, 27px); }
+  .petrolero-story-content {
+    width: 56%;
+    margin-left: 5vw;
+  }
+  .petrolero-story-copy {
+    font-size: clamp(18px, 2.5vw, 27px);
+  }
 }
 
 @media (max-width: 620px) {
-  .petrolero-story { height: 250svh; }
-  .petrolero-story-sticky { align-items: end; }
+  .petrolero-story-sticky {
+    align-items: flex-end;
+  }
   .petrolero-story-content {
     width: calc(100% - 40px);
-    margin: 0 20px 12vh;
+    margin: 0 20px 10vh;
     padding: 0;
   }
-  .petrolero-story-copy { font-size: clamp(17px, 4.7vw, 23px); line-height: 1.27; }
+  .petrolero-story-copy {
+    font-size: clamp(17px, 4.7vw, 23px);
+    line-height: 1.29;
+  }
+  .petrolero-story-paragraph + .petrolero-story-paragraph {
+    margin-top: 20px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .petrolero-story-line { transform: none; will-change: auto; }
+  .petrolero-story-glyph {
+    color: #f4f0ea;
+    will-change: auto;
+  }
 }
