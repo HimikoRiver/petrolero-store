@@ -1,0 +1,76 @@
+.petrolero-fuel-icon {
+  display: block;
+  overflow: visible;
+  flex-shrink: 0;
+  color: #d7b47c;
+}
+
+.petrolero-fuel__bond {
+  stroke-dasharray: 70;
+  stroke-dashoffset: 0;
+}
+
+.petrolero-fuel__ring,
+.petrolero-fuel__core,
+.petrolero-fuel__drop,
+.petrolero-fuel__reflection,
+.petrolero-fuel__indicator {
+  transform-origin: 120px 119px;
+}
+
+.petrolero-fuel-icon--animated .petrolero-fuel__bond {
+  animation: petrolero-fuel-circuit 4.6s ease-in-out infinite;
+}
+
+.petrolero-fuel-icon--animated .petrolero-fuel__bond--2 { animation-delay: -.65s; }
+.petrolero-fuel-icon--animated .petrolero-fuel__bond--3 { animation-delay: -1.3s; }
+.petrolero-fuel-icon--animated .petrolero-fuel__bond--4 { animation-delay: -1.95s; }
+.petrolero-fuel-icon--animated .petrolero-fuel__bond--5 { animation-delay: -2.6s; }
+.petrolero-fuel-icon--animated .petrolero-fuel__bond--6 { animation-delay: -3.25s; }
+
+.petrolero-fuel-icon--animated .petrolero-fuel__core {
+  animation: petrolero-fuel-core 4.6s ease-in-out infinite;
+}
+
+.petrolero-fuel-icon--animated .petrolero-fuel__reflection {
+  animation: petrolero-fuel-reflection 4.6s ease-in-out infinite;
+}
+
+.petrolero-fuel-icon--animated .petrolero-fuel__indicator {
+  animation: petrolero-fuel-indicator 4.6s ease-in-out infinite;
+  transform-origin: 208px 197px;
+}
+
+.petrolero-fuel-icon:hover .petrolero-fuel__ring {
+  filter: drop-shadow(0 0 2px rgba(245, 190, 101, .55));
+}
+
+@keyframes petrolero-fuel-circuit {
+  0%, 9%, 82%, 100% { opacity: .52; stroke-dashoffset: 0; }
+  17% { opacity: 1; stroke-dashoffset: 6; }
+  25% { opacity: .95; stroke-dashoffset: 0; }
+}
+
+@keyframes petrolero-fuel-core {
+  0%, 75%, 100% { filter: drop-shadow(0 0 0 rgba(232, 174, 89, 0)); }
+  38%, 48% { filter: drop-shadow(0 0 5px rgba(240, 180, 86, .33)); }
+}
+
+@keyframes petrolero-fuel-reflection {
+  0%, 20%, 70%, 100% { opacity: .3; }
+  37%, 48% { opacity: 1; }
+}
+
+@keyframes petrolero-fuel-indicator {
+  0%, 18%, 75%, 100% { transform: translateY(0); opacity: .72; }
+  39%, 47% { transform: translateY(5px); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petrolero-fuel-icon--animated .petrolero-fuel__bond,
+  .petrolero-fuel-icon--animated .petrolero-fuel__core,
+  .petrolero-fuel-icon--animated .petrolero-fuel__reflection,
+  .petrolero-fuel-icon--animated .petrolero-fuel__indicator {
+    animation: none;
+  }
+}
