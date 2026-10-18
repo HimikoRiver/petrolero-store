@@ -1,15 +1,19 @@
+/* A Mercedes-Maybach-inspired pinned reading sequence.
+   Only the colour of individual glyphs advances with scroll. */
 .petrolero-story {
   position: relative;
-  height: 250svh;
+  height: 280svh;
   background: #000;
-  color: #f4f0ea;
+  color: #f5f2ea;
 }
 
 .petrolero-story-sticky {
   position: sticky;
   top: 0;
   display: flex;
-  min-height: 100svh;
+  box-sizing: border-box;
+  height: 100svh;
+  width: 100%;
   align-items: center;
   overflow: hidden;
   background: #000;
@@ -17,17 +21,22 @@
 
 .petrolero-story-content {
   position: relative;
+  box-sizing: border-box;
   z-index: 1;
-  width: min(51%, 830px);
+  width: min(50%, 810px);
   margin-left: clamp(26px, 7.4vw, 145px);
-  padding-block: clamp(38px, 7vh, 84px);
+  padding-block: clamp(42px, 7vh, 78px);
+  opacity: var(--story-visibility, 1);
+  will-change: opacity;
 }
 
 .petrolero-story-copy {
-  font-size: clamp(21px, 2vw, 35px);
-  font-weight: 550;
-  line-height: 1.26;
-  letter-spacing: -.03em;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(18px, min(2vw, 3.4svh), 35px);
+  font-weight: 400;
+  line-height: 1.28;
+  letter-spacing: -.028em;
 }
 
 .petrolero-story-paragraph {
@@ -35,7 +44,7 @@
 }
 
 .petrolero-story-paragraph + .petrolero-story-paragraph {
-  margin-top: clamp(18px, 2.6vh, 34px);
+  margin-top: clamp(16px, 2.2vh, 27px);
 }
 
 .petrolero-story-word {
@@ -45,41 +54,44 @@
 
 .petrolero-story-glyph {
   display: inline;
-  color: rgb(103 103 105);
-  will-change: color;
+  color: rgb(143 143 147);
 }
 
 @media (max-width: 900px) {
   .petrolero-story-content {
-    width: 56%;
+    width: 57%;
     margin-left: 5vw;
   }
+
   .petrolero-story-copy {
-    font-size: clamp(18px, 2.5vw, 27px);
+    font-size: clamp(17px, min(2.35vw, 3.3svh), 27px);
   }
 }
 
 @media (max-width: 620px) {
-  .petrolero-story-sticky {
-    align-items: flex-end;
-  }
   .petrolero-story-content {
     width: calc(100% - 40px);
-    margin: 0 20px 10vh;
-    padding: 0;
+    margin-inline: 20px;
+    padding-block: 50px 24px;
   }
+
   .petrolero-story-copy {
-    font-size: clamp(17px, 4.7vw, 23px);
-    line-height: 1.29;
+    font-size: clamp(16px, min(4.15vw, 2.8svh), 22px);
+    line-height: 1.35;
+    letter-spacing: -.02em;
   }
+
   .petrolero-story-paragraph + .petrolero-story-paragraph {
-    margin-top: 20px;
+    margin-top: 18px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .petrolero-story-glyph {
-    color: #f4f0ea;
+  .petrolero-story-content {
     will-change: auto;
+  }
+
+  .petrolero-story-glyph {
+    color: #f5f2ea;
   }
 }
