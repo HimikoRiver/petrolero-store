@@ -2,7 +2,7 @@
    Only the colour of individual glyphs advances with scroll. */
 .petrolero-story {
   position: relative;
-  height: 280svh;
+  height: 390svh;
   background: #000;
   color: #f5f2ea;
 }
@@ -16,13 +16,61 @@
   width: 100%;
   align-items: center;
   overflow: hidden;
+  isolation: isolate;
   background: #000;
+}
+
+/* The engine photograph stays hidden during reading and the logo's flight. */
+.petrolero-story-sticky::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  background: #000 url("/home/images/fon2.webp") center right / cover no-repeat;
+  opacity: 0;
+  transform: translate3d(3%, 0, 0) scale(1.035);
+  transition:
+    opacity 1100ms ease 0ms,
+    transform 1900ms cubic-bezier(.18,.72,.23,1) 0ms;
+}
+
+/* Darken the reading area, while leaving the gold mechanics visible on the right. */
+.petrolero-story-sticky::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(0,0,0,.97) 0%,
+    rgba(0,0,0,.94) 28%,
+    rgba(0,0,0,.78) 46%,
+    rgba(0,0,0,.22) 75%,
+    rgba(0,0,0,.06) 100%
+  );
+  opacity: 0;
+  transition: opacity 1100ms ease 0ms;
+}
+
+/* 1.75 s return flight + a small buffer before the image can emerge.
+   Reversing the scroll hides it immediately without a delay. */
+.petrolero-story[data-background-visible="true"] .petrolero-story-sticky::before {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  transition-delay: 1850ms;
+}
+
+.petrolero-story[data-background-visible="true"] .petrolero-story-sticky::after {
+  opacity: 1;
+  transition-delay: 1850ms;
 }
 
 .petrolero-story-content {
   position: relative;
   box-sizing: border-box;
-  z-index: 1;
+  z-index: 2;
   width: min(50%, 810px);
   margin-left: clamp(26px, 7.4vw, 145px);
   padding-block: clamp(42px, 7vh, 78px);
@@ -58,6 +106,9 @@
 }
 
 @media (max-width: 900px) {
+  .petrolero-story-sticky::before {
+    background-position: 64% center;
+  }
   .petrolero-story-content {
     width: 57%;
     margin-left: 5vw;
@@ -69,6 +120,13 @@
 }
 
 @media (max-width: 620px) {
+  .petrolero-story-sticky::before {
+    background-position: 72% center;
+  }
+
+  .petrolero-story-sticky::after {
+    background: linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.84));
+  }
   .petrolero-story-content {
     width: calc(100% - 40px);
     margin-inline: 20px;
@@ -87,6 +145,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .petrolero-story-sticky::before,
+  .petrolero-story-sticky::after {
+    transition: none;
+  }
   .petrolero-story-content {
     will-change: auto;
   }
