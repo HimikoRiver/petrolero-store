@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import PetroleroHeader from "./PetroleroHeader";
 import PetroleroStory from "./PetroleroStory";
+import PetroleroThirdSection from "./PetroleroThirdSection";
 import OilVideoSurface from "./OilVideoSurface";
 import type { OilRipple } from "./OilVideoSurface";
 import "./PetroleroLanding.css";
@@ -169,6 +170,8 @@ export default function PetroleroLanding() {
       <div ref={storyRef}>
         <PetroleroStory onShowcaseChange={handleShowcaseChange} reducedMotion={reducedMotion} />
       </div>
+
+      <PetroleroThirdSection />
     </main>
   );
 }
