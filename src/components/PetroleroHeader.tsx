@@ -99,7 +99,7 @@ export default function PetroleroHeader({ phase, showcase, reducedMotion }: Petr
     <>
       <div className="petrolero-fixed-header" data-showcase={showcase} data-phase={phase}>
         <div className="petrolero-fixed-brand">
-          <PetroleroLogo animated={!reducedMotion} shine={showcase} variant="gold" />
+          <PetroleroLogo animated={!reducedMotion} variant="gold" />
         </div>
         <header className="petrolero-fixed-actions-area">
           <nav className="petrolero-nav-actions" aria-label="Действия магазина">
