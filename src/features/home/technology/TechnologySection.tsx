@@ -9,7 +9,7 @@ import "./TechnologySection.css";
 const VIDEO_SRC = "/home/video/block4.webm";
 
 export default function TechnologySection({ reducedMotion = false }: { reducedMotion?: boolean }) {
-  const sectionRef = useRef<HTMLElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const explicitlyPausedRef = useRef(false);
   const [paused, setPaused] = useState(true);
@@ -17,9 +17,9 @@ export default function TechnologySection({ reducedMotion = false }: { reducedMo
   const [videoError, setVideoError] = useState(false);
 
   useEffect(() => {
-    const section = sectionRef.current;
+    const stage = stageRef.current;
     const video = videoRef.current;
-    if (!section || !video) return;
+    if (!stage || !video) return;
 
     let isMounted = true;
     const observer = new IntersectionObserver(
@@ -37,7 +37,7 @@ export default function TechnologySection({ reducedMotion = false }: { reducedMo
       },
       { threshold: 0.25 },
     );
-    observer.observe(section);
+    observer.observe(stage);
     return () => {
       isMounted = false;
       observer.disconnect();
@@ -64,7 +64,7 @@ export default function TechnologySection({ reducedMotion = false }: { reducedMo
   };
 
   return (
-    <section ref={sectionRef} className="petrolero-technology" aria-label="Подбор масла и технологии защиты двигателя">
+    <section className="petrolero-technology" aria-label="Подбор масла и технологии защиты двигателя">
       <div className="petrolero-tech-inner">
         <div className="petrolero-tech-section-heading">
           <span className="petrolero-tech-heading-line" aria-hidden="true" />
@@ -80,7 +80,7 @@ export default function TechnologySection({ reducedMotion = false }: { reducedMo
           <span className="petrolero-tech-heading-line" aria-hidden="true" />
         </div>
 
-        <div className={`petrolero-tech-stage ${paused ? "is-paused" : "is-playing"}`}>
+        <div ref={stageRef} className={`petrolero-tech-stage ${paused ? "is-paused" : "is-playing"}`}>
           <video
             ref={videoRef}
             className="petrolero-tech-video"
