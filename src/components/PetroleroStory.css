@@ -24,21 +24,12 @@
   padding-bottom: clamp(40px, 9vh, 110px);
 }
 
-.petrolero-story-overline {
-  margin: 0 0 clamp(22px, 3vw, 52px);
-  color: #d7b47c;
-  font-size: clamp(10px, .8vw, 12px);
-  font-weight: 700;
-  letter-spacing: .23em;
-  opacity: var(--story-caption-opacity, 0);
-}
-
 .petrolero-story-copy {
   margin: 0;
-  font-size: clamp(23px, 2.45vw, 45px);
-  line-height: 1.32;
+  font-size: clamp(18px, 1.85vw, 32px);
+  line-height: 1.26;
   letter-spacing: -.035em;
-  font-weight: 600;
+  font-weight: 560;
   text-transform: none;
 }
 
@@ -48,7 +39,7 @@
   opacity: var(--line-opacity, 0);
   transform: translateY(calc(var(--line-offset, 1) * 18px));
   will-change: opacity, transform;
-  margin-bottom: .32em;
+  margin-bottom: .18em;
 }
 
 .petrolero-story-line--gold {
@@ -57,7 +48,7 @@
 
 @media (max-width: 900px) {
   .petrolero-story-content { width: 54%; margin-left: 5vw; }
-  .petrolero-story-copy { font-size: clamp(22px, 2.9vw, 35px); }
+  .petrolero-story-copy { font-size: clamp(17px, 2.45vw, 27px); }
 }
 
 @media (max-width: 620px) {
@@ -68,8 +59,7 @@
     margin: 0 20px 12vh;
     padding: 0;
   }
-  .petrolero-story-copy { font-size: clamp(19px, 4.5vw, 27px); line-height: 1.28; }
-  .petrolero-story-overline { margin-bottom: 23px; }
+  .petrolero-story-copy { font-size: clamp(17px, 4.7vw, 23px); line-height: 1.27; }
 }
 
 @media (prefers-reduced-motion: reduce) {
