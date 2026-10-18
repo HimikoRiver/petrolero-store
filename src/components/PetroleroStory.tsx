@@ -50,12 +50,14 @@ export default function PetroleroStory({
       frame = 0;
       const rect = section.getBoundingClientRect();
       const viewport = window.innerHeight;
-      const progress = clamp01((viewport - rect.top) / (viewport + rect.height));
+      // Measure only the section's sticky scrolling interval, so the
+      // late background reveal still happens while the screen is visible.
+      const progress = clamp01(-rect.top / Math.max(rect.height - viewport, 1));
 
       // Mercedes-like reading progress: all copy remains visible in grey.
       // A narrow leading edge turns individual letters ivory in reading order.
       // The effect reverses naturally when the scroll moves upwards.
-      const head = clamp01((progress - 0.17) / 0.42) * LETTER_COUNT;
+      const head = clamp01((progress - 0.02) / 0.50) * LETTER_COUNT;
       const edge = 3.2; // Soft transition across just a few letters.
 
       glyphs.forEach((glyph, index) => {
@@ -68,11 +70,11 @@ export default function PetroleroStory({
 
       // The pinned text must disappear BEFORE the section releases its sticky
       // positioning, so it never slides behind the fixed navigation.
-      const visible = reducedMotion ? 1 : 1 - clamp01((progress - 0.72) / 0.07);
+      const visible = reducedMotion ? 1 : 1 - clamp01((progress - 0.61) / 0.10);
       section.style.setProperty("--story-visibility", visible.toFixed(4));
 
       // The logo waits until the sentence is nearly complete before travelling.
-      const showcase = progress >= 0.57 && progress < 0.77;
+      const showcase = progress >= 0.53 && progress < 0.69;
       if (showcase !== previousShowcase) {
         previousShowcase = showcase;
         onShowcaseChange(showcase);
@@ -81,7 +83,7 @@ export default function PetroleroStory({
       // The engine appears late in the story, after the logo begins its
       // return to the upper-left corner. CSS waits for that flight to finish
       // before revealing the image, even after a fast scroll.
-      const revealEngine = progress >= 0.80 && !showcase;
+      const revealEngine = progress >= 0.76 && !showcase;
       section.dataset.backgroundVisible = revealEngine ? "true" : "false";
     };
 
