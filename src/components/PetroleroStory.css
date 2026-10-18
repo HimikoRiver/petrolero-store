@@ -18,7 +18,7 @@
 .petrolero-story-content {
   position: relative;
   z-index: 1;
-  width: min(49%, 800px);
+  width: min(50%, 820px);
   margin-left: clamp(26px, 7.4vw, 145px);
   padding-top: clamp(40px, 9vh, 110px);
   padding-bottom: clamp(40px, 9vh, 110px);
@@ -35,11 +35,11 @@
 
 .petrolero-story-copy {
   margin: 0;
-  font-size: clamp(30px, 3.5vw, 70px);
-  line-height: 1.16;
-  letter-spacing: -.05em;
-  font-weight: 750;
-  text-transform: uppercase;
+  font-size: clamp(23px, 2.45vw, 45px);
+  line-height: 1.32;
+  letter-spacing: -.035em;
+  font-weight: 600;
+  text-transform: none;
 }
 
 .petrolero-story-line {
@@ -48,6 +48,7 @@
   opacity: var(--line-opacity, 0);
   transform: translateY(calc(var(--line-offset, 1) * 18px));
   will-change: opacity, transform;
+  margin-bottom: .32em;
 }
 
 .petrolero-story-line--gold {
@@ -56,7 +57,7 @@
 
 @media (max-width: 900px) {
   .petrolero-story-content { width: 54%; margin-left: 5vw; }
-  .petrolero-story-copy { font-size: clamp(24px, 3.8vw, 46px); }
+  .petrolero-story-copy { font-size: clamp(22px, 2.9vw, 35px); }
 }
 
 @media (max-width: 620px) {
@@ -67,7 +68,7 @@
     margin: 0 20px 12vh;
     padding: 0;
   }
-  .petrolero-story-copy { font-size: clamp(24px, 6vw, 36px); line-height: 1.25; }
+  .petrolero-story-copy { font-size: clamp(19px, 4.5vw, 27px); line-height: 1.28; }
   .petrolero-story-overline { margin-bottom: 23px; }
 }
 
