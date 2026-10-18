@@ -73,18 +73,19 @@
 }
 
 .petrolero-home-eyebrow {
-  display: table;
   max-width: 100%;
   margin: 0 auto clamp(18px, 3vh, 34px);
-  padding: 7px 24px;
-  background: linear-gradient(90deg, transparent, rgba(0,0,0,.74) 24%, rgba(0,0,0,.78) 76%, transparent);
-  backdrop-filter: blur(3px);
+  padding: 0;
+  background: none;
   color: #f1c992;
   font-size: clamp(10px, .85vw, 13px);
   font-weight: 700;
   letter-spacing: clamp(.16em, .32vw, .34em);
   line-height: 1.6;
-  text-shadow: 0 2px 18px #000;
+  text-shadow:
+    0 1px 3px rgba(0,0,0,.95),
+    0 2px 12px rgba(0,0,0,.92),
+    0 0 30px rgba(0,0,0,.68);
 }
 
 .petrolero-home-copy h1 {
@@ -110,18 +111,19 @@
 }
 
 .petrolero-home-slogan {
-  display: table;
   max-width: 100%;
   margin: clamp(25px, 3.2vw, 43px) auto 0;
-  padding: 8px 25px;
-  background: linear-gradient(90deg, transparent, rgba(0,0,0,.75) 22%, rgba(0,0,0,.78) 78%, transparent);
-  backdrop-filter: blur(3px);
+  padding: 0;
+  background: none;
   color: rgba(255,250,238,.82);
   font-size: clamp(9px, 1vw, 13px);
   font-weight: 650;
   letter-spacing: .19em;
   line-height: 1.8;
-  text-shadow: 0 2px 15px #000;
+  text-shadow:
+    0 1px 3px rgba(0,0,0,.97),
+    0 2px 12px rgba(0,0,0,.92),
+    0 0 30px rgba(0,0,0,.72);
 }
 
 .petrolero-home-scroll {
