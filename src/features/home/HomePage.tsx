@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import SiteHeader from "./header/SiteHeader";
 import HeroSection from "./hero/HeroSection";
 import BrandStory from "./story/BrandStory";
-import AdvantagesSection from "./advantages/AdvantagesSection";
 import useReducedMotion from "./hooks/useReducedMotion";
 
 export default function HomePage() {
@@ -41,7 +40,6 @@ export default function HomePage() {
       <div ref={storyRef}>
         <BrandStory onShowcaseChange={handleShowcaseChange} reducedMotion={reducedMotion} />
       </div>
-      <AdvantagesSection />
     </main>
   );
 }

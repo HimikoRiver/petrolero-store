@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import "./BrandStory.css";
 import { PARAGRAPHS } from "./copy";
+import AdvantagesSection from "../advantages/AdvantagesSection";
 
 type PetroleroStoryProps = {
   onShowcaseChange: (showcase: boolean) => void;
@@ -48,11 +49,10 @@ export default function BrandStory({
       // late background reveal still happens while the screen is visible.
       const progress = clamp01(-rect.top / Math.max(rect.height - viewport, 1));
 
-      // Mercedes-like reading progress: all copy remains visible in grey.
-      // A narrow leading edge turns individual letters ivory in reading order.
-      // The effect reverses naturally when the scroll moves upwards.
-      const head = clamp01((progress - 0.02) / 0.50) * LETTER_COUNT;
-      const edge = 3.2; // Soft transition across just a few letters.
+      // Text remains grey until the reading progress brings each letter
+      // to white. The final character is fully white before the logo returns.
+      const edge = 3.2;
+      const head = clamp01((progress - 0.02) / 0.49) * (LETTER_COUNT + edge);
 
       glyphs.forEach((glyph, index) => {
         const lit = reducedMotion ? 1 : clamp01((head - index) / edge);
@@ -62,23 +62,19 @@ export default function BrandStory({
         glyph.style.color = `rgb(${red} ${green} ${blue})`;
       });
 
-      // The pinned text must disappear BEFORE the section releases its sticky
-      // positioning, so it never slides behind the fixed navigation.
-      const visible = reducedMotion ? 1 : 1 - clamp01((progress - 0.61) / 0.10);
-      section.style.setProperty("--story-visibility", visible.toFixed(4));
-
-      // The logo waits until the sentence is nearly complete before travelling.
-      const showcase = progress >= 0.53 && progress < 0.69;
+      // The logo moves halfway through the text's reveal, stays while the
+      // last letters turn white, then returns before the benefits appear.
+      const showcase = !reducedMotion && progress >= 0.28 && progress < 0.56;
       if (showcase !== previousShowcase) {
         previousShowcase = showcase;
         onShowcaseChange(showcase);
       }
 
-      // The engine appears late in the story, after the logo begins its
-      // return to the upper-left corner. CSS waits for that flight to finish
-      // before revealing the image, even after a fast scroll.
-      const revealEngine = progress >= 0.76 && !showcase;
-      section.dataset.backgroundVisible = revealEngine ? "true" : "false";
+      // Switch scenes on the same sticky viewport, not the next section.
+      // CSS allows the header's return flight to finish first. Scrolling
+      // upward reverses the state and restores the reading sequence.
+      section.dataset.advantagesVisible =
+        progress >= 0.56 ? "true" : "false";
     };
 
     const schedule = () => {
@@ -127,6 +123,7 @@ export default function BrandStory({
             ))}
           </div>
         </div>
+        <AdvantagesSection />
       </div>
     </section>
   );

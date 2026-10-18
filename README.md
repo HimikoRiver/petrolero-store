@@ -21,20 +21,21 @@ npm run dev
 - `src/features/home/` — композиция главной страницы.
 - `src/features/home/hero/` — первый экран, видео и WebGL-волны.
 - `src/features/home/header/` — закреплённая шапка, логотип и поиск.
-- `src/features/home/story/` — скролл-текст и фон двигателя.
-- `src/features/home/advantages/` — будущий блок преимуществ.
+- `src/features/home/story/` — скролл-текст, анимация логотипа и переключение на сцену преимуществ.
+- `src/features/home/advantages/` — семь карточек преимуществ, их данные и стили.
 - `src/features/menu/` — независимый экран меню, карточки и стили.
 - `src/features/molecules/` — независимый экран молекул, canvas и бутылочки.
 - `public/menu/images/` — карточки меню.
 - `public/molecules/images/` — бутылочки.
-- `public/home/advantages/icons/` — место для будущих WebP-иконок.
+- `public/home/images/icons/` — локальные WebP-иконки преимуществ (ico1–ico7).
 
 ## Локальные медиа
 
-Два файла использует главная страница, но в GitHub **они не закоммичены**. Не перемещайте их после `git pull`:
+Ниже перечислены локальные файлы, которые главная страница использует, но которых **нет в GitHub**. Не перемещайте их после `git pull`:
 
 - `public/home/video/oil.webm` — интерактивный фон первого экрана.
 - `public/home/images/fon2.webp` — фон второго экрана.
+- `public/home/images/icons/ico1.webp` ... `ico7.webp` — семь иконок преимуществ.
 
 В новых блоках размещайте медиа в тематических папках и обновляйте публичный URL в компонентах.
 
