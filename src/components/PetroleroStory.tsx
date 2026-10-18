@@ -10,12 +10,14 @@ type PetroleroStoryProps = {
 };
 
 const LINES = [
-  "ВНУТРИ ДВИГАТЕЛЯ",
-  "НЕТ ПАУЗ.",
-  "ТРЕНИЕ. ДАВЛЕНИЕ.",
-  "ТЕМПЕРАТУРА.",
-  "В ЭТИХ УСЛОВИЯХ",
-  "РАБОТАЕТ МАСЛО.",
+  "Petrolero — международная команда,",
+  "увлечённая химией, автомобилями и инженерными технологиями.",
+  "Мы создаём масла и присадки,",
+  "сочетая современные компоненты с разработками DuoZinc и REACORE.",
+  "Наша задача — снижать трение и износ,",
+  "поддерживать чистоту двигателя",
+  "и сохранять стабильную работу его механизмов",
+  "при ежедневных поездках и серьёзных нагрузках.",
 ] as const;
 
 const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
@@ -52,17 +54,17 @@ export default function PetroleroStory({
 
       lineRefs.current.forEach((line, index) => {
         if (!line) return;
-        const begin = 0.10 + index * 0.075;
+        const begin = 0.12 + index * 0.068;
         const revealed = reducedMotion
           ? 1
-          : clamp01((progress - begin) / 0.12);
+          : clamp01((progress - begin) / 0.14);
         // Fade the whole narrative out as the black section finishes.
         const exit = reducedMotion ? 1 : 1 - clamp01((progress - 0.82) / 0.13);
         line.style.setProperty("--line-opacity", (revealed * exit).toFixed(4));
         line.style.setProperty("--line-offset", (1 - revealed).toFixed(4));
       });
 
-      const showcase = progress >= 0.61 && progress < 0.89;
+      const showcase = progress >= 0.69 && progress < 0.88;
       if (showcase !== wasShowcase) {
         wasShowcase = showcase;
         onShowcaseChange(showcase);
@@ -88,15 +90,15 @@ export default function PetroleroStory({
     <section
       ref={sectionRef}
       className="petrolero-story"
-      aria-label="О работе моторного масла"
+      aria-label="О компании Petrolero"
     >
       <div className="petrolero-story-sticky">
         <div className="petrolero-story-content">
-          <p className="petrolero-story-overline">01 / ЧТО ПРОИСХОДИТ ВНУТРИ</p>
+          <p className="petrolero-story-overline">01 / О PETROLERO</p>
           <h2 className="petrolero-story-copy">
             {LINES.map((line, index) => (
               <span
-                className={`petrolero-story-line ${index === 1 || index === 5 ? "petrolero-story-line--gold" : ""}`}
+                className={`petrolero-story-line ${index === 3 || index === 7 ? "petrolero-story-line--gold" : ""}`}
                 key={line}
                 ref={(node) => {
                   lineRefs.current[index] = node;
