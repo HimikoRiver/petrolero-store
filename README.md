@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Petrolero Store
 
-## Getting Started
+Интернет-магазин моторных масел Petrolero. Next.js 16 (App Router), React 19, TypeScript и Tailwind CSS 4.
 
-First, run the development server:
+## Запуск
 
-```bash
+```cmd
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Главная: http://localhost:3000/
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Сохранённые самостоятельные экраны:
+- http://localhost:3000/menu-demo — карточки меню.
+- http://localhost:3000/molecules-demo — молекулы и бутылочки.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Архитектура
 
-## Learn More
+- `src/app/` — исключительно роуты и корневой layout.
+- `src/features/home/` — композиция главной страницы.
+- `src/features/home/hero/` — первый экран, видео и WebGL-волны.
+- `src/features/home/header/` — закреплённая шапка, логотип и поиск.
+- `src/features/home/story/` — скролл-текст и фон двигателя.
+- `src/features/home/advantages/` — будущий блок преимуществ.
+- `src/features/menu/` — независимый экран меню, карточки и стили.
+- `src/features/molecules/` — независимый экран молекул, canvas и бутылочки.
+- `public/menu/images/` — карточки меню.
+- `public/molecules/images/` — бутылочки.
+- `public/home/advantages/icons/` — место для будущих WebP-иконок.
 
-To learn more about Next.js, take a look at the following resources:
+## Локальные медиа
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Два файла использует главная страница, но в GitHub **они не закоммичены**. Не перемещайте их после `git pull`:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `public/home/video/oil.webm` — интерактивный фон первого экрана.
+- `public/home/images/fon2.webp` — фон второго экрана.
 
-## Deploy on Vercel
+В новых блоках размещайте медиа в тематических папках и обновляйте публичный URL в компонентах.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Проверки
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```cmd
+npm run lint
+npm run build
+```
+
+Рефакторинг выполнен в `feature/liquid-intro-prototype`. До него создана резервная ветка `backup/pre-refactor-2026-10-18`.

@@ -1,7 +1,7 @@
-import "./PetroleroThirdSection.css";
+import "./AdvantagesSection.css";
 
 /** The third screen is deliberately empty until the next design stage. */
-export default function PetroleroThirdSection() {
+export default function AdvantagesSection() {
   return (
     <section
       id="petrolero-third-section"

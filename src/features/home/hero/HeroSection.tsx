@@ -1,45 +1,33 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
-import PetroleroHeader from "./PetroleroHeader";
-import PetroleroStory from "./PetroleroStory";
-import PetroleroThirdSection from "./PetroleroThirdSection";
 import OilVideoSurface from "./OilVideoSurface";
 import type { OilRipple } from "./OilVideoSurface";
-import "./PetroleroLanding.css";
+import "./HeroSection.css";
 
-const VIDEO_SRC = "/home/video/oil.webm";
+const VIDEO_SRC = "/home/video/oil.webm"; // Local asset; not committed to GitHub.
 const MAX_RIPPLES = 12;
 
-export default function PetroleroLanding() {
+type HeroSectionProps = {
+  phase: 0 | 1 | 2 | 3;
+  reducedMotion: boolean;
+  onNext: () => void;
+};
+
+export default function HeroSection({ phase, reducedMotion, onNext }: HeroSectionProps) {
   const heroRef = useRef<HTMLElement>(null);
-  const storyRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const ripplesRef = useRef<OilRipple[]>([]);
   const lastPointerRef = useRef({ x: -1, y: -1, time: -1 });
-
   const [videoElement, setVideoElement] = useState<HTMLVideoElement | null>(null);
   const [videoReady, setVideoReady] = useState(false);
   const [webglReady, setWebglReady] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const [phase, setPhase] = useState<0 | 1 | 2 | 3>(0);
-  const [showcase, setShowcase] = useState(false);
-
-  const handleShowcaseChange = useCallback((active: boolean) => {
-    setShowcase(active);
-  }, []);
 
   useEffect(() => {
     const canvas = document.createElement("canvas");
     setWebglReady(Boolean(canvas.getContext("webgl2") || canvas.getContext("webgl")));
     setVideoElement(videoRef.current);
-
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReducedMotion(query.matches);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
   }, []);
 
   useEffect(() => {
@@ -49,33 +37,10 @@ export default function PetroleroLanding() {
       video.pause();
     } else {
       void video.play().catch(() => {
-        // Autoplay is decorative; the video itself remains the fallback.
+        // Keep the video as the fallback when autoplay is restricted.
       });
     }
   }, [reducedMotion, videoReady]);
-
-  useEffect(() => {
-    if (reducedMotion) {
-      setPhase(3);
-      return;
-    }
-
-    // If opening the page on an existing scroll position, do not leave
-    // the brand centered over the second section.
-    if (window.scrollY > window.innerHeight * 0.35) {
-      setPhase(3);
-      return;
-    }
-
-    setPhase(0);
-    const timers = [
-      setTimeout(() => setPhase(1), 450),
-      setTimeout(() => setPhase(2), 2300),
-      setTimeout(() => setPhase(3), 3300),
-    ];
-
-    return () => timers.forEach(clearTimeout);
-  }, [reducedMotion]);
 
   const emitRipple = (event: ReactPointerEvent<HTMLElement>, force = false) => {
     if (reducedMotion || !heroRef.current) return;
@@ -109,10 +74,8 @@ export default function PetroleroLanding() {
     emitRipple(event, true);
   };
 
-  return (
-    <main className="petrolero-home">
-      <PetroleroHeader phase={phase} showcase={showcase} reducedMotion={reducedMotion} />
 
+  return (
       <section
         ref={heroRef}
         className="petrolero-home-hero"
@@ -156,22 +119,12 @@ export default function PetroleroLanding() {
           className="petrolero-home-scroll"
           type="button"
           aria-label="Перейти ко второму экрану"
-          onClick={() => storyRef.current?.scrollIntoView({
-            behavior: reducedMotion ? "instant" : "smooth",
-            block: "start",
-          })}
+          onClick={onNext}
         >
           <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="miter" aria-hidden="true">
             <path d="M12 3v17m-7-7 7 7 7-7" />
           </svg>
         </button>
       </section>
-
-      <div ref={storyRef}>
-        <PetroleroStory onShowcaseChange={handleShowcaseChange} reducedMotion={reducedMotion} />
-      </div>
-
-      <PetroleroThirdSection />
-    </main>
   );
 }

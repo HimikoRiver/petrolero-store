@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
-import PetroleroLogo from "./PetroleroLogo";
-import "./PetroleroHeader.css";
+import BrandLogo from "./BrandLogo";
+import { SearchIcon, AccountIcon, CartIcon } from "./HeaderIcons";
+import "./SiteHeader.css";
 
 type Panel = "account" | "cart" | null;
 
@@ -13,35 +14,7 @@ type PetroleroHeaderProps = {
   reducedMotion: boolean;
 };
 
-function SearchIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="square" aria-hidden="true">
-      <circle cx="10.8" cy="10.8" r="6.6" />
-      <path d="m16 16 5 5" />
-    </svg>
-  );
-}
-
-function AccountIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="square" aria-hidden="true">
-      <circle cx="12" cy="7.9" r="3.35" />
-      <path d="M4.7 20c0-4.15 2.9-6.5 7.3-6.5s7.3 2.35 7.3 6.5" />
-    </svg>
-  );
-}
-
-function CartIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="miter" aria-hidden="true">
-      <path d="M2.5 4.5h2.6l2.05 10.2h11.7L21 7H6" />
-      <circle cx="9.1" cy="19.4" r="1.2" />
-      <circle cx="17.3" cy="19.4" r="1.2" />
-    </svg>
-  );
-}
-
-export default function PetroleroHeader({ phase, showcase, reducedMotion }: PetroleroHeaderProps) {
+export default function SiteHeader({ phase, showcase, reducedMotion }: PetroleroHeaderProps) {
   const searchRef = useRef<HTMLInputElement>(null);
   const searchWrapRef = useRef<HTMLDivElement>(null);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -99,7 +72,7 @@ export default function PetroleroHeader({ phase, showcase, reducedMotion }: Petr
     <>
       <div className="petrolero-fixed-header" data-showcase={showcase} data-phase={phase}>
         <div className="petrolero-fixed-brand">
-          <PetroleroLogo animated={!reducedMotion} variant="gold" />
+          <BrandLogo animated={!reducedMotion} variant="gold" />
         </div>
         <header className="petrolero-fixed-actions-area">
           <nav className="petrolero-nav-actions" aria-label="Действия магазина">

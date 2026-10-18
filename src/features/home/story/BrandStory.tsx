@@ -1,19 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import "./PetroleroStory.css";
+import "./BrandStory.css";
+import { PARAGRAPHS } from "./copy";
 
 type PetroleroStoryProps = {
   onShowcaseChange: (showcase: boolean) => void;
   reducedMotion: boolean;
 };
-
-/* Full, readable phrases; wrapping is handled by the browser, not forced lines. */
-const PARAGRAPHS = [
-  "Мы — международная команда инженеров и энтузиастов.",
-  "Нас объединяют химия, автомобили и технологии.",
-  "В маслах и присадках мы сочетаем компоненты с разработками DuoZinc и REACORE, чтобы снижать трение и износ, поддерживать чистоту двигателя и стабильную работу под нагрузкой.",
-] as const;
 
 /* Give each visible letter its own stable index for a continuous left-to-right
    reveal, including across line wraps and between paragraphs. */
@@ -30,7 +24,7 @@ const LETTERS = PARAGRAPHS.map((paragraph) =>
 const LETTER_COUNT = indexCounter;
 const clamp01 = (number: number) => Math.max(0, Math.min(1, number));
 
-export default function PetroleroStory({
+export default function BrandStory({
   onShowcaseChange,
   reducedMotion,
 }: PetroleroStoryProps) {

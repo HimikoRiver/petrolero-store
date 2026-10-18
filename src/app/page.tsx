@@ -1,5 +1,5 @@
-import PetroleroLanding from "@/components/PetroleroLanding";
+import HomePage from "@/features/home/HomePage";
 
 export default function Home() {
-  return <PetroleroLanding />;
+  return <HomePage />;
 }

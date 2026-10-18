@@ -2,24 +2,24 @@
 
 import { useState } from "react";
 import type { HTMLAttributes } from "react";
-import "./PetroleroLogo.css";
+import "./BrandLogo.css";
 
 // Official branded SVG served by petrolero.ru (with the original wordmark outlines).
 export const OFFICIAL_PETROLERO_LOGO =
   "https://petrolero.ru/upload/iblock/35e/jgc65bilqftol5pq129e204e9ngvhlj3/logo.svg";
 const LOCAL_FALLBACK = "/home/images/petrolero-logo.svg";
 
-type PetroleroLogoProps = HTMLAttributes<HTMLSpanElement> & {
+type BrandLogoProps = HTMLAttributes<HTMLSpanElement> & {
   animated?: boolean;
   variant?: "original" | "gold" | "white";
 };
 
-export default function PetroleroLogo({
+export default function BrandLogo({
   animated = true,
   variant = "original",
   className = "",
   ...props
-}: PetroleroLogoProps) {
+}: BrandLogoProps) {
   const [source, setSource] = useState(OFFICIAL_PETROLERO_LOGO);
 
   return (
