@@ -45,9 +45,9 @@
 
 .petrolero-fixed-header[data-phase="2"] .petrolero-fixed-brand,
 .petrolero-fixed-header[data-phase="3"] .petrolero-fixed-brand {
-  top: 14px;
-  left: clamp(23px, 3.3vw, 58px);
-  width: clamp(115px, 9.7vw, 166px);
+  top: 5px;
+  left: clamp(16px, 2.7vw, 45px);
+  width: clamp(74px, 5.5vw, 98px);
   transform: translate(0,0);
 }
 
@@ -350,9 +350,9 @@
   }
   .petrolero-fixed-header[data-phase="2"] .petrolero-fixed-brand,
   .petrolero-fixed-header[data-phase="3"] .petrolero-fixed-brand {
-    left: 14px;
-    top: 7px;
-    width: 99px;
+    left: 12px;
+    top: 3px;
+    width: 73px;
   }
   .petrolero-fixed-header[data-showcase="true"] .petrolero-fixed-brand {
     top: 24svh;
