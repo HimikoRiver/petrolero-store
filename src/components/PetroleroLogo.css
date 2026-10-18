@@ -32,6 +32,77 @@
   100% { opacity: 1; transform: translateY(0) scale(1); clip-path: inset(0 0 0 0); }
 }
 
+/* The upper emblem (P) is highlighted using the very same official SVG.
+   Duplicating the SVG image preserves the authentic lettering underneath. */
+.petrolero-logo__p-aura,
+.petrolero-logo__p-sweep {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+  overflow: hidden;
+  clip-path: inset(0 0 48% 0);
+  opacity: 0;
+}
+
+.petrolero-logo__p-aura img,
+.petrolero-logo__p-sweep img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.petrolero-logo__p-aura {
+  transition: opacity 420ms ease;
+  filter: drop-shadow(0 0 7px rgba(255, 205, 102, .86))
+    drop-shadow(0 0 21px rgba(216, 138, 45, .50));
+}
+
+.petrolero-logo__p-aura img {
+  filter: brightness(0) saturate(100%) invert(91%) sepia(38%) saturate(850%) hue-rotate(320deg) brightness(110%);
+}
+
+.petrolero-logo--shining .petrolero-logo__p-aura {
+  opacity: .72;
+  transition-delay: 1120ms;
+}
+
+.petrolero-logo__p-sweep {
+  -webkit-mask-image: linear-gradient(95deg, transparent 0%, rgba(0,0,0,.2) 35%, #000 50%, rgba(0,0,0,.2) 65%, transparent 100%);
+  mask-image: linear-gradient(95deg, transparent 0%, rgba(0,0,0,.2) 35%, #000 50%, rgba(0,0,0,.2) 65%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 32% 100%;
+  mask-size: 32% 100%;
+  -webkit-mask-position: -62% 0;
+  mask-position: -62% 0;
+}
+
+.petrolero-logo__p-sweep img {
+  filter: brightness(0) saturate(100%) invert(99%) sepia(15%) saturate(920%) hue-rotate(333deg)
+    drop-shadow(0 0 9px #ffdc8c);
+}
+
+.petrolero-logo--shining .petrolero-logo__p-sweep {
+  opacity: 1;
+  animation: petrolero-logo-p-reflection 3.7s 1.15s ease-in-out infinite both;
+}
+
+@keyframes petrolero-logo-p-reflection {
+  0%, 14% {
+    -webkit-mask-position: -62% 0;
+    mask-position: -62% 0;
+  }
+  63%, 100% {
+    -webkit-mask-position: 163% 0;
+    mask-position: 163% 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .petrolero-logo--animated .petrolero-logo__image { animation: none; }
+  .petrolero-logo--shining .petrolero-logo__p-sweep { animation: none; opacity: 0; }
+  .petrolero-logo--shining .petrolero-logo__p-aura { opacity: .52; transition: none; }
 }
