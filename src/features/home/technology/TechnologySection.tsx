@@ -13,6 +13,7 @@ export default function TechnologySection({ reducedMotion = false }: { reducedMo
   const videoRef = useRef<HTMLVideoElement>(null);
   const explicitlyPausedRef = useRef(false);
   const [paused, setPaused] = useState(true);
+  const [manuallyPaused, setManuallyPaused] = useState(false);
   const [revealedCount, setRevealedCount] = useState(0);
   const [videoError, setVideoError] = useState(false);
 
@@ -56,9 +57,11 @@ export default function TechnologySection({ reducedMotion = false }: { reducedMo
     if (!video) return;
     if (video.paused) {
       explicitlyPausedRef.current = false;
+      setManuallyPaused(false);
       void video.play().catch(() => setPaused(true));
     } else {
       explicitlyPausedRef.current = true;
+      setManuallyPaused(true);
       video.pause();
     }
   };
@@ -67,20 +70,18 @@ export default function TechnologySection({ reducedMotion = false }: { reducedMo
     <section className="petrolero-technology" aria-label="Подбор масла и технологии защиты двигателя">
       <div className="petrolero-tech-inner">
         <div className="petrolero-tech-section-heading">
-          <span className="petrolero-tech-heading-line" aria-hidden="true" />
-          <h2>НАЙДИТЕ СВОЁ МАСЛО</h2>
-          <span className="petrolero-tech-heading-line" aria-hidden="true" />
+          <h2>НАЙДИТЕ <span>СВОЁ МАСЛО</span></h2>
+          <p>Подбор по типу техники</p>
         </div>
 
         <VehicleCards />
 
         <div className="petrolero-tech-section-heading petrolero-tech-section-heading--engine">
-          <span className="petrolero-tech-heading-line" aria-hidden="true" />
-          <h2>ТЕХНОЛОГИЯ В ДЕТАЛЯХ</h2>
-          <span className="petrolero-tech-heading-line" aria-hidden="true" />
+          <h2>ТЕХНОЛОГИЯ <span>В ДЕТАЛЯХ</span></h2>
+          <p>Работа защитных компонентов</p>
         </div>
 
-        <div ref={stageRef} className={`petrolero-tech-stage ${paused ? "is-paused" : "is-playing"}`}>
+        <div ref={stageRef} className={`petrolero-tech-stage ${manuallyPaused ? "is-user-paused" : "is-playing"}`}>
           <video
             ref={videoRef}
             className="petrolero-tech-video"

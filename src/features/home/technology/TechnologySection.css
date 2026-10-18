@@ -24,31 +24,33 @@
 
 .petrolero-tech-section-heading {
   display: flex;
-  gap: clamp(12px, 1.8vw, 32px);
-  align-items: center;
-  justify-content: center;
-  margin-bottom: clamp(25px, 4vh, 44px);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  width: min(100%, 1160px);
+  margin: 0 auto clamp(26px, 4vh, 48px);
 }
 
 .petrolero-tech-section-heading h2 {
-  flex: none;
   margin: 0;
-  color: #dcb67a;
-  font-weight: 800;
-  font-size: clamp(13px, 1.06vw, 18px);
-  line-height: 1.3;
-  letter-spacing: .22em;
-  text-align: center;
+  color: #f1e8dd;
+  font-size: clamp(31px, 4.6vw, 70px);
+  font-weight: 850;
+  line-height: .98;
+  letter-spacing: -.052em;
 }
 
-.petrolero-tech-heading-line {
-  width: min(27vw, 340px);
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(218,172,99,.52));
+.petrolero-tech-section-heading h2 span {
+  color: #d9b177;
 }
 
-.petrolero-tech-heading-line:last-child {
-  transform: rotate(180deg);
+.petrolero-tech-section-heading p {
+  margin: 0;
+  color: rgba(234, 214, 189, .62);
+  font-size: clamp(11px, .8vw, 14px);
+  font-weight: 500;
+  letter-spacing: .13em;
+  text-transform: uppercase;
 }
 
 .petrolero-tech-cards {
@@ -72,17 +74,6 @@
     linear-gradient(145deg, #161514, #050505);
   box-shadow: inset 0 0 24px rgba(217,158,83,.04), 0 6px 26px rgba(0,0,0,.24);
   overflow: hidden;
-}
-
-.petrolero-tech-vehicle::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(244,204,148,.75), transparent);
-  opacity: .58;
 }
 
 .petrolero-tech-vehicle-index {
@@ -132,8 +123,13 @@
 }
 
 .petrolero-tech-section-heading--engine {
-  margin-top: clamp(68px, 9vh, 124px);
-  margin-bottom: clamp(14px, 2.3vh, 24px);
+  width: min(100%, 1400px);
+  margin-top: clamp(65px, 9vh, 124px);
+  margin-bottom: clamp(17px, 3vh, 34px);
+}
+
+.petrolero-tech-section-heading--engine h2 {
+  font-size: clamp(30px, 4.2vw, 63px);
 }
 
 .petrolero-tech-stage {
@@ -141,7 +137,7 @@
   width: min(100%, 1400px);
   aspect-ratio: 1200 / 620;
   margin-inline: auto;
-  background: radial-gradient(ellipse at 50% 50%, #1b120b, #050403 64%, #000 91%);
+  background: #050505;
   overflow: hidden;
 }
 
@@ -156,21 +152,32 @@
   object-position: center center;
 }
 
+/* Four-sided soft vignette, matched precisely to the block background.
+   Unlike the former overlay, this never darkens the engine when paused. */
 .petrolero-tech-video-shade {
   position: absolute;
   z-index: 1;
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(0,0,0,.75), rgba(0,0,0,.12) 28%, rgba(0,0,0,.10) 69%, rgba(0,0,0,.72)),
-    linear-gradient(0deg, rgba(0,0,0,.62), transparent 23%, transparent 80%, rgba(0,0,0,.26));
-  transition: background 250ms ease;
-}
-
-.petrolero-tech-stage.is-paused .petrolero-tech-video-shade {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.77), rgba(0,0,0,.25) 29%, rgba(0,0,0,.23) 68%, rgba(0,0,0,.76)),
-    linear-gradient(0deg, rgba(0,0,0,.55), rgba(0,0,0,.22), rgba(0,0,0,.2));
+    linear-gradient(90deg,
+      #050505 0%,
+      rgba(5,5,5,.94) 3%,
+      rgba(5,5,5,.5) 9%,
+      rgba(5,5,5,0) 19%,
+      rgba(5,5,5,0) 81%,
+      rgba(5,5,5,.5) 91%,
+      rgba(5,5,5,.94) 97%,
+      #050505 100%),
+    linear-gradient(180deg,
+      #050505 0%,
+      rgba(5,5,5,.88) 4%,
+      rgba(5,5,5,.4) 11%,
+      rgba(5,5,5,0) 22%,
+      rgba(5,5,5,0) 77%,
+      rgba(5,5,5,.42) 89%,
+      rgba(5,5,5,.9) 96%,
+      #050505 100%);
 }
 
 .petrolero-tech-annotations {
@@ -233,19 +240,20 @@
   gap: clamp(7px, .8vw, 14px);
   align-items: center;
   opacity: 0;
-  transform: translateY(9px);
+  transform: translateY(calc(-50% + 9px));
   transition: opacity 520ms ease, transform 650ms cubic-bezier(.19,.8,.23,1);
 }
 
 .petrolero-tech-note.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(-50%);
 }
 
-.petrolero-tech-note--left-top { left: 1.1%; top: 16.2%; }
-.petrolero-tech-note--left-bottom { left: 1.1%; top: 67.6%; }
-.petrolero-tech-note--right-top { right: 1%; top: 16.2%; }
-.petrolero-tech-note--right-bottom { right: 1%; top: 67.6%; }
+/* Align callout centres and connector starts to identical SVG rows. */
+.petrolero-tech-note--left-top { left: 1.1%; top: 25.48%; }
+.petrolero-tech-note--left-bottom { left: 1.1%; top: 73.87%; }
+.petrolero-tech-note--right-top { right: 1%; top: 25.48%; }
+.petrolero-tech-note--right-bottom { right: 1%; top: 73.87%; }
 
 .petrolero-tech-note-icon {
   display: grid;
@@ -292,18 +300,17 @@
   display: grid;
   place-items: center;
   padding: 0;
-  border: 1px solid rgba(225,176,109,.55);
+  border: 0;
   border-radius: 0;
   color: #efc78a;
-  background: rgba(10,10,10,.72);
-  box-shadow: 0 7px 24px rgba(0,0,0,.38);
-  backdrop-filter: blur(9px);
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
   transform: translateX(-50%);
   cursor: pointer;
   transition:
     bottom 950ms cubic-bezier(.19,.75,.18,1),
     background 400ms ease,
-    border-color 300ms ease,
     color 300ms ease,
     box-shadow 400ms ease;
 }
@@ -313,17 +320,15 @@
   z-index: 1;
 }
 
-.petrolero-tech-stage.is-paused .petrolero-tech-play {
+.petrolero-tech-stage.is-user-paused .petrolero-tech-play {
   bottom: calc(50% - 28px);
   color: #ffe5b3;
   background: #070707;
-  border-color: rgba(229,178,103,.38);
-  box-shadow: 0 0 25px rgba(217,146,58,.18), 0 12px 35px rgba(0,0,0,.65);
+  box-shadow: 0 0 22px rgba(217,146,58,.14), 0 12px 35px rgba(0,0,0,.3);
 }
 
 .petrolero-tech-play:hover {
   color: #fff4d6;
-  border-color: #f0c28b;
 }
 
 .petrolero-tech-play:focus-visible {
@@ -351,7 +356,7 @@
   filter: drop-shadow(0 0 5px rgba(247,184,89,.8));
 }
 
-.petrolero-tech-stage.is-paused .petrolero-tech-play-outline rect {
+.petrolero-tech-stage.is-user-paused .petrolero-tech-play-outline rect {
   opacity: 1;
   animation: petrolero-tech-border-trace 1050ms 480ms ease both;
 }
@@ -392,16 +397,18 @@
   .petrolero-tech-note { width: 24%; }
   .petrolero-tech-note-icon { flex-basis: 34px; width: 34px; height: 34px; }
   .petrolero-tech-note-copy { font-size: clamp(9px, 1vw, 12px); }
-  .petrolero-tech-note--left-top { left: 1.5%; top: 12%; }
-  .petrolero-tech-note--right-top { right: 1%; top: 12%; }
-  .petrolero-tech-note--left-bottom { left: 1.5%; top: 76%; }
-  .petrolero-tech-note--right-bottom { right: 1%; top: 76%; }
+  .petrolero-tech-note--left-top { left: 1.5%; top: 25.48%; }
+  .petrolero-tech-note--right-top { right: 1%; top: 25.48%; }
+  .petrolero-tech-note--left-bottom { left: 1.5%; top: 73.87%; }
+  .petrolero-tech-note--right-bottom { right: 1%; top: 73.87%; }
 }
 
 @media (max-width: 700px) {
   .petrolero-technology { padding: 76px 14px 70px; }
   .petrolero-tech-section-heading h2 { font-size: 11px; letter-spacing: .12em; }
-  .petrolero-tech-heading-line { width: 12vw; }
+  .petrolero-tech-section-heading { gap: 8px; }
+  .petrolero-tech-section-heading h2 { font-size: clamp(25px, 6vw, 39px); line-height: 1.04; }
+  .petrolero-tech-section-heading p { font-size: 10px; letter-spacing: .08em; }
   .petrolero-tech-cards { gap: 8px; }
   .petrolero-tech-vehicle { min-height: 116px; padding: 9px; }
   .petrolero-tech-vehicle-placeholder { min-height: 62px; }
@@ -413,18 +420,21 @@
   .petrolero-tech-stage { aspect-ratio: 5 / 4; }
   .petrolero-tech-video { object-fit: cover; object-position: center; }
   .petrolero-tech-video-shade {
-    background: linear-gradient(0deg, rgba(0,0,0,.8), transparent 23%, transparent 66%, rgba(0,0,0,.68));
+    background:
+      linear-gradient(90deg, #050505 0%, transparent 20%, transparent 80%, #050505 100%),
+      linear-gradient(180deg, #050505 0%, transparent 18%, transparent 80%, #050505 100%);
   }
   .petrolero-tech-note { width: 44%; gap: 7px; }
-  .petrolero-tech-note--left-top { left: 2%; top: 4%; }
-  .petrolero-tech-note--right-top { right: 2%; top: 4%; }
-  .petrolero-tech-note--left-bottom { left: 2%; top: 77%; }
-  .petrolero-tech-note--right-bottom { right: 2%; top: 77%; }
+  .petrolero-tech-note--left-top { left: 2%; top: 11%; }
+  .petrolero-tech-note--right-top { right: 2%; top: 11%; }
+  .petrolero-tech-note--left-bottom { left: 2%; top: 89%; }
+  .petrolero-tech-note--right-bottom { right: 2%; top: 89%; }
   .petrolero-tech-note-icon { width: 29px; height: 29px; flex-basis: 29px; }
   .petrolero-tech-note-copy { font-size: 9px; line-height: 1.3; }
   .petrolero-tech-connections { opacity: .67; }
+  .petrolero-tech-connection path { display: none; }
   .petrolero-tech-play { --size: 46px; bottom: 12px; }
-  .petrolero-tech-stage.is-paused .petrolero-tech-play { bottom: calc(50% - 23px); }
+  .petrolero-tech-stage.is-user-paused .petrolero-tech-play { bottom: calc(50% - 23px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -435,7 +445,7 @@
     transition: none;
   }
   .petrolero-tech-connection.is-visible path,
-  .petrolero-tech-stage.is-paused .petrolero-tech-play-outline rect,
+  .petrolero-tech-stage.is-user-paused .petrolero-tech-play-outline rect,
   .petrolero-tech-connection.is-visible .petrolero-tech-dot-glow {
     animation: none;
     stroke-dashoffset: 0;
