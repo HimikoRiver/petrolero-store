@@ -99,7 +99,7 @@ export default function PetroleroHeader({ phase, showcase, reducedMotion }: Petr
     <>
       <div className="petrolero-fixed-header" data-showcase={showcase} data-phase={phase}>
         <div className="petrolero-fixed-brand">
-          <PetroleroLogo animated={!reducedMotion} variant="gold" />
+          <PetroleroLogo animated={!reducedMotion} shine={showcase} variant="gold" />
         </div>
         <header className="petrolero-fixed-actions-area">
           <nav className="petrolero-nav-actions" aria-label="Действия магазина">
@@ -146,9 +146,6 @@ export default function PetroleroHeader({ phase, showcase, reducedMotion }: Petr
                 aria-expanded={searchOpen}
                 onClick={toggleSearch}
               >
-                <svg className="petrolero-nav-search-trigger-outline" viewBox="0 0 44 44" fill="none" aria-hidden="true">
-                  <rect x="1" y="1" width="42" height="42" pathLength={100} />
-                </svg>
                 <SearchIcon />
               </button>
             </div>
