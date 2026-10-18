@@ -32,53 +32,6 @@
   100% { opacity: 1; transform: translateY(0) scale(1); clip-path: inset(0 0 0 0); }
 }
 
-/* A single precise gold stroke traces each part of the P.
-   No opaque duplicate SVG, bloom fill, or sweeping rectangular mask. */
-.petrolero-logo__p-outline {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.petrolero-logo__p-outline-path {
-  fill: none;
-  stroke: #ffe3a1;
-  stroke-width: 1.5;
-  stroke-linecap: square;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  opacity: 0;
-  filter: drop-shadow(0 0 3px rgba(255, 191, 95, .75));
-}
-
-.petrolero-logo--shining .petrolero-logo__p-outline-path--top {
-  animation: petrolero-logo-outline 800ms 1780ms ease-in-out both;
-}
-
-.petrolero-logo--shining .petrolero-logo__p-outline-path--dash {
-  animation: petrolero-logo-outline 300ms 2430ms ease-out both;
-}
-
-.petrolero-logo--shining .petrolero-logo__p-outline-path--stem {
-  animation: petrolero-logo-outline 400ms 2650ms ease-out both;
-}
-
-@keyframes petrolero-logo-outline {
-  from { stroke-dashoffset: 100; opacity: 1; }
-  to { stroke-dashoffset: 0; opacity: 1; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .petrolero-logo--animated .petrolero-logo__image { animation: none; }
-  .petrolero-logo--shining .petrolero-logo__p-outline-path {
-    animation: none;
-    stroke-dashoffset: 0;
-    opacity: 1;
-  }
 }
