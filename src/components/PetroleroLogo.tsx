@@ -11,11 +11,13 @@ const LOCAL_FALLBACK = "/home/images/petrolero-logo.svg";
 
 type PetroleroLogoProps = HTMLAttributes<HTMLSpanElement> & {
   animated?: boolean;
+  shine?: boolean;
   variant?: "original" | "gold" | "white";
 };
 
 export default function PetroleroLogo({
   animated = true,
+  shine = false,
   variant = "original",
   className = "",
   ...props
@@ -26,7 +28,7 @@ export default function PetroleroLogo({
     <span
       role="img"
       aria-label="Petrolero"
-      className={`petrolero-logo petrolero-logo--${variant} ${animated ? "petrolero-logo--animated" : ""} ${className}`}
+      className={`petrolero-logo petrolero-logo--${variant} ${animated ? "petrolero-logo--animated" : ""} ${shine ? "petrolero-logo--shining" : ""} ${className}`}
       {...props}
     >
       <img
@@ -39,6 +41,12 @@ export default function PetroleroLogo({
           if (source !== LOCAL_FALLBACK) setSource(LOCAL_FALLBACK);
         }}
       />
+      <span className="petrolero-logo__p-aura" aria-hidden="true">
+        <img src={source} alt="" draggable={false} />
+      </span>
+      <span className="petrolero-logo__p-sweep" aria-hidden="true">
+        <img src={source} alt="" draggable={false} />
+      </span>
     </span>
   );
 }
