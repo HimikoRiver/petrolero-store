@@ -58,15 +58,15 @@
 }
 
 .petrolero-logo--shining .petrolero-logo__p-outline-path--top {
-  animation: petrolero-logo-outline 950ms 1450ms ease-in-out both;
+  animation: petrolero-logo-outline 800ms 1780ms ease-in-out both;
 }
 
 .petrolero-logo--shining .petrolero-logo__p-outline-path--dash {
-  animation: petrolero-logo-outline 350ms 2210ms ease-out both;
+  animation: petrolero-logo-outline 300ms 2430ms ease-out both;
 }
 
 .petrolero-logo--shining .petrolero-logo__p-outline-path--stem {
-  animation: petrolero-logo-outline 490ms 2470ms ease-out both;
+  animation: petrolero-logo-outline 400ms 2650ms ease-out both;
 }
 
 @keyframes petrolero-logo-outline {
