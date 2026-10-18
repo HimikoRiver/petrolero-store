@@ -77,6 +77,12 @@ export default function PetroleroStory({
         previousShowcase = showcase;
         onShowcaseChange(showcase);
       }
+
+      // The engine appears late in the story, after the logo begins its
+      // return to the upper-left corner. CSS waits for that flight to finish
+      // before revealing the image, even after a fast scroll.
+      const revealEngine = progress >= 0.80 && !showcase;
+      section.dataset.backgroundVisible = revealEngine ? "true" : "false";
     };
 
     const schedule = () => {
