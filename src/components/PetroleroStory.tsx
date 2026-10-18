@@ -46,14 +46,6 @@ export default function PetroleroStory({
       // 1: the end of the story reaches the top of the viewport.
       const progress = clamp01((viewport - rect.top) / (viewport + rect.height));
 
-      section.style.setProperty("--story-progress", progress.toFixed(4));
-      const captionIn = clamp01((progress - 0.03) / 0.09);
-      const captionOut = 1 - clamp01((progress - 0.75) / 0.12);
-      section.style.setProperty(
-        "--story-caption-opacity",
-        (reducedMotion ? 1 : captionIn * captionOut).toFixed(4),
-      );
-
       lineRefs.current.forEach((line, index) => {
         if (!line) return;
         const begin = 0.045 + index * 0.021;
