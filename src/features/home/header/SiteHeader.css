@@ -45,10 +45,11 @@
 
 .petrolero-fixed-header[data-phase="2"] .petrolero-fixed-brand,
 .petrolero-fixed-header[data-phase="3"] .petrolero-fixed-brand {
-  top: 5px;
+  /* Align the actual centre of the brand with the 44px navigation icons. */
+  top: 42px;
   left: clamp(16px, 2.7vw, 45px);
   width: clamp(74px, 5.5vw, 98px);
-  transform: translate(0,0);
+  transform: translateY(-50%);
 }
 
 /* A quick spring-loaded detachment of the logo into the story's right column. */
@@ -351,8 +352,9 @@
   .petrolero-fixed-header[data-phase="2"] .petrolero-fixed-brand,
   .petrolero-fixed-header[data-phase="3"] .petrolero-fixed-brand {
     left: 12px;
-    top: 3px;
+    top: 30px;
     width: 73px;
+    transform: translateY(-50%);
   }
   .petrolero-fixed-header[data-showcase="true"] .petrolero-fixed-brand {
     top: 24svh;
