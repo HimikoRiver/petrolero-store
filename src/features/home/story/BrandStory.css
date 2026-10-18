@@ -85,12 +85,13 @@
 
 .petrolero-story-copy {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: clamp(17px, min(1.6vw, 2.9svh), 29px);
-  font-weight: 650;
-  line-height: 1.3;
-  letter-spacing: -.028em;
-  text-transform: uppercase;
+  /* Marck Script matches the requested handwritten Russian typography. */
+  font-family: var(--font-marck-script), "Segoe Script", cursive;
+  font-size: clamp(29px, min(3vw, 5svh), 52px);
+  font-weight: 400;
+  line-height: 1.19;
+  letter-spacing: normal;
+  text-transform: none;
 }
 
 .petrolero-story-paragraph { margin: 0; }
@@ -112,7 +113,7 @@
 @media (max-width: 900px) {
   .petrolero-story-sticky::before { background-position: 64% center; }
   .petrolero-story-content { width: 56%; margin-left: 5vw; }
-  .petrolero-story-copy { font-size: clamp(16px, min(2.35vw, 3svh), 25px); }
+  .petrolero-story-copy { font-size: clamp(26px, min(3.4vw, 4.5svh), 39px); }
 }
 
 @media (max-width: 620px) {
@@ -123,8 +124,8 @@
     padding-block: 58px 24px;
   }
   .petrolero-story-copy {
-    font-size: clamp(15px, min(4.1vw, 2.6svh), 21px);
-    line-height: 1.35;
+    font-size: clamp(21px, min(5.7vw, 3.5svh), 28px);
+    line-height: 1.28;
   }
   .petrolero-story-paragraph + .petrolero-story-paragraph { margin-top: 16px; }
 }
