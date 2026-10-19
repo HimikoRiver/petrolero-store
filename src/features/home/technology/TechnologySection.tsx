@@ -70,13 +70,6 @@ export default function TechnologySection({ reducedMotion = false }: { reducedMo
     <section className="petrolero-technology" aria-label="Подбор масла и технологии защиты двигателя">
       <div className="petrolero-tech-inner">
         <div className="petrolero-tech-section-heading petrolero-tech-section-heading--selection">
-          <span className="petrolero-tech-heading-mark" aria-hidden="true">
-            <svg viewBox="0 0 58 58" fill="none">
-              <path d="M10 39V18H24L32 11H48V25H38L28 35V48H10V39Z" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="bevel"/>
-              <path d="M18 40h11M29 40h12" stroke="currentColor" strokeWidth="2.2"/>
-              <path d="M42 38c-3.6 4.5-6 7.6-6 10a6 6 0 0 0 12 0c0-2.4-2.4-5.5-6-10Z" fill="currentColor"/>
-            </svg>
-          </span>
           <div className="petrolero-tech-heading-copy">
             <span className="petrolero-tech-heading-eyebrow">ПОДБОР ПО ТИПУ ТЕХНИКИ</span>
             <h2>Найдите своё <em>масло</em></h2>
@@ -87,13 +80,6 @@ export default function TechnologySection({ reducedMotion = false }: { reducedMo
         <VehicleCards />
 
         <div className="petrolero-tech-section-heading petrolero-tech-section-heading--engine">
-          <span className="petrolero-tech-heading-mark" aria-hidden="true">
-            <svg viewBox="0 0 58 58" fill="none">
-              <path d="M10 39V18H24L32 11H48V25H38L28 35V48H10V39Z" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="bevel"/>
-              <path d="M18 40h11M29 40h12" stroke="currentColor" strokeWidth="2.2"/>
-              <path d="M42 38c-3.6 4.5-6 7.6-6 10a6 6 0 0 0 12 0c0-2.4-2.4-5.5-6-10Z" fill="currentColor"/>
-            </svg>
-          </span>
           <div className="petrolero-tech-heading-copy">
             <span className="petrolero-tech-heading-eyebrow">МАСЛО В РАБОТЕ</span>
             <h2>Внутри <em>двигателя</em></h2>
