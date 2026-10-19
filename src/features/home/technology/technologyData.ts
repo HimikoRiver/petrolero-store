@@ -11,21 +11,21 @@ export const ENGINE_NOTES = [
   {
     id: "protection", title: "Надёжная защита", detail: "двигателя",
     icon: "shield", side: "left", position: "top", time: 1.5,
-    dotX: 375, dotY: 248, line: "M248 202H282L375 248",
+    dotX: 375, dotY: 248, line: "M126 202H282L375 248", compactLine: "M248 202H282L375 248",
   },
   {
     id: "innovation", title: "Инновационные", detail: "формулы",
     icon: "gear", side: "right", position: "top", time: 3.4,
-    dotX: 893, dotY: 269, line: "M956 202H933L893 269",
+    dotX: 893, dotY: 269, line: "M1074 202H933L893 269", compactLine: "M956 202H933L893 269",
   },
   {
     id: "efficiency", title: "Максимальная", detail: "эффективность",
     icon: "gauge", side: "left", position: "bottom", time: 5.3,
-    dotX: 470, dotY: 452, line: "M248 500H306L470 452",
+    dotX: 470, dotY: 452, line: "M126 500H306L470 452", compactLine: "M248 500H306L470 452",
   },
   {
     id: "stability", title: "Стабильная работа", detail: "под нагрузкой",
     icon: "drop", side: "right", position: "bottom", time: 7.2,
-    dotX: 833, dotY: 452, line: "M956 500H926L833 452",
+    dotX: 833, dotY: 452, line: "M1074 500H926L833 452", compactLine: "M956 500H926L833 452",
   },
 ] as const;
