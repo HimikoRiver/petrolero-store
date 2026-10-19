@@ -173,6 +173,20 @@
   object-position: center center;
 }
 
+/* Soft four-sided fade applied above the footage, below annotations. */
+.petrolero-tech-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, #050505 0%, rgba(5, 5, 5, .76) 6%, transparent 24%),
+    linear-gradient(to top, #050505 0%, rgba(5, 5, 5, .76) 6%, transparent 24%),
+    linear-gradient(to right, #050505 0%, rgba(5, 5, 5, .72) 7%, transparent 24%),
+    linear-gradient(to left, #050505 0%, rgba(5, 5, 5, .72) 7%, transparent 24%);
+}
+
 .petrolero-tech-annotations {
   position: absolute;
   z-index: 2;
