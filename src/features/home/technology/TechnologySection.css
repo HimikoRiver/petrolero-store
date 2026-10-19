@@ -167,6 +167,20 @@
   mask-image: radial-gradient(ellipse 66% 75% at center, #000 45%, rgba(0, 0, 0, .95) 58%, rgba(0, 0, 0, .58) 78%, transparent 100%);
 }
 
+/* Gentle shadow on each video edge, without restoring section-wide glow. */
+.petrolero-tech-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, #050505 0%, rgba(5, 5, 5, .76) 6%, transparent 24%),
+    linear-gradient(to top, #050505 0%, rgba(5, 5, 5, .76) 6%, transparent 24%),
+    linear-gradient(to right, #050505 0%, rgba(5, 5, 5, .72) 7%, transparent 24%),
+    linear-gradient(to left, #050505 0%, rgba(5, 5, 5, .72) 7%, transparent 24%);
+}
+
 .petrolero-tech-annotations {
   position: absolute;
   z-index: 2;
