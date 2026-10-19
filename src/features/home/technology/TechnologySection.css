@@ -8,15 +8,6 @@
   overflow: clip;
 }
 
-.petrolero-technology::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(ellipse at 50% 53%, rgba(126,75,25,.12), transparent 61%);
-}
-
 .petrolero-tech-inner {
   width: min(100%, 1530px);
   margin-inline: auto;
@@ -171,20 +162,9 @@
   height: 100%;
   object-fit: cover;
   object-position: center center;
-}
-
-/* Soft four-sided fade applied above the footage, below annotations. */
-.petrolero-tech-stage::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    linear-gradient(to bottom, #050505 0%, rgba(5, 5, 5, .76) 6%, transparent 24%),
-    linear-gradient(to top, #050505 0%, rgba(5, 5, 5, .76) 6%, transparent 24%),
-    linear-gradient(to right, #050505 0%, rgba(5, 5, 5, .72) 7%, transparent 24%),
-    linear-gradient(to left, #050505 0%, rgba(5, 5, 5, .72) 7%, transparent 24%);
+  /* Fade the actual video pixels into the section background without any light halo. */
+  -webkit-mask-image: radial-gradient(ellipse 66% 75% at center, #000 45%, rgba(0, 0, 0, .95) 58%, rgba(0, 0, 0, .58) 78%, transparent 100%);
+  mask-image: radial-gradient(ellipse 66% 75% at center, #000 45%, rgba(0, 0, 0, .95) 58%, rgba(0, 0, 0, .58) 78%, transparent 100%);
 }
 
 .petrolero-tech-annotations {
