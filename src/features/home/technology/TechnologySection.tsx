@@ -117,7 +117,6 @@ export default function TechnologySection({ reducedMotion = false }: { reducedMo
             onPause={() => setPaused(true)}
             onError={() => { setVideoError(true); setPaused(true); }}
           />
-          <div className="petrolero-tech-video-shade" aria-hidden="true" />
           {videoError ? (
             <p className="petrolero-tech-error" role="status">
               Не удалось загрузить видео. Проверь файл public/home/video/block4.webm.
