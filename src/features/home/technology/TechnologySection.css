@@ -265,7 +265,7 @@
 .petrolero-tech-note--left-top { left: -9%; top: 29.93%; }
 .petrolero-tech-note--left-bottom { left: -9%; top: 74.07%; }
 .petrolero-tech-note--right-top { right: -9%; top: 29.93%; }
-.petrolero-tech-note--right-bottom { right: -9%; top: 74.07%; }
+.petrolero-tech-note--right-bottom { right: -3%; top: 70.52%; }
 
 .petrolero-tech-note-icon {
   display: grid;
@@ -274,13 +274,13 @@
   height: clamp(28px, 3.1vw, 49px);
   place-items: center;
   color: #e5ae65;
-  border: 1px solid rgba(209,156,86,.67);
-  background: rgba(11,10,9,.56);
 }
 
-.petrolero-tech-note-icon svg {
-  width: 66%;
-  height: 66%;
+.petrolero-tech-note-icon-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .petrolero-tech-note-copy {
