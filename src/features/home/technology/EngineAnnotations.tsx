@@ -15,7 +15,8 @@ export default function EngineAnnotations({ revealedCount }: { revealedCount: nu
       <svg className="petrolero-tech-connections" viewBox="0 0 1200 675" preserveAspectRatio="none" fill="none" aria-hidden="true">
         {ENGINE_NOTES.map((note, i) => (
           <g className={`petrolero-tech-connection ${i < revealedCount ? "is-visible" : ""}`} key={note.id}>
-            <path d={note.line} pathLength="100" />
+            <path className="petrolero-tech-connection-path--wide" d={note.line} pathLength="100" />
+            <path className="petrolero-tech-connection-path--compact" d={note.compactLine} pathLength="100" />
             <circle className="petrolero-tech-dot-glow" cx={note.dotX} cy={note.dotY} r="7" />
             <circle className="petrolero-tech-dot" cx={note.dotX} cy={note.dotY} r="3.1" />
           </g>
