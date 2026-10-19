@@ -16,7 +16,7 @@ export const ENGINE_NOTES = [
   {
     id: "innovation", title: "Инновационные", detail: "формулы",
     icon: "gear", side: "right", position: "top", time: 3.4,
-    dotX: 893, dotY: 269, line: "M1074 202H933L893 269", compactLine: "M956 202H933L893 269",
+    dotX: 893, dotY: 269, line: "M1145 202H933L893 269", compactLine: "M956 202H933L893 269",
   },
   {
     id: "efficiency", title: "Максимальная", detail: "эффективность",
@@ -26,6 +26,6 @@ export const ENGINE_NOTES = [
   {
     id: "stability", title: "Стабильная работа", detail: "под нагрузкой",
     icon: "drop", side: "right", position: "bottom", time: 7.2,
-    dotX: 833, dotY: 452, line: "M1074 500H926L833 452", compactLine: "M956 500H926L833 452",
+    dotX: 833, dotY: 452, line: "M1002 476H923L833 452", compactLine: "M956 500H926L833 452",
   },
 ] as const;
