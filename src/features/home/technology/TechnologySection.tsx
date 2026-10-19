@@ -73,7 +73,6 @@ export default function TechnologySection({ reducedMotion = false }: { reducedMo
           <span className="petrolero-tech-heading-eyebrow">ПОДБОР ПО ТИПУ ТЕХНИКИ</span>
           <div className="petrolero-tech-heading-copy">
             <h2>Найдите своё <em>масло</em></h2>
-            <p>Для легковых автомобилей, мотоциклов и грузовой техники</p>
           </div>
         </div>
 
@@ -83,7 +82,6 @@ export default function TechnologySection({ reducedMotion = false }: { reducedMo
           <span className="petrolero-tech-heading-eyebrow">МАСЛО В РАБОТЕ</span>
           <div className="petrolero-tech-heading-copy">
             <h2>Внутри <em>двигателя</em></h2>
-            <p>Путь смазки по каналам и рабочим узлам</p>
           </div>
         </div>
 
