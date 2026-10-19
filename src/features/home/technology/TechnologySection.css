@@ -153,12 +153,11 @@
 
 .petrolero-tech-stage {
   position: relative;
-  width: 100vw;
-  width: 100dvw;
-  height: 100vh;
-  height: 100svh;
-  margin-inline: calc(50% - 50vw);
-  margin-inline: calc(50% - 50dvw);
+  width: 50vw;
+  width: 50dvw;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-inline: auto;
   background: #050505;
   overflow: hidden;
 }
@@ -387,7 +386,7 @@
 }
 
 @media (max-width: 1050px) {
-  .petrolero-tech-stage { height: 100svh; }
+  .petrolero-tech-stage { width: 100%; height: auto; aspect-ratio: 16 / 9; }
   .petrolero-tech-note { width: 24%; }
   .petrolero-tech-note-icon { flex-basis: 34px; width: 34px; height: 34px; }
   .petrolero-tech-note-copy { font-size: clamp(9px, 1vw, 12px); }
@@ -414,7 +413,7 @@
   .petrolero-tech-vehicle-footer { font-size: 10px; }
   .petrolero-tech-vehicle-arrow { width: 20px; height: 20px; flex-basis: 20px; font-size: 12px; }
   .petrolero-tech-section-heading--engine { margin-top: 72px; }
-  .petrolero-tech-stage { height: 100svh; }
+  .petrolero-tech-stage { width: 100%; height: auto; aspect-ratio: 16 / 9; }
   .petrolero-tech-video { object-fit: cover; object-position: center; }
 
   .petrolero-tech-note { width: 44%; gap: 7px; }
