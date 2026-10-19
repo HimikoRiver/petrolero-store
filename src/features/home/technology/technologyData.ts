@@ -26,6 +26,6 @@ export const ENGINE_NOTES = [
   {
     id: "stability", title: "Стабильная работа", detail: "под нагрузкой",
     icon: "drop", side: "right", position: "bottom", time: 7.2,
-    dotX: 914, dotY: 410, line: "M994 475H950L914 410", compactLine: "M956 500H926L833 452",
+    dotX: 878, dotY: 410, line: "M1008 478H946L878 410", compactLine: "M956 500H926L833 452",
   },
 ] as const;
