@@ -15,22 +15,29 @@
 
 /* Engine-oil schematic label: compact industrial typography, not giant slogan. */
 .petrolero-tech-section-heading {
-  display: flex;
-  align-items: center;
-  gap: clamp(12px, 1.7vw, 25px);
-  width: min(100%, 1160px);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  width: 100%;
   margin: 0 auto clamp(30px, 4.8vh, 51px);
 }
 
 .petrolero-tech-heading-copy {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 6px;
   min-width: 0;
+  max-width: 100%;
+  text-align: center;
 }
 
 .petrolero-tech-heading-eyebrow {
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  max-width: 22%;
   font-size: clamp(9px, .67vw, 11px);
   color: rgba(222,180,114,.75);
   letter-spacing: .17em;
@@ -130,7 +137,7 @@
 }
 
 .petrolero-tech-section-heading--engine {
-  width: min(100%, 1400px);
+  width: 100%;
   margin-top: clamp(60px, 8vh, 115px);
   margin-bottom: 0;
   position: relative;
@@ -393,6 +400,11 @@
   to { stroke-dashoffset: 0; }
 }
 
+@media (min-width: 701px) and (max-width: 1050px) {
+  .petrolero-tech-section-heading { padding-top: 32px; }
+  .petrolero-tech-heading-eyebrow { max-width: 40%; }
+}
+
 @media (max-width: 1050px) {
   .petrolero-tech-stage { width: 100%; height: auto; aspect-ratio: 16 / 9; }
   .petrolero-tech-note { width: 24%; }
@@ -406,7 +418,12 @@
 
 @media (max-width: 700px) {
   .petrolero-technology { padding: 76px 14px 70px; }
-  .petrolero-tech-section-heading { gap: 10px; margin-bottom: 24px; }
+  .petrolero-tech-section-heading { gap: 18px; margin-bottom: 24px; }
+  .petrolero-tech-heading-eyebrow {
+    position: static;
+    justify-self: start;
+    max-width: 100%;
+  }
   .petrolero-tech-heading-mark { flex-basis: 37px; width: 37px; height: 37px; }
   .petrolero-tech-heading-eyebrow { font-size: 9px; letter-spacing: .1em; }
   .petrolero-tech-section-heading h2 { font-size: clamp(23px, 6vw, 36px); letter-spacing: -.04em; }
