@@ -157,7 +157,7 @@
   aspect-ratio: 16 / 9;
   margin-inline: auto;
   background: #050505;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .petrolero-tech-video {
@@ -212,6 +212,10 @@
   opacity: 1;
 }
 
+.petrolero-tech-connection .petrolero-tech-connection-path--compact {
+  display: none;
+}
+
 .petrolero-tech-connection path {
   stroke: #dfae67;
   stroke-width: 1.25;
@@ -258,10 +262,10 @@
 }
 
 /* Annotation labels share the endpoint Y of the SVG connector. */
-.petrolero-tech-note--left-top { left: 3.2%; top: 29.93%; }
-.petrolero-tech-note--left-bottom { left: 3.2%; top: 74.07%; }
-.petrolero-tech-note--right-top { right: 2%; top: 29.93%; }
-.petrolero-tech-note--right-bottom { right: 2%; top: 74.07%; }
+.petrolero-tech-note--left-top { left: -9%; top: 29.93%; }
+.petrolero-tech-note--left-bottom { left: -9%; top: 74.07%; }
+.petrolero-tech-note--right-top { right: -9%; top: 29.93%; }
+.petrolero-tech-note--right-bottom { right: -9%; top: 74.07%; }
 
 .petrolero-tech-note-icon {
   display: grid;
@@ -405,6 +409,8 @@
 }
 
 @media (max-width: 1050px) {
+  .petrolero-tech-connection .petrolero-tech-connection-path--wide { display: none; }
+  .petrolero-tech-connection .petrolero-tech-connection-path--compact { display: initial; }
   .petrolero-tech-stage { width: 100%; height: auto; aspect-ratio: 16 / 9; }
   .petrolero-tech-note { width: 24%; }
   .petrolero-tech-note-icon { flex-basis: 34px; width: 34px; height: 34px; }
