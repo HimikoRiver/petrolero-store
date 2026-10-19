@@ -11,21 +11,21 @@ export const ENGINE_NOTES = [
   {
     id: "protection", title: "Надёжная защита", detail: "двигателя",
     icon: "shield", side: "left", position: "top", time: 1.5,
-    dotX: 375, dotY: 248, line: "M126 202H282L375 248", compactLine: "M248 202H282L375 248",
+    dotX: 385, dotY: 250, line: "M88 202H260L385 250", compactLine: "M248 202H282L375 248",
   },
   {
     id: "innovation", title: "Инновационные", detail: "формулы",
     icon: "gear", side: "right", position: "top", time: 3.4,
-    dotX: 893, dotY: 269, line: "M1145 202H933L893 269", compactLine: "M956 202H933L893 269",
+    dotX: 720, dotY: 216, line: "M1074 202L720 216", compactLine: "M956 202H933L893 269",
   },
   {
     id: "efficiency", title: "Максимальная", detail: "эффективность",
     icon: "gauge", side: "left", position: "bottom", time: 5.3,
-    dotX: 470, dotY: 452, line: "M126 500H306L470 452", compactLine: "M248 500H306L470 452",
+    dotX: 445, dotY: 466, line: "M126 500H290L445 466", compactLine: "M248 500H306L470 452",
   },
   {
     id: "stability", title: "Стабильная работа", detail: "под нагрузкой",
     icon: "drop", side: "right", position: "bottom", time: 7.2,
-    dotX: 833, dotY: 452, line: "M1002 476H923L833 452", compactLine: "M956 500H926L833 452",
+    dotX: 914, dotY: 410, line: "M994 475H950L914 410", compactLine: "M956 500H926L833 452",
   },
 ] as const;
