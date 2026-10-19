@@ -163,14 +163,17 @@
 
 /* The video and caption overlap slightly to lose the hard top seam. */
 .petrolero-tech-section-heading--engine + .petrolero-tech-stage {
-  margin-top: -20px;
+  margin-top: 28px;
 }
 
 .petrolero-tech-stage {
   position: relative;
-  width: min(100%, 1400px);
-  aspect-ratio: 16 / 9;
-  margin-inline: auto;
+  width: 100vw;
+  width: 100dvw;
+  height: 100vh;
+  height: 100svh;
+  margin-inline: calc(50% - 50vw);
+  margin-inline: calc(50% - 50dvw);
   background: #050505;
   overflow: hidden;
 }
@@ -186,47 +189,6 @@
   object-position: center center;
 }
 
-/* Physically fade VIDEO pixels into the black section on every edge.
-   This avoids visible video rectangles and preserves contrast in the centre. */
-.petrolero-tech-video {
-  -webkit-mask-image: radial-gradient(ellipse 50% 51% at 50% 50%,
-    #000 31%,
-    rgba(0,0,0,.99) 44%,
-    rgba(0,0,0,.82) 58%,
-    rgba(0,0,0,.44) 75%,
-    rgba(0,0,0,.12) 90%,
-    transparent 100%);
-  mask-image: radial-gradient(ellipse 50% 51% at 50% 50%,
-    #000 31%,
-    rgba(0,0,0,.99) 44%,
-    rgba(0,0,0,.82) 58%,
-    rgba(0,0,0,.44) 75%,
-    rgba(0,0,0,.12) 90%,
-    transparent 100%);
-}
-
-/* A stronger top fade also blurs the raw video into the background. */
-.petrolero-tech-video-shade {
-  position: absolute;
-  z-index: 1;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, #050505 0%, rgba(5,5,5,.92) 9%,
-      rgba(5,5,5,.67) 18%, rgba(5,5,5,.18) 31%, transparent 43%),
-    linear-gradient(0deg, #050505 0%, rgba(5,5,5,.54) 9%, transparent 27%);
-}
-
-.petrolero-tech-video-shade::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: 35%;
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0,0,0,.95) 25%, transparent 100%);
-  mask-image: linear-gradient(180deg, #000 0%, rgba(0,0,0,.95) 25%, transparent 100%);
-}
 .petrolero-tech-annotations {
   position: absolute;
   z-index: 2;
@@ -301,22 +263,6 @@
 .petrolero-tech-note--left-bottom { left: 3.2%; top: 74.07%; }
 .petrolero-tech-note--right-top { right: 2%; top: 29.93%; }
 .petrolero-tech-note--right-bottom { right: 2%; top: 74.07%; }
-
-.petrolero-tech-note-icon {
-  display: grid;
-  flex: 0 0 clamp(28px, 3.1vw, 49px);
-  width: clamp(28px, 3.1vw, 49px);
-  height: clamp(28px, 3.1vw, 49px);
-  place-items: center;
-  color: #e5ae65;
-  border: 1px solid rgba(209,156,86,.67);
-  background: rgba(11,10,9,.56);
-}
-
-.petrolero-tech-note-icon svg {
-  width: 66%;
-  height: 66%;
-}
 
 .petrolero-tech-note-copy {
   display: flex;
@@ -440,9 +386,8 @@
 }
 
 @media (max-width: 1050px) {
-  .petrolero-tech-stage { aspect-ratio: 16 / 9; }
+  .petrolero-tech-stage { height: 100svh; }
   .petrolero-tech-note { width: 24%; }
-  .petrolero-tech-note-icon { flex-basis: 34px; width: 34px; height: 34px; }
   .petrolero-tech-note-copy { font-size: clamp(9px, 1vw, 12px); }
   .petrolero-tech-note--left-top { left: 2%; top: 29.93%; }
   .petrolero-tech-note--right-top { right: 2%; top: 29.93%; }
@@ -467,19 +412,14 @@
   .petrolero-tech-vehicle-footer { font-size: 10px; }
   .petrolero-tech-vehicle-arrow { width: 20px; height: 20px; flex-basis: 20px; font-size: 12px; }
   .petrolero-tech-section-heading--engine { margin-top: 72px; }
-  .petrolero-tech-stage { aspect-ratio: 16 / 9; }
+  .petrolero-tech-stage { height: 100svh; }
   .petrolero-tech-video { object-fit: cover; object-position: center; }
-  .petrolero-tech-video-shade {
-    background: linear-gradient(180deg, #050505 0%, rgba(5,5,5,.84) 12%, transparent 34%);
-  }
-  .petrolero-tech-video-shade::before { height: 33%; backdrop-filter: blur(12px); }
 
   .petrolero-tech-note { width: 44%; gap: 7px; }
   .petrolero-tech-note--left-top { left: 2%; top: 23%; }
   .petrolero-tech-note--right-top { right: 2%; top: 23%; }
   .petrolero-tech-note--left-bottom { left: 2%; top: 77%; }
   .petrolero-tech-note--right-bottom { right: 2%; top: 77%; }
-  .petrolero-tech-note-icon { width: 29px; height: 29px; flex-basis: 29px; }
   .petrolero-tech-note-copy { font-size: 9px; line-height: 1.3; }
   .petrolero-tech-connections { opacity: .67; }
   .petrolero-tech-connection path { display: none; }
@@ -491,9 +431,7 @@
   .petrolero-tech-play,
   .petrolero-tech-note,
   .petrolero-tech-connection,
-  .petrolero-tech-video-shade {
-    transition: none;
-  }
+
   .petrolero-tech-connection.is-visible path,
   .petrolero-tech-stage.is-user-paused .petrolero-tech-play-outline rect,
   .petrolero-tech-connection.is-visible .petrolero-tech-dot-glow {
