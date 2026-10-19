@@ -346,12 +346,12 @@
 
 .petrolero-tech-play-outline {
   position: absolute;
-  inset: -1px;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .petrolero-tech-play-outline rect {
@@ -361,7 +361,6 @@
   stroke-dasharray: 100;
   stroke-dashoffset: 100;
   opacity: 0;
-  filter: drop-shadow(0 0 5px rgba(247,184,89,.8));
 }
 
 .petrolero-tech-stage.is-user-paused .petrolero-tech-play-outline rect {
