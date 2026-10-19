@@ -70,8 +70,8 @@ export default function TechnologySection({ reducedMotion = false }: { reducedMo
     <section className="petrolero-technology" aria-label="Подбор масла и технологии защиты двигателя">
       <div className="petrolero-tech-inner">
         <div className="petrolero-tech-section-heading petrolero-tech-section-heading--selection">
+          <span className="petrolero-tech-heading-eyebrow">ПОДБОР ПО ТИПУ ТЕХНИКИ</span>
           <div className="petrolero-tech-heading-copy">
-            <span className="petrolero-tech-heading-eyebrow">ПОДБОР ПО ТИПУ ТЕХНИКИ</span>
             <h2>Найдите своё <em>масло</em></h2>
             <p>Для легковых автомобилей, мотоциклов и грузовой техники</p>
           </div>
@@ -80,8 +80,8 @@ export default function TechnologySection({ reducedMotion = false }: { reducedMo
         <VehicleCards />
 
         <div className="petrolero-tech-section-heading petrolero-tech-section-heading--engine">
+          <span className="petrolero-tech-heading-eyebrow">МАСЛО В РАБОТЕ</span>
           <div className="petrolero-tech-heading-copy">
-            <span className="petrolero-tech-heading-eyebrow">МАСЛО В РАБОТЕ</span>
             <h2>Внутри <em>двигателя</em></h2>
             <p>Путь смазки по каналам и рабочим узлам</p>
           </div>
