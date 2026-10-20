@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import OilVideoSurface from "./OilVideoSurface";
+import OilRippleOverlay from "./OilRippleOverlay";
 import type { OilRipple } from "./OilVideoSurface";
 import "./HeroSection.css";
 
@@ -23,11 +24,17 @@ export default function HeroSection({ phase, reducedMotion, onNext }: HeroSectio
   const [videoElement, setVideoElement] = useState<HTMLVideoElement | null>(null);
   const [videoReady, setVideoReady] = useState(false);
   const [webglReady, setWebglReady] = useState(false);
+  const [heroVisible, setHeroVisible] = useState(true);
 
   useEffect(() => {
     const canvas = document.createElement("canvas");
     setWebglReady(Boolean(canvas.getContext("webgl2") || canvas.getContext("webgl")));
-    setVideoElement(videoRef.current);
+    const video = videoRef.current;
+    setVideoElement(video);
+    // loadeddata can fire before React attaches the event listener on cached video.
+    if (video && video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+      setVideoReady(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -93,6 +100,17 @@ export default function HeroSection({ phase, reducedMotion, onNext }: HeroSectio
     };
   }, [reducedMotion]);
 
+  useEffect(() => {
+    const section = heroRef.current;
+    if (!section) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setHeroVisible(entry.isIntersecting),
+      { threshold: 0.01 },
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
   const emitRipple = (event: ReactPointerEvent<HTMLElement>, force = false) => {
     if (reducedMotion || !heroRef.current) return;
     const rect = heroRef.current.getBoundingClientRect();
@@ -154,6 +172,11 @@ export default function HeroSection({ phase, reducedMotion, onNext }: HeroSectio
               reducedMotion={reducedMotion}
             />
           )}
+          <OilRippleOverlay
+            ripplesRef={ripplesRef}
+            reducedMotion={reducedMotion}
+            visible={heroVisible}
+          />
         </div>
         <div className="petrolero-home-vignette" aria-hidden="true" />
 
