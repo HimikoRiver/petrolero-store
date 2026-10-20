@@ -46,6 +46,17 @@
 
 .petrolero-home-video { object-fit: cover; }
 
+/* Persistent transparent highlights, separate from video/WebGL readiness. */
+.petrolero-home-oil .petrolero-home-ripples {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
 .petrolero-home-vignette {
   z-index: 1;
   background:
