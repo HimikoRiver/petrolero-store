@@ -6,7 +6,7 @@ import OilVideoSurface from "./OilVideoSurface";
 import type { OilRipple } from "./OilVideoSurface";
 import "./HeroSection.css";
 
-const VIDEO_SRC = "/home/video/oil.webm"; // Local asset; not committed to GitHub.
+const VIDEO_SRC = "/home/video/oil.webm";
 const MAX_RIPPLES = 12;
 
 type HeroSectionProps = {
@@ -41,6 +41,57 @@ export default function HeroSection({ phase, reducedMotion, onNext }: HeroSectio
       });
     }
   }, [reducedMotion, videoReady]);
+
+  // Generate ambient waves while this screen is visible, even if the
+  // visitor never moves the pointer. Pause the work offscreen.
+  useEffect(() => {
+    const section = heroRef.current;
+    if (!section || reducedMotion) return;
+
+    let timer: ReturnType<typeof setInterval> | null = null;
+    let sequence = 0;
+    const spawn = () => {
+      if (document.hidden) return;
+      const time = performance.now() * 0.001;
+      const x = 0.23 + 0.54 * (0.5 + 0.5 * Math.sin(sequence * 2.39996));
+      const y = 0.24 + 0.49 * (0.5 + 0.5 * Math.cos(sequence * 1.73205));
+      ripplesRef.current.push({ x, y, time, strength: 1.15 });
+      if (ripplesRef.current.length > MAX_RIPPLES) {
+        ripplesRef.current.splice(0, ripplesRef.current.length - MAX_RIPPLES);
+      }
+      sequence += 1;
+    };
+
+    const stop = () => {
+      if (timer !== null) clearInterval(timer);
+      timer = null;
+    };
+    const start = () => {
+      if (timer !== null || document.hidden) return;
+      spawn();
+      timer = setInterval(spawn, 740);
+    };
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) start();
+        else stop();
+      },
+      { threshold: 0.08 },
+    );
+    observer.observe(section);
+
+    const onVisibilityChange = () => {
+      if (document.hidden) stop();
+      else if (section.getBoundingClientRect().bottom > 0 &&
+               section.getBoundingClientRect().top < window.innerHeight) start();
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      stop();
+    };
+  }, [reducedMotion]);
 
   const emitRipple = (event: ReactPointerEvent<HTMLElement>, force = false) => {
     if (reducedMotion || !heroRef.current) return;
