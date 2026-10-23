@@ -5,13 +5,12 @@ import "./BrandStory.css";
 import { PARAGRAPHS } from "./copy";
 import AdvantagesSection from "../advantages/AdvantagesSection";
 
-type PetroleroStoryProps = {
-  onShowcaseChange: (showcase: boolean) => void;
+type BrandStoryProps = {
   reducedMotion: boolean;
 };
 
-/* Give each visible letter its own stable index for a continuous left-to-right
-   reveal, including across line wraps and between paragraphs. */
+/* Stable indexes keep the original continuous character-by-character
+   reveal across all three paragraphs, including natural line wrapping. */
 let indexCounter = 0;
 const LETTERS = PARAGRAPHS.map((paragraph) =>
   paragraph.split(" ").map((word) => ({
@@ -23,12 +22,9 @@ const LETTERS = PARAGRAPHS.map((paragraph) =>
   })),
 );
 const LETTER_COUNT = indexCounter;
-const clamp01 = (number: number) => Math.max(0, Math.min(1, number));
+const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
 
-export default function BrandStory({
-  onShowcaseChange,
-  reducedMotion,
-}: PetroleroStoryProps) {
+export default function BrandStory({ reducedMotion }: BrandStoryProps) {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -39,18 +35,14 @@ export default function BrandStory({
       section.querySelectorAll<HTMLSpanElement>(".petrolero-story-glyph"),
     );
     let frame = 0;
-    let previousShowcase: boolean | null = null;
 
     const update = () => {
       frame = 0;
       const rect = section.getBoundingClientRect();
       const viewport = window.innerHeight;
-      // Measure only the section's sticky scrolling interval, so the
-      // late background reveal still happens while the screen is visible.
       const progress = clamp01(-rect.top / Math.max(rect.height - viewport, 1));
 
-      // Text remains grey until the reading progress brings each letter
-      // to white. The final character is fully white before the logo returns.
+      // The complete text lights up before the next scene begins.
       const edge = 3.2;
       const head = clamp01((progress - 0.02) / 0.49) * (LETTER_COUNT + edge);
 
@@ -62,17 +54,8 @@ export default function BrandStory({
         glyph.style.color = `rgb(${red} ${green} ${blue})`;
       });
 
-      // The logo moves halfway through the text's reveal, stays while the
-      // last letters turn white, then returns before the benefits appear.
-      const showcase = !reducedMotion && progress >= 0.28 && progress < 0.56;
-      if (showcase !== previousShowcase) {
-        previousShowcase = showcase;
-        onShowcaseChange(showcase);
-      }
-
-      // Switch scenes on the same sticky viewport, not the next section.
-      // CSS allows the header's return flight to finish first. Scrolling
-      // upward reverses the state and restores the reading sequence.
+      // Continue into the existing advantages scene, with no separate
+      // logo flight: the brand mark remains in the header throughout.
       section.dataset.advantagesVisible =
         progress >= 0.56 ? "true" : "false";
     };
@@ -88,9 +71,8 @@ export default function BrandStory({
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
       if (frame) cancelAnimationFrame(frame);
-      onShowcaseChange(false);
     };
-  }, [onShowcaseChange, reducedMotion]);
+  }, [reducedMotion]);
 
   return (
     <section
@@ -101,26 +83,33 @@ export default function BrandStory({
       <div className="petrolero-story-sticky">
         <div className="petrolero-story-content">
           <div className="petrolero-story-copy">
-            {LETTERS.map((words, paragraphIndex) => (
-              <p
-                key={paragraphIndex}
-                className="petrolero-story-paragraph"
-                aria-label={PARAGRAPHS[paragraphIndex]}
-              >
-                {words.map(({ word, glyphs }, wordIndex) => (
-                  <span key={wordIndex}>
-                    <span className="petrolero-story-word" aria-hidden="true">
-                      {glyphs.map(({ character, index }) => (
-                        <span className="petrolero-story-glyph" key={index}>
-                          {character}
-                        </span>
-                      ))}
+            <p className="petrolero-story-eyebrow">О КОМПАНИИ</p>
+            <h2 className="petrolero-story-title">
+              <span>БОЛЬШЕ, ЧЕМ</span>
+              <span>ПРОСТО <em>МАСЛО</em></span>
+            </h2>
+            <div className="petrolero-story-description">
+              {LETTERS.map((words, paragraphIndex) => (
+                <p
+                  key={paragraphIndex}
+                  className="petrolero-story-paragraph"
+                  aria-label={PARAGRAPHS[paragraphIndex]}
+                >
+                  {words.map(({ word, glyphs }, wordIndex) => (
+                    <span key={wordIndex}>
+                      <span className="petrolero-story-word" aria-hidden="true">
+                        {glyphs.map(({ character, index }) => (
+                          <span className="petrolero-story-glyph" key={index}>
+                            {character}
+                          </span>
+                        ))}
+                      </span>
+                      {wordIndex < words.length - 1 ? " " : null}
                     </span>
-                    {wordIndex < words.length - 1 ? " " : null}
-                  </span>
-                ))}
-              </p>
-            ))}
+                  ))}
+                </p>
+              ))}
+            </div>
           </div>
         </div>
         <AdvantagesSection />
