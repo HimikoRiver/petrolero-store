@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SiteHeader from "./header/SiteHeader";
 import HeroSection from "./hero/HeroSection";
 import BrandStory from "./story/BrandStory";
@@ -11,8 +11,6 @@ export default function HomePage() {
   const storyRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
   const [phase, setPhase] = useState<0 | 1 | 2 | 3>(0);
-  const [showcase, setShowcase] = useState(false);
-  const handleShowcaseChange = useCallback((active: boolean) => setShowcase(active), []);
 
   useEffect(() => {
     if (reducedMotion || window.scrollY > window.innerHeight * 0.35) {
@@ -36,10 +34,10 @@ export default function HomePage() {
 
   return (
     <main className="petrolero-home">
-      <SiteHeader phase={phase} showcase={showcase} reducedMotion={reducedMotion} />
+      <SiteHeader phase={phase} reducedMotion={reducedMotion} />
       <HeroSection phase={phase} reducedMotion={reducedMotion} onNext={scrollToStory} />
       <div ref={storyRef}>
-        <BrandStory onShowcaseChange={handleShowcaseChange} reducedMotion={reducedMotion} />
+        <BrandStory reducedMotion={reducedMotion} />
       </div>
       <TechnologySection reducedMotion={reducedMotion} />
     </main>
