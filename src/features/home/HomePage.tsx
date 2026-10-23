@@ -4,11 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import SiteHeader from "./header/SiteHeader";
 import HeroSection from "./hero/HeroSection";
 import BrandStory from "./story/BrandStory";
+import SteelSection from "./steel/SteelSection";
 import TechnologySection from "./technology/TechnologySection";
 import useReducedMotion from "./hooks/useReducedMotion";
 
 export default function HomePage() {
-  const storyRef = useRef<HTMLDivElement>(null);
+  const steelRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
   const [phase, setPhase] = useState<0 | 1 | 2 | 3>(0);
 
@@ -26,8 +27,8 @@ export default function HomePage() {
     return () => timers.forEach(clearTimeout);
   }, [reducedMotion]);
 
-  const scrollToStory = () =>
-    storyRef.current?.scrollIntoView({
+  const scrollToSteel = () =>
+    steelRef.current?.scrollIntoView({
       behavior: reducedMotion ? "instant" : "smooth",
       block: "start",
     });
@@ -35,10 +36,11 @@ export default function HomePage() {
   return (
     <main className="petrolero-home">
       <SiteHeader phase={phase} reducedMotion={reducedMotion} />
-      <HeroSection phase={phase} reducedMotion={reducedMotion} onNext={scrollToStory} />
-      <div ref={storyRef}>
-        <BrandStory reducedMotion={reducedMotion} />
+      <HeroSection phase={phase} reducedMotion={reducedMotion} onNext={scrollToSteel} />
+      <div ref={steelRef}>
+        <SteelSection reducedMotion={reducedMotion} />
       </div>
+      <BrandStory reducedMotion={reducedMotion} />
       <TechnologySection reducedMotion={reducedMotion} />
     </main>
   );
