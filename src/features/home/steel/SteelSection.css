@@ -23,8 +23,9 @@
 }
 
 .petrolero-steel-copy {
-  align-self: flex-end;
-  width: min(48%, 590px);
+  align-self: center;
+  width: min(100%, 900px);
+  text-align: center;
   opacity: 0;
   transform: translateY(22px);
   transition: opacity 850ms ease, transform 1000ms cubic-bezier(.2,.7,.2,1);
@@ -38,6 +39,7 @@
 .petrolero-steel-title {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: .07em;
   margin: 0;
   font-size: clamp(38px, 4.2vw, 76px);
@@ -51,11 +53,19 @@
 .petrolero-steel-title span { color: #c3c7c4; font-size: .73em; white-space: nowrap; }
 
 .petrolero-steel-description {
-  max-width: 460px;
-  margin: 21px 0 0;
+  max-width: 860px;
+  margin: clamp(22px, 3vh, 34px) auto 0;
   color: #d3d6d6;
-  font-size: clamp(15px, 1.16vw, 19px);
-  line-height: 1.6;
+  font-size: clamp(15px, 1.13vw, 18px);
+  line-height: 1.65;
+}
+
+.petrolero-steel-description p {
+  margin: 0;
+}
+
+.petrolero-steel-description p + p {
+  margin-top: 13px;
 }
 
 .petrolero-steel-cards {
@@ -156,7 +166,7 @@
 
 @media (max-width: 1024px) {
   .petrolero-steel-layout { padding-inline: 4vw; }
-  .petrolero-steel-copy { width: min(55%, 500px); }
+  .petrolero-steel-copy { width: min(100%, 820px); }
   .petrolero-steel-title { font-size: clamp(33px, 4.2vw, 56px); }
   .petrolero-steel-card { aspect-ratio: 3 / 4; }
   .petrolero-steel-card-title { font-size: clamp(16px, 2.1vw, 23px); }
@@ -165,10 +175,11 @@
 @media (max-width: 700px) {
   .petrolero-steel, .petrolero-steel-layout { min-height: 0; }
   .petrolero-steel-layout { gap: 32px; padding: 145px 18px 85px; }
-  .petrolero-steel-copy { align-self: flex-end; width: min(100%, 440px); text-align: right; }
-  .petrolero-steel-title { align-items: flex-end; font-size: clamp(32px, 7vw, 48px); }
+  .petrolero-steel-copy { align-self: center; width: min(100%, 540px); text-align: center; }
+  .petrolero-steel-title { align-items: center; font-size: clamp(32px, 7vw, 48px); }
   .petrolero-steel-title span { white-space: normal; }
-  .petrolero-steel-description { max-width: 340px; margin: 15px 0 0 auto; font-size: 14px; }
+  .petrolero-steel-description { max-width: 520px; margin: 18px auto 0; font-size: 14px; }
+  .petrolero-steel-description p + p { margin-top: 11px; }
   .petrolero-steel-cards { grid-template-columns: 1fr; gap: 14px; }
   .petrolero-steel-card { width: min(100%, 480px); margin-inline: auto; aspect-ratio: 3 / 4; }
   .petrolero-steel-card-copy { right: 22px; bottom: 23px; left: 22px; }
