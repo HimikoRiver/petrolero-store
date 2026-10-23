@@ -10,11 +10,10 @@ type Panel = "account" | "cart" | null;
 
 type PetroleroHeaderProps = {
   phase: 0 | 1 | 2 | 3;
-  showcase: boolean;
   reducedMotion: boolean;
 };
 
-export default function SiteHeader({ phase, showcase, reducedMotion }: PetroleroHeaderProps) {
+export default function SiteHeader({ phase, reducedMotion }: PetroleroHeaderProps) {
   const searchRef = useRef<HTMLInputElement>(null);
   const searchWrapRef = useRef<HTMLDivElement>(null);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -70,7 +69,7 @@ export default function SiteHeader({ phase, showcase, reducedMotion }: Petrolero
 
   return (
     <>
-      <div className="petrolero-fixed-header" data-showcase={showcase} data-phase={phase}>
+      <div className="petrolero-fixed-header" data-phase={phase}>
         <div className="petrolero-fixed-brand">
           <BrandLogo animated={!reducedMotion} variant="gold" />
         </div>
