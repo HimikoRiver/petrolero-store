@@ -62,10 +62,6 @@ export default function SteelSection({ reducedMotion }: SteelSectionProps) {
       aria-labelledby="petrolero-steel-heading"
       data-visible={visible || reducedMotion}
     >
-      <div className="petrolero-steel-artwork" aria-hidden="true" />
-      <div className="petrolero-steel-shading" aria-hidden="true" />
-      <div className="petrolero-steel-light" aria-hidden="true" />
-
       <div className="petrolero-steel-layout">
         <div className="petrolero-steel-copy">
           <h2 id="petrolero-steel-heading" className="petrolero-steel-title">

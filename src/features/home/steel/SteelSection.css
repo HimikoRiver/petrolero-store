@@ -1,4 +1,4 @@
-/* Portrait vehicle cards on a black graphite stage. */
+/* Portrait vehicle cards on a pure black stage. */
 .petrolero-steel {
   position: relative;
   isolation: isolate;
@@ -6,59 +6,6 @@
   overflow: clip;
   background: #000;
   color: #eef0f0;
-}
-
-.petrolero-steel-artwork,
-.petrolero-steel-shading,
-.petrolero-steel-light {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.petrolero-steel-artwork {
-  z-index: 0;
-  inset: 0 0 auto;
-  height: clamp(370px, 49svh, 580px);
-  background: #101214 url("/home/images/fon4.webp") 34% 18% / cover no-repeat;
-  opacity: .28;
-  filter: grayscale(1) brightness(.66);
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 30%, transparent 96%);
-  mask-image: linear-gradient(180deg, #000 0%, #000 30%, transparent 96%);
-  transform: scale(1.035);
-  transform-origin: top center;
-  transition: transform 1700ms cubic-bezier(.2,.7,.2,1);
-}
-
-.petrolero-steel[data-visible="true"] .petrolero-steel-artwork {
-  transform: scale(1);
-}
-
-.petrolero-steel-shading {
-  z-index: 1;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,.3) 24%, #000 49%, #000 100%),
-    linear-gradient(270deg, rgba(0,0,0,.55), transparent 65%);
-}
-
-.petrolero-steel-light {
-  z-index: 2;
-  inset: 0 0 auto;
-  height: clamp(340px, 42svh, 510px);
-  opacity: 0;
-  background: linear-gradient(110deg, transparent 30%, rgba(208,216,219,.045) 50%, transparent 70%);
-  transform: translateX(-45%);
-  mix-blend-mode: screen;
-}
-
-.petrolero-steel[data-visible="true"] .petrolero-steel-light {
-  animation: petrolero-steel-sweep 1.9s ease-out both;
-}
-
-@keyframes petrolero-steel-sweep {
-  0% { transform: translateX(-45%); opacity: 0; }
-  28%, 72% { opacity: .8; }
-  100% { transform: translateX(45%); opacity: 0; }
 }
 
 .petrolero-steel-layout {
@@ -217,10 +164,6 @@
 
 @media (max-width: 700px) {
   .petrolero-steel, .petrolero-steel-layout { min-height: 0; }
-  .petrolero-steel-artwork { background-position: 31% top; height: 400px; opacity: .22; }
-  .petrolero-steel-shading {
-    background: linear-gradient(180deg, rgba(0,0,0,.17), rgba(0,0,0,.48) 19%, #000 43%, #000 100%);
-  }
   .petrolero-steel-layout { gap: 32px; padding: 145px 18px 85px; }
   .petrolero-steel-copy { align-self: flex-end; width: min(100%, 440px); text-align: right; }
   .petrolero-steel-title { align-items: flex-end; font-size: clamp(32px, 7vw, 48px); }
@@ -233,12 +176,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .petrolero-steel-artwork, .petrolero-steel-copy, .petrolero-steel-card, .petrolero-steel-card-image {
+  .petrolero-steel-copy, .petrolero-steel-card, .petrolero-steel-card-image {
     transition: none;
     transform: none;
   }
-  .petrolero-steel-artwork { filter: grayscale(1) brightness(.66); }
   .petrolero-steel-card-image { filter: grayscale(.82) brightness(.94); }
   .petrolero-steel-copy, .petrolero-steel-card { opacity: 1; }
-  .petrolero-steel-light { display: none; }
 }
