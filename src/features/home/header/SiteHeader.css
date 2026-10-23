@@ -52,15 +52,6 @@
   transform: translateY(-50%);
 }
 
-/* A quick spring-loaded detachment of the logo into the story's right column. */
-.petrolero-fixed-header[data-showcase="true"] .petrolero-fixed-brand {
-  top: 51svh;
-  left: calc(100vw - min(34vw, 490px) - clamp(30px, 7vw, 135px));
-  width: min(34vw, 490px);
-  transform: translate(0, -50%);
-  opacity: 1;
-}
-
 .petrolero-fixed-brand .petrolero-logo__image {
   filter: brightness(0) saturate(100%) invert(86%) sepia(22%) saturate(697%) hue-rotate(342deg) brightness(100%) contrast(92%);
 }
@@ -330,13 +321,6 @@
   color: rgba(255,255,255,.7);
 }
 
-@media (max-width: 900px) {
-  .petrolero-fixed-header[data-showcase="true"] .petrolero-fixed-brand {
-    width: 33vw;
-    left: 63vw;
-  }
-}
-
 @media (max-width: 620px) {
   .petrolero-fixed-header::before { height: 70px; }
   .petrolero-fixed-brand { width: clamp(145px, 46vw, 235px); }
@@ -356,20 +340,11 @@
     width: 73px;
     transform: translateY(-50%);
   }
-  .petrolero-fixed-header[data-showcase="true"] .petrolero-fixed-brand {
-    top: 24svh;
-    left: calc(100vw - min(42vw,190px) - 17px);
-    width: min(42vw,190px);
-    transform: translateY(-50%);
-  }
   .petrolero-nav-dialog-backdrop { padding: 75px 15px 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .petrolero-fixed-brand,
-  .petrolero-fixed-header[data-showcase="true"] .petrolero-fixed-brand {
-    transition: none !important;
-  }
+  .petrolero-fixed-brand { transition: none !important; }
   .petrolero-nav-search-field,
   .petrolero-nav-search-field input { transition: none !important; }
   .petrolero-nav-search-outline rect { animation: none !important; stroke-dashoffset: 0; }
