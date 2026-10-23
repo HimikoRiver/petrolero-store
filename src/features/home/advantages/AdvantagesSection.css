@@ -1,5 +1,5 @@
 /* Advantages occupy the same pinned cinematic scene as the brand story.
-   The parent controls when the finished logo flight reveals this layer. */
+   The parent switches scenes after the scroll-driven text reveal. */
 .petrolero-advantages {
   position: absolute;
   z-index: 3;
@@ -25,9 +25,9 @@
   pointer-events: auto;
   transform: translate3d(0, 0, 0);
   transition:
-    opacity 760ms ease 1750ms,
-    transform 900ms cubic-bezier(.22,.8,.2,1) 1750ms,
-    visibility 0ms linear 1750ms;
+    opacity 760ms ease 440ms,
+    transform 900ms cubic-bezier(.22,.8,.2,1) 440ms,
+    visibility 0ms linear 440ms;
 }
 
 .petrolero-advantages-inner {
