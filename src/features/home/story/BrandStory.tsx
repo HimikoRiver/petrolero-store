@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import "./BrandStory.css";
 import { PARAGRAPHS } from "./copy";
 import AdvantagesSection from "../advantages/AdvantagesSection";
@@ -22,6 +23,11 @@ const LETTERS = PARAGRAPHS.map((paragraph) =>
   })),
 );
 const LETTER_COUNT = indexCounter;
+const FEATURES = [
+  { number: "01", title: "ИССЛЕДОВАНИЯ И РАЗРАБОТКИ", icon: "/home/images/icons/petrolero-flask-icon.webp", description: "Изучаем процессы внутри двигателя и свойства компонентов моторных масел." },
+  { number: "02", title: "СОВРЕМЕННЫЕ ТЕХНОЛОГИИ", icon: "/home/images/icons/petrolero-gear-icon.webp", description: "Используем современные компоненты при разработке масел и присадок." },
+  { number: "03", title: "ЗАЩИТА И НАДЁЖНОСТЬ", icon: "/home/images/icons/petrolero-shield-icon.webp", description: "Помогаем уменьшать трение и износ и поддерживать стабильную работу двигателя." },
+] as const;
 const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
 
 export default function BrandStory({ reducedMotion }: BrandStoryProps) {
@@ -108,6 +114,16 @@ export default function BrandStory({ reducedMotion }: BrandStoryProps) {
                     </span>
                   ))}
                 </p>
+              ))}
+            </div>
+            <div className="petrolero-story-features">
+              {FEATURES.map((feature) => (
+                <article className="petrolero-story-feature" key={feature.number}>
+                  <span className="petrolero-story-feature-number">{feature.number}</span>
+                  <h3>{feature.title}</h3>
+                  <Image src={feature.icon} alt="" width={724} height={724} className="petrolero-story-feature-icon" />
+                  <p>{feature.description}</p>
+                </article>
               ))}
             </div>
           </div>
