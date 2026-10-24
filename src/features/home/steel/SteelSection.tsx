@@ -15,7 +15,7 @@ const VEHICLE_LOADS = [
     title: "ЧАСТЫЕ ОСТАНОВКИ И ЗАПУСКИ",
     image: "/home/images/cards/1.webp",
     detail: "Городской режим, частые пуски и перепады температур.",
-    icon: "car",
+    icon: "/home/images/icons/petrolero-gold-icon-1.webp",
     alt: "Легковой автомобиль в плотном ночном потоке на мокрой дороге",
   },
   {
@@ -24,7 +24,7 @@ const VEHICLE_LOADS = [
     title: "ВЫСОКИЕ ОБОРОТЫ",
     image: "/home/images/cards/2.webp",
     detail: "Повышенные обороты и интенсивный нагрев двигателя.",
-    icon: "moto",
+    icon: "/home/images/icons/petrolero-gold-icon-2.webp",
     alt: "Мотоциклист проходит поворот горной дороги",
   },
   {
@@ -33,7 +33,7 @@ const VEHICLE_LOADS = [
     title: "ДЛИТЕЛЬНЫЕ НАГРУЗКИ",
     image: "/home/images/cards/3.webp",
     detail: "Тяжёлый груз, высокое давление и длительные пробеги.",
-    icon: "truck",
+    icon: "/home/images/icons/petrolero-gold-icon-3.webp",
     alt: "Тяжёлый грузовик преодолевает горный подъём",
   },
 ] as const;
@@ -102,7 +102,7 @@ export default function SteelSection({ reducedMotion }: SteelSectionProps) {
               />
               <div className="petrolero-steel-card-copy">
                 <div className="petrolero-steel-card-icon" aria-hidden="true">
-                  {vehicle.icon === "car" ? "▰" : vehicle.icon === "moto" ? "◉" : "▣"}
+                  <Image src={vehicle.icon} alt="" width={724} height={480} sizes="96px" />
                 </div>
                 <p className="petrolero-steel-card-type">{vehicle.type}</p>
                 <h3 className="petrolero-steel-card-title">{vehicle.title}</h3>
