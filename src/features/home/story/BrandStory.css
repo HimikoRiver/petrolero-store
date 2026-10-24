@@ -64,6 +64,16 @@
   opacity: 1;
 }
 
+/* Subtle fade from the preceding pure-black steel section. */
+.petrolero-story-sticky::before {
+  background-image:
+    linear-gradient(to bottom, #000 0%, rgba(0,0,0,.82) 7%, rgba(0,0,0,.35) 18%, transparent 30%),
+    linear-gradient(90deg, rgba(0,0,0,.94) 0%, rgba(0,0,0,.82) 24%, rgba(0,0,0,.55) 46%, rgba(0,0,0,.12) 76%, rgba(0,0,0,.04) 100%),
+    linear-gradient(0deg, rgba(0,0,0,.28), transparent 37%, rgba(0,0,0,.16)),
+    url("/home/images/fon3.webp");
+  background-position: center, center, center, center;
+}
+
 .petrolero-story-content {
   position: relative;
   z-index: 2;
