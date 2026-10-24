@@ -14,6 +14,8 @@ const VEHICLE_LOADS = [
     type: "ЛЕГКОВЫЕ",
     title: "ЧАСТЫЕ ОСТАНОВКИ И ЗАПУСКИ",
     image: "/home/images/cards/1.webp",
+    detail: "Городской режим, частые пуски и перепады температур.",
+    icon: "car",
     alt: "Легковой автомобиль в плотном ночном потоке на мокрой дороге",
   },
   {
@@ -21,6 +23,8 @@ const VEHICLE_LOADS = [
     type: "МОТО",
     title: "ВЫСОКИЕ ОБОРОТЫ",
     image: "/home/images/cards/2.webp",
+    detail: "Повышенные обороты и интенсивный нагрев двигателя.",
+    icon: "moto",
     alt: "Мотоциклист проходит поворот горной дороги",
   },
   {
@@ -28,6 +32,8 @@ const VEHICLE_LOADS = [
     type: "ГРУЗОВЫЕ",
     title: "ДЛИТЕЛЬНЫЕ НАГРУЗКИ",
     image: "/home/images/cards/3.webp",
+    detail: "Тяжёлый груз, высокое давление и длительные пробеги.",
+    icon: "truck",
     alt: "Тяжёлый грузовик преодолевает горный подъём",
   },
 ] as const;
@@ -66,20 +72,18 @@ export default function SteelSection({ reducedMotion }: SteelSectionProps) {
         <div className="petrolero-steel-copy">
           <h2 id="petrolero-steel-heading" className="petrolero-steel-title">
             <strong>МЕТАЛЛ</strong>
-            <span>ПОД НАГРУЗКОЙ</span>
+            <span>ПОД <em>НАГРУЗКОЙ</em></span>
           </h2>
           <div className="petrolero-steel-description">
             <p>
-              Когда двигатель работает, его детали непрерывно испытывают давление,
-              нагрев и трение. Но нагрузка бывает разной: в городском потоке —
-              частые пуски и остановки, на мотоцикле — высокие обороты,
-              у грузовика — долгая работа с тяжёлым грузом.
+              Когда двигатель работает, его детали постоянно испытывают экстремальные условия:
+              <span> высокое давление, сильный нагрев и постоянное трение.</span>
+              <br />Нагрузка зависит от типа техники и условий эксплуатации.
             </p>
             <p>
-              В этих условиях моторное масло должно сохранять защитную плёнку
-              между движущимися поверхностями, помогая уменьшать трение и износ.
-              Поэтому при выборе масла важно учитывать требования двигателя
-              и условия его эксплуатации.
+              Моторное масло должно сохранять защитную плёнку между движущимися поверхностями,
+              помогая <span>уменьшать трение и износ.</span> Поэтому важно учитывать
+              требования двигателя и условия, в которых он работает.
             </p>
           </div>
         </div>
@@ -93,12 +97,16 @@ export default function SteelSection({ reducedMotion }: SteelSectionProps) {
                 alt={vehicle.alt}
                 width={680}
                 height={768}
-                sizes="(max-width: 700px) 92vw, (max-width: 1024px) 31vw, 30vw"
+                sizes="(max-width: 700px) 90vw, (max-width: 1024px) 30vw, 340px"
                 loading="lazy"
               />
               <div className="petrolero-steel-card-copy">
+                <div className="petrolero-steel-card-icon" aria-hidden="true">
+                  {vehicle.icon === "car" ? "▰" : vehicle.icon === "moto" ? "◉" : "▣"}
+                </div>
                 <p className="petrolero-steel-card-type">{vehicle.type}</p>
                 <h3 className="petrolero-steel-card-title">{vehicle.title}</h3>
+                <p className="petrolero-steel-card-detail">{vehicle.detail}</p>
               </div>
             </article>
           ))}
