@@ -25,7 +25,7 @@ const LETTERS = PARAGRAPHS.map((paragraph) =>
 const LETTER_COUNT = indexCounter;
 const FEATURES = [
   { number: "01", title: "ИССЛЕДОВАНИЯ И РАЗРАБОТКИ", icon: "/home/images/icons/petrolero-flask-icon.webp", description: "Изучаем процессы внутри двигателя и свойства компонентов моторных масел." },
-  { number: "02", title: "СОВРЕМЕННЫЕ ТЕХНОЛОГИИ", icon: "/home/images/icons/engine-gear.webp", description: "Используем современные компоненты при разработке масел и присадок." },
+  { number: "02", title: "СОВРЕМЕННЫЕ ТЕХНОЛОГИИ", icon: "/home/images/icons/petrolero-gear-icon.webp", description: "Используем современные компоненты при разработке масел и присадок." },
   { number: "03", title: "ЗАЩИТА И НАДЁЖНОСТЬ", icon: "/home/images/icons/petrolero-shield-icon.webp", description: "Помогаем уменьшать трение и износ и поддерживать стабильную работу двигателя." },
 ] as const;
 const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
