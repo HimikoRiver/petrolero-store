@@ -194,3 +194,31 @@
   .petrolero-steel-card-image { filter: grayscale(.82) brightness(.94); }
   .petrolero-steel-copy, .petrolero-steel-card { opacity: 1; }
 }
+
+/* Refined premium black-and-gold steel story */
+.petrolero-steel-layout { gap: clamp(26px, 4vh, 44px); padding-block: clamp(105px, 12vh, 132px) clamp(74px, 9vh, 105px); }
+.petrolero-steel-title strong { color: #f0f0ef; }
+.petrolero-steel-title span { color: #d9d9d9; }
+.petrolero-steel-title em { color: #d8a951; font-style: normal; }
+.petrolero-steel-description { max-width: 760px; font-size: clamp(14px, 1vw, 16px); line-height: 1.6; color: #bfc0c1; }
+.petrolero-steel-description span { color: #d8a951; }
+.petrolero-steel-cards { width: min(100%, 1050px); gap: clamp(16px, 2vw, 34px); }
+.petrolero-steel-card { aspect-ratio: 3 / 4; border: 1px solid rgba(202,151,62,.5); border-radius: 10px; background: #080808; }
+.petrolero-steel-card-image { filter: grayscale(.65) saturate(.52) contrast(1.08) brightness(.91); }
+.petrolero-steel-card::after { background: linear-gradient(180deg, rgba(0,0,0,.03) 10%, rgba(0,0,0,.03) 37%, rgba(0,0,0,.7) 65%, #000 100%); }
+.petrolero-steel-card-copy { right: 15px; bottom: clamp(15px, 2vw, 25px); left: 15px; text-align: center; }
+.petrolero-steel-card-icon { display: grid; place-items: center; width: 48px; height: 34px; margin: 0 auto 8px; color: #e0b45d; border: 1px solid rgba(216,169,81,.65); border-radius: 8px; font-size: 22px; }
+.petrolero-steel-card-type { margin-bottom: 5px; font-size: 10px; letter-spacing: .16em; }
+.petrolero-steel-card-title { max-width: none; font-size: clamp(17px, 1.4vw, 22px); }
+.petrolero-steel-card-detail { max-width: 245px; margin: 13px auto 0; color: #b8b8b8; font-size: clamp(11px, .85vw, 13px); line-height: 1.5; }
+@media (hover:hover) and (pointer:fine) {
+  .petrolero-steel[data-visible="true"] .petrolero-steel-card:hover { border-color: #e0b45d; box-shadow: 0 12px 36px rgba(191,137,49,.14); }
+  .petrolero-steel-card:hover .petrolero-steel-card-image { filter: grayscale(.25) saturate(.75) brightness(1.03); }
+}
+@media (max-width:700px) {
+  .petrolero-steel-layout { padding: 125px 18px 75px; }
+  .petrolero-steel-cards { gap: 18px; }
+  .petrolero-steel-card { width: min(100%, 370px); }
+  .petrolero-steel-card-title { font-size: 21px; }
+  .petrolero-steel-card-detail { font-size: 13px; }
+}
