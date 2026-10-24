@@ -120,8 +120,10 @@ export default function BrandStory({ reducedMotion }: BrandStoryProps) {
               {FEATURES.map((feature) => (
                 <article className="petrolero-story-feature" key={feature.number}>
                   <span className="petrolero-story-feature-number">{feature.number}</span>
-                  <h3>{feature.title}</h3>
-                  <Image src={feature.icon} alt="" width={724} height={724} className="petrolero-story-feature-icon" />
+                  <div className="petrolero-story-feature-heading">
+                    <Image src={feature.icon} alt="" width={724} height={724} className="petrolero-story-feature-icon" />
+                    <h3>{feature.title}</h3>
+                  </div>
                   <p>{feature.description}</p>
                 </article>
               ))}
