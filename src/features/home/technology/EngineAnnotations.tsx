@@ -2,10 +2,10 @@ import Image from "next/image";
 import { ENGINE_NOTES } from "./technologyData";
 
 const ENGINE_ICON_SRC = {
-  protection: "/home/images/icons/3.webp",
-  innovation: "/home/images/icons/2.webp",
-  efficiency: "/home/images/icons/4.webp",
-  stability: "/home/images/icons/1.webp",
+  protection: "/home/images/icons/engine-shield.webp",
+  innovation: "/home/images/icons/engine-gear.webp",
+  efficiency: "/home/images/icons/engine-speedometer.webp",
+  stability: "/home/images/icons/engine-oil-drop.webp",
 } as const;
 
 export default function EngineAnnotations({ revealedCount }: { revealedCount: number }) {
