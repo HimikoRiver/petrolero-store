@@ -205,14 +205,18 @@
 .petrolero-steel-card-type { margin-bottom: 5px; font-size: 10px; letter-spacing: .16em; }
 .petrolero-steel-card-title { max-width: none; font-size: clamp(17px, 1.4vw, 22px); }
 .petrolero-steel-card-detail { max-width: 245px; margin: 13px auto 0; color: #b8b8b8; font-size: clamp(11px, .85vw, 13px); line-height: 1.5; }
-@media (hover:hover) and (pointer:fine) {
-}
 @media (max-width:700px) {
   .petrolero-steel-layout { padding: 125px 18px 75px; }
   .petrolero-steel-cards { gap: 18px; }
   .petrolero-steel-card { width: min(100%, 370px); }
   .petrolero-steel-card-title { font-size: 21px; }
   .petrolero-steel-card-detail { font-size: 13px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petrolero-steel-card:hover .petrolero-steel-card-image {
+    transform: none;
+  }
 }
 
 /* Custom gold vehicle emblems */
