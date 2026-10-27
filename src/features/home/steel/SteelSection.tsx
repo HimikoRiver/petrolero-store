@@ -15,7 +15,7 @@ const VEHICLE_LOADS = [
     title: "ЧАСТЫЕ ОСТАНОВКИ И ЗАПУСКИ",
     image: "/home/images/cards/1.webp",
     detail: "Городской режим, частые пуски и перепады температур.",
-    icon: "/home/images/icons/petrolero-gold-icon-1.webp",
+    icon: "/home/images/icons/petrolero-gold-icon-1.webp?v=a8a85109",
     alt: "Легковой автомобиль в плотном ночном потоке на мокрой дороге",
   },
   {
@@ -33,7 +33,7 @@ const VEHICLE_LOADS = [
     title: "ДЛИТЕЛЬНЫЕ НАГРУЗКИ",
     image: "/home/images/cards/3.webp",
     detail: "Тяжёлый груз, высокое давление и длительные пробеги.",
-    icon: "/home/images/icons/petrolero-gold-icon-3.webp",
+    icon: "/home/images/icons/petrolero-gold-icon-3.webp?v=4db78ad9",
     alt: "Тяжёлый грузовик преодолевает горный подъём",
   },
 ] as const;
