@@ -29,7 +29,7 @@ export const ENGINE_NOTES = [
   {
     id: "efficiency", title: "Максимальная", detail: "эффективность",
     icon: "gauge", side: "left", position: "bottom", time: 5.3,
-    dotX: 445, dotY: 466, line: "M105 500H290L445 466", compactLine: "M248 500H306L470 452",
+    dotX: 445, dotY: 466, line: "M170 500H290L445 466", compactLine: "M248 500H306L470 452",
   },
 {
   id: "stability",
@@ -41,7 +41,7 @@ export const ENGINE_NOTES = [
   time: 7.2,
   dotX: 958,
   dotY: 410,
-  line: "M1075 494H996L958 410",
+  line: "M1060 494H996L958 410",
   compactLine: "M956 500H926L833 452",
 },
 ] as const;

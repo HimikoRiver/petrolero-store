@@ -1,3 +1,4 @@
+
 /* Portrait vehicle cards on a pure black stage. */
 .petrolero-steel {
   position: relative;
@@ -19,7 +20,10 @@
   width: min(100%, 1620px);
   min-height: 100svh;
   margin: 0 auto;
-  padding: clamp(118px, 14vh, 150px) clamp(24px, 5vw, 92px) clamp(90px, 11vh, 125px);
+  padding:
+    clamp(118px, 14vh, 150px)
+    clamp(24px, 5vw, 92px)
+    clamp(90px, 11vh, 125px);
 }
 
 .petrolero-steel-copy {
@@ -28,7 +32,9 @@
   text-align: center;
   opacity: 0;
   transform: translateY(22px);
-  transition: opacity 850ms ease, transform 1000ms cubic-bezier(.2,.7,.2,1);
+  transition:
+    opacity 850ms ease,
+    transform 1000ms cubic-bezier(.2,.7,.2,1);
 }
 
 .petrolero-steel[data-visible="true"] .petrolero-steel-copy {
@@ -49,8 +55,16 @@
   text-transform: uppercase;
 }
 
-.petrolero-steel-title strong { color: #eff0f0; font-weight: 850; }
-.petrolero-steel-title span { color: #c3c7c4; font-size: .73em; white-space: nowrap; }
+.petrolero-steel-title strong {
+  color: #eff0f0;
+  font-weight: 850;
+}
+
+.petrolero-steel-title span {
+  color: #c3c7c4;
+  font-size: .73em;
+  white-space: nowrap;
+}
 
 .petrolero-steel-description {
   max-width: 860px;
@@ -100,8 +114,15 @@
   transform: translateY(0);
 }
 
-.petrolero-steel[data-visible="true"] .petrolero-steel-card:nth-child(2) { transition-delay: 100ms; }
-.petrolero-steel[data-visible="true"] .petrolero-steel-card:nth-child(3) { transition-delay: 200ms; }
+.petrolero-steel[data-visible="true"]
+.petrolero-steel-card:nth-child(2) {
+  transition-delay: 100ms;
+}
+
+.petrolero-steel[data-visible="true"]
+.petrolero-steel-card:nth-child(3) {
+  transition-delay: 200ms;
+}
 
 .petrolero-steel-card-image {
   position: absolute;
@@ -111,9 +132,15 @@
   height: 100%;
   object-fit: cover;
   object-position: center 54%;
-  filter: grayscale(.82) saturate(.26) contrast(1.06) brightness(.94);
+  filter:
+    grayscale(.82)
+    saturate(.26)
+    contrast(1.06)
+    brightness(.94);
   transform: scale(1);
-  transition: transform 750ms cubic-bezier(.2,.7,.2,1), filter 750ms ease;
+  transition:
+    transform 750ms cubic-bezier(.2,.7,.2,1),
+    filter 750ms ease;
 }
 
 .petrolero-steel-card::after {
@@ -121,7 +148,14 @@
   position: absolute;
   z-index: 1;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,.1) 12%, transparent 36%, rgba(0,0,0,.45) 59%, rgba(0,0,0,.93) 100%);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.1) 12%,
+      transparent 36%,
+      rgba(0,0,0,.45) 59%,
+      rgba(0,0,0,.93) 100%
+    );
   pointer-events: none;
 }
 
@@ -152,77 +186,271 @@
   letter-spacing: -.03em;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .petrolero-steel[data-visible="true"] .petrolero-steel-card:hover {
-    transform: translateY(-7px);
-    border-color: rgba(224,231,232,.68);
-    box-shadow: 0 27px 70px rgba(0,0,0,.53);
-  }
-  .petrolero-steel-card:hover .petrolero-steel-card-image {
-    transform: scale(1.065);
-    filter: grayscale(.5) saturate(.45) contrast(1.04) brightness(1.04);
-  }
-}
-
+/* Tablet */
 @media (max-width: 1024px) {
-  .petrolero-steel-layout { padding-inline: 4vw; }
-  .petrolero-steel-copy { width: min(100%, 820px); }
-  .petrolero-steel-title { font-size: clamp(33px, 4.2vw, 56px); }
-  .petrolero-steel-card { aspect-ratio: 3 / 4; }
-  .petrolero-steel-card-title { font-size: clamp(16px, 2.1vw, 23px); }
-}
-
-@media (max-width: 700px) {
-  .petrolero-steel, .petrolero-steel-layout { min-height: 0; }
-  .petrolero-steel-layout { gap: 32px; padding: 145px 18px 85px; }
-  .petrolero-steel-copy { align-self: center; width: min(100%, 540px); text-align: center; }
-  .petrolero-steel-title { align-items: center; font-size: clamp(32px, 7vw, 48px); }
-  .petrolero-steel-title span { white-space: normal; }
-  .petrolero-steel-description { max-width: 520px; margin: 18px auto 0; font-size: 14px; }
-  .petrolero-steel-description p + p { margin-top: 11px; }
-  .petrolero-steel-cards { grid-template-columns: 1fr; gap: 14px; }
-  .petrolero-steel-card { width: min(100%, 480px); margin-inline: auto; aspect-ratio: 3 / 4; }
-  .petrolero-steel-card-copy { right: 22px; bottom: 23px; left: 22px; }
-  .petrolero-steel-card-title { font-size: clamp(20px, 5.5vw, 27px); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .petrolero-steel-copy, .petrolero-steel-card, .petrolero-steel-card-image {
-    transition: none;
-    transform: none;
+  .petrolero-steel-layout {
+    padding-inline: 4vw;
   }
-  .petrolero-steel-card-image { filter: grayscale(.82) brightness(.94); }
-  .petrolero-steel-copy, .petrolero-steel-card { opacity: 1; }
+
+  .petrolero-steel-copy {
+    width: min(100%, 820px);
+  }
+
+  .petrolero-steel-title {
+    font-size: clamp(33px, 4.2vw, 56px);
+  }
+
+  .petrolero-steel-card {
+    aspect-ratio: 3 / 4;
+  }
+
+  .petrolero-steel-card-title {
+    font-size: clamp(16px, 2.1vw, 23px);
+  }
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .petrolero-steel,
+  .petrolero-steel-layout {
+    min-height: 0;
+  }
+
+  .petrolero-steel-layout {
+    gap: 32px;
+    padding: 145px 18px 85px;
+  }
+
+  .petrolero-steel-copy {
+    align-self: center;
+    width: min(100%, 540px);
+    text-align: center;
+  }
+
+  .petrolero-steel-title {
+    align-items: center;
+    font-size: clamp(32px, 7vw, 48px);
+  }
+
+  .petrolero-steel-title span {
+    white-space: normal;
+  }
+
+  .petrolero-steel-description {
+    max-width: 520px;
+    margin: 18px auto 0;
+    font-size: 14px;
+  }
+
+  .petrolero-steel-description p + p {
+    margin-top: 11px;
+  }
+
+  .petrolero-steel-cards {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .petrolero-steel-card {
+    width: min(100%, 480px);
+    margin-inline: auto;
+    aspect-ratio: 3 / 4;
+  }
+
+  .petrolero-steel-card-copy {
+    right: 22px;
+    bottom: 23px;
+    left: 22px;
+  }
+
+  .petrolero-steel-card-title {
+    font-size: clamp(20px, 5.5vw, 27px);
+  }
 }
 
 /* Refined premium black-and-gold steel story */
-.petrolero-steel-layout { gap: clamp(26px, 4vh, 44px); padding-block: clamp(105px, 12vh, 132px) clamp(74px, 9vh, 105px); }
-.petrolero-steel-title strong { color: #f0f0ef; }
-.petrolero-steel-title span { color: #d9d9d9; }
-.petrolero-steel-title em { color: #d8a951; font-style: normal; }
-.petrolero-steel-description { max-width: 760px; font-size: clamp(14px, 1vw, 16px); line-height: 1.6; color: #bfc0c1; }
-.petrolero-steel-description span { color: #d8a951; }
-.petrolero-steel-cards { width: min(100%, 1050px); gap: clamp(16px, 2vw, 34px); }
-.petrolero-steel-card { aspect-ratio: 3 / 4; border: 1px solid rgba(202,151,62,.5); border-radius: 10px; background: #080808; }
-.petrolero-steel-card-image { filter: grayscale(.65) saturate(.52) contrast(1.08) brightness(.91); }
-.petrolero-steel-card::after { background: linear-gradient(180deg, rgba(0,0,0,.03) 10%, rgba(0,0,0,.03) 37%, rgba(0,0,0,.7) 65%, #000 100%); }
-.petrolero-steel-card-copy { right: 15px; bottom: clamp(15px, 2vw, 25px); left: 15px; text-align: center; }
-.petrolero-steel-card-icon { display: grid; place-items: center; width: 48px; height: 34px; margin: 0 auto 8px; color: #e0b45d; border: 1px solid rgba(216,169,81,.65); border-radius: 8px; font-size: 22px; }
-.petrolero-steel-card-type { margin-bottom: 5px; font-size: 10px; letter-spacing: .16em; }
-.petrolero-steel-card-title { max-width: none; font-size: clamp(17px, 1.4vw, 22px); }
-.petrolero-steel-card-detail { max-width: 245px; margin: 13px auto 0; color: #b8b8b8; font-size: clamp(11px, .85vw, 13px); line-height: 1.5; }
-@media (hover:hover) and (pointer:fine) {
-  .petrolero-steel[data-visible="true"] .petrolero-steel-card:hover { border-color: #e0b45d; box-shadow: 0 12px 36px rgba(191,137,49,.14); }
-  .petrolero-steel-card:hover .petrolero-steel-card-image { filter: grayscale(.25) saturate(.75) brightness(1.03); }
+.petrolero-steel-layout {
+  gap: clamp(26px, 4vh, 44px);
+  padding-block:
+    clamp(105px, 12vh, 132px)
+    clamp(74px, 9vh, 105px);
 }
-@media (max-width:700px) {
-  .petrolero-steel-layout { padding: 125px 18px 75px; }
-  .petrolero-steel-cards { gap: 18px; }
-  .petrolero-steel-card { width: min(100%, 370px); }
-  .petrolero-steel-card-title { font-size: 21px; }
-  .petrolero-steel-card-detail { font-size: 13px; }
+
+.petrolero-steel-title strong {
+  color: #f0f0ef;
+}
+
+.petrolero-steel-title span {
+  color: #d9d9d9;
+}
+
+.petrolero-steel-title em {
+  color: #d8a951;
+  font-style: normal;
+}
+
+.petrolero-steel-description {
+  max-width: 760px;
+  font-size: clamp(14px, 1vw, 16px);
+  line-height: 1.6;
+  color: #bfc0c1;
+}
+
+.petrolero-steel-description span {
+  color: #d8a951;
+}
+
+.petrolero-steel-cards {
+  width: min(100%, 1050px);
+  gap: clamp(16px, 2vw, 34px);
+}
+
+.petrolero-steel-card {
+  aspect-ratio: 3 / 4;
+  border: 1px solid rgba(202,151,62,.5);
+  border-radius: 10px;
+  background: #080808;
+}
+
+.petrolero-steel-card-image {
+  filter:
+    grayscale(.65)
+    saturate(.52)
+    contrast(1.08)
+    brightness(.91);
+}
+
+.petrolero-steel-card::after {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.03) 10%,
+      rgba(0,0,0,.03) 37%,
+      rgba(0,0,0,.7) 65%,
+      #000 100%
+    );
+}
+
+.petrolero-steel-card-copy {
+  right: 15px;
+  bottom: clamp(15px, 2vw, 25px);
+  left: 15px;
+  text-align: center;
+}
+
+.petrolero-steel-card-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 34px;
+  margin: 0 auto 8px;
+  color: #e0b45d;
+  border: 1px solid rgba(216,169,81,.65);
+  border-radius: 8px;
+  font-size: 22px;
+}
+
+.petrolero-steel-card-type {
+  margin-bottom: 5px;
+  font-size: 10px;
+  letter-spacing: .16em;
+}
+
+.petrolero-steel-card-title {
+  max-width: none;
+  font-size: clamp(17px, 1.4vw, 22px);
+}
+
+.petrolero-steel-card-detail {
+  max-width: 245px;
+  margin: 13px auto 0;
+  color: #b8b8b8;
+  font-size: clamp(11px, .85vw, 13px);
+  line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+  .petrolero-steel-layout {
+    padding: 125px 18px 75px;
+  }
+
+  .petrolero-steel-cards {
+    gap: 18px;
+  }
+
+  .petrolero-steel-card {
+    width: min(100%, 370px);
+  }
+
+  .petrolero-steel-card-title {
+    font-size: 21px;
+  }
+
+  .petrolero-steel-card-detail {
+    font-size: 13px;
+  }
 }
 
 /* Custom gold vehicle emblems */
-.petrolero-steel-card-icon { width: 104px; height: 58px; margin: 0 auto 4px; border: 0; border-radius: 0; }
-.petrolero-steel-card-icon img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.petrolero-steel-card-icon {
+  width: 104px;
+  height: 58px;
+  margin: 0 auto 4px;
+  border: 0;
+  border-radius: 0;
+}
+
+.petrolero-steel-card-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/*
+ * Hover:
+ * - Card remains stationary
+ * - Photo zooms in
+ * - Colour and light return
+ * - Gold border glows
+ */
+@media (hover: hover) and (pointer: fine) {
+  .petrolero-steel[data-visible="true"]
+  .petrolero-steel-card:hover {
+    border-color: #e0b45d;
+    box-shadow: 0 12px 36px rgba(191,137,49,.14);
+  }
+
+  .petrolero-steel-card:hover .petrolero-steel-card-image {
+    transform: scale(1.065);
+    filter:
+      grayscale(.25)
+      saturate(.75)
+      brightness(1.03);
+  }
+}
+
+/* Accessibility: reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .petrolero-steel-copy,
+  .petrolero-steel-card,
+  .petrolero-steel-card-image {
+    transition: none;
+    transform: none;
+  }
+
+  .petrolero-steel-card-image {
+    filter:
+      grayscale(.82)
+      brightness(.94);
+  }
+
+  .petrolero-steel-copy,
+  .petrolero-steel-card {
+    opacity: 1;
+  }
+
+  .petrolero-steel-card:hover .petrolero-steel-card-image {
+    transform: none;
+  }
+}
