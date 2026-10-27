@@ -1,5 +1,6 @@
 
 /* Portrait vehicle cards on a pure black stage. */
+
 .petrolero-steel {
   position: relative;
   isolation: isolate;
@@ -114,13 +115,11 @@
   transform: translateY(0);
 }
 
-.petrolero-steel[data-visible="true"]
-.petrolero-steel-card:nth-child(2) {
+.petrolero-steel[data-visible="true"] .petrolero-steel-card:nth-child(2) {
   transition-delay: 100ms;
 }
 
-.petrolero-steel[data-visible="true"]
-.petrolero-steel-card:nth-child(3) {
+.petrolero-steel[data-visible="true"] .petrolero-steel-card:nth-child(3) {
   transition-delay: 200ms;
 }
 
@@ -187,6 +186,7 @@
 }
 
 /* Tablet */
+
 @media (max-width: 1024px) {
   .petrolero-steel-layout {
     padding-inline: 4vw;
@@ -210,6 +210,7 @@
 }
 
 /* Mobile */
+
 @media (max-width: 700px) {
   .petrolero-steel,
   .petrolero-steel-layout {
@@ -269,6 +270,7 @@
 }
 
 /* Refined premium black-and-gold steel story */
+
 .petrolero-steel-layout {
   gap: clamp(26px, 4vh, 44px);
   padding-block:
@@ -391,7 +393,14 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .petrolero-steel-card:hover .petrolero-steel-card-image {
+    transform: none;
+  }
+}
+
 /* Custom gold vehicle emblems */
+
 .petrolero-steel-card-icon {
   width: 104px;
   height: 58px;
@@ -414,9 +423,9 @@
  * - Colour and light return
  * - Gold border glows
  */
+
 @media (hover: hover) and (pointer: fine) {
-  .petrolero-steel[data-visible="true"]
-  .petrolero-steel-card:hover {
+  .petrolero-steel[data-visible="true"] .petrolero-steel-card:hover {
     border-color: #e0b45d;
     box-shadow: 0 12px 36px rgba(191,137,49,.14);
   }
@@ -431,6 +440,7 @@
 }
 
 /* Accessibility: reduced motion */
+
 @media (prefers-reduced-motion: reduce) {
   .petrolero-steel-copy,
   .petrolero-steel-card,
