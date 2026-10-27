@@ -39,13 +39,15 @@
   width: clamp(38px, 2.85vw, 44px);
   height: clamp(38px, 2.85vw, 44px);
   place-items: center;
-  border: 1px solid rgba(207, 155, 77, 0.38);
+  border: 1px solid transparent;
   border-radius: 50%;
   color: #dfb574;
-  background: linear-gradient(145deg, #2b221a 0%, #11100f 54%, #21180f 100%);
+  background:
+    linear-gradient(145deg, #251b13 0%, #100f0e 54%, #25180c 100%) padding-box,
+    linear-gradient(142deg, #ffe0a0 0%, #bd853d 24%, #654522 57%, #dfaa5c 86%, #98602c 100%) border-box;
   box-shadow:
-    inset 0 1px 0 rgba(255, 224, 168, 0.14),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.45);
+    inset 0 1px 0 rgba(255, 224, 168, 0.18),
+    inset 0 -2px 5px rgba(0, 0, 0, 0.56);
   cursor: pointer;
   text-decoration: none;
   transition:
@@ -61,18 +63,22 @@
   width: 25px;
   height: 25px;
   overflow: visible;
-  filter: drop-shadow(0 0 3px rgba(238, 170, 72, 0.13));
+  filter:
+    drop-shadow(0 1px 0 rgba(95, 53, 19, 0.9))
+    drop-shadow(0 -1px 1px rgba(245, 192, 113, 0.35));
 }
 
 .petrolero-site-footer-social:hover,
 .petrolero-site-footer-social:focus-visible {
   color: #ffe1a4;
-  border-color: rgba(243, 198, 120, 0.95);
-  background: linear-gradient(145deg, #4b3320, #15110e 60%, #352212);
+  border-color: transparent;
+  background:
+    linear-gradient(145deg, #3c291a, #15110e 60%, #352212) padding-box,
+    linear-gradient(142deg, #fff0c1, #d6a05a 36%, #98703b 64%, #ffe2aa) border-box;
   box-shadow:
     inset 0 1px 0 rgba(255, 233, 182, 0.25),
     0 0 17px rgba(205, 145, 62, 0.18);
-  transform: translateY(-2px);
+  transform: none;
 }
 
 .petrolero-site-footer-social:focus-visible {
@@ -191,7 +197,7 @@
 
 @media (max-width: 430px) {
   .petrolero-site-footer {
-    height: 240px;
+    height: clamp(240px, 72vw, 310px);
   }
 
   .petrolero-site-footer-top {
