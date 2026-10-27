@@ -8,6 +8,7 @@ import BrandStory from "./story/BrandStory";
 import SteelSection from "./steel/SteelSection";
 import MolecularSection from "../molecules/MolecularSection";
 import TechnologySection from "./technology/TechnologySection";
+import SiteFooter from "./footer/SiteFooter";
 import useReducedMotion from "./hooks/useReducedMotion";
 
 export default function HomePage() {
@@ -42,7 +43,8 @@ export default function HomePage() {
     });
 
   return (
-    <main className="petrolero-home">
+    <>
+      <main className="petrolero-home">
       <SiteHeader
         phase={phase}
         reducedMotion={reducedMotion}
@@ -63,6 +65,8 @@ export default function HomePage() {
       <MolecularSection />
 
       <TechnologySection reducedMotion={reducedMotion} />
-    </main>
+      </main>
+      <SiteFooter />
+    </>
   );
 }
