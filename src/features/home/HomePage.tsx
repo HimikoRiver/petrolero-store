@@ -8,6 +8,7 @@ import BrandStory from "./story/BrandStory";
 import SteelSection from "./steel/SteelSection";
 import MolecularSection from "../molecules/MolecularSection";
 import TechnologySection from "./technology/TechnologySection";
+import ContactsSection from "./contacts/ContactsSection";
 import SiteFooter from "./footer/SiteFooter";
 import PageScrollControls from "./navigation/PageScrollControls";
 import useReducedMotion from "./hooks/useReducedMotion";
@@ -66,6 +67,8 @@ export default function HomePage() {
       <MolecularSection />
 
       <TechnologySection reducedMotion={reducedMotion} />
+
+      <ContactsSection />
       </main>
       <SiteFooter />
       <PageScrollControls reducedMotion={reducedMotion} />
