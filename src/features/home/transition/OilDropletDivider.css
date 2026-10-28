@@ -33,10 +33,10 @@
   display: grid;
   grid-template-columns: repeat(55, minmax(0, 1fr));
   align-items: center;
-  width: min(calc(100% - var(--petrolero-content-gutter) - var(--petrolero-content-gutter)), var(--petrolero-content-max));
+  width: min(100%, 1920px);
   height: 100%;
   margin-inline: auto;
-  padding-inline: 0;
+  padding-inline: clamp(18px, 3.3vw, 70px);
   -webkit-mask-image: linear-gradient(
     to right, transparent 0%, #000 4%, #000 96%, transparent 100%
   );
@@ -116,7 +116,7 @@
 
   .petrolero-oil-divider__row {
     grid-template-columns: repeat(27, minmax(0, 1fr));
-    padding-inline: 0;
+    padding-inline: 15px;
   }
 
   .petrolero-oil-divider__cell:nth-child(n+28) {
@@ -133,7 +133,7 @@
 
   .petrolero-oil-divider__row {
     grid-template-columns: repeat(19, minmax(0, 1fr));
-    padding-inline: 0;
+    padding-inline: 10px;
   }
 
   .petrolero-oil-divider__cell:nth-child(n+20) {
