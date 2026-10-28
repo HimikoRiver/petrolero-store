@@ -1,0 +1,26 @@
+name: Verify unified homepage layout
+on:
+  push:
+    branches:
+      - feature/liquid-intro-prototype
+    paths:
+      - .github/workflows/verify-unified-layout.yml
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Generate Next.js route types
+        run: npx next typegen
+      - name: Verify TypeScript
+        run: npx tsc --noEmit
+      - name: Build production
+        run: npm run build
