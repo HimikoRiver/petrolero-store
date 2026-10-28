@@ -742,11 +742,11 @@ a.petrolero-contacts-detail-value:focus-visible {
    Reduce the original large composition without scaling interactive hit areas. */
 .petrolero-contacts {
   min-height: 570px;
-  padding: clamp(60px, 6.5vh, 85px) clamp(20px, 3vw, 54px) clamp(42px, 5vh, 66px);
+  padding: clamp(60px, 6.5vh, 85px) var(--petrolero-content-gutter) clamp(42px, 5vh, 66px);
 }
 
 .petrolero-contacts-inner {
-  max-width: 1280px;
+  max-width: var(--petrolero-content-max);
 }
 
 .petrolero-contacts-intro {
@@ -938,7 +938,7 @@ a.petrolero-contacts-detail-value:focus-visible {
 }
 
 @media (max-width: 920px) {
-  .petrolero-contacts { padding: 65px 23px 50px; }
+  .petrolero-contacts { padding: 65px var(--petrolero-content-gutter) 50px; }
   .petrolero-contacts-intro { min-height: 310px; }
   .petrolero-contacts-copy { width: min(80%, 620px); }
   .petrolero-contacts-bottom {
@@ -951,7 +951,7 @@ a.petrolero-contacts-detail-value:focus-visible {
 @media (max-width: 620px) {
   .petrolero-contacts {
     min-height: 0;
-    padding: 60px 16px 44px;
+    padding: 60px var(--petrolero-content-gutter) 44px;
   }
   .petrolero-contacts-backdrop {
     background-size: cover, cover, auto 440px;
