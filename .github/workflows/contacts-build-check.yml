@@ -19,6 +19,8 @@ jobs:
           cache: npm
       - name: Install exact dependencies
         run: npm ci --no-audit --no-fund
+      - name: Generate Next.js route types
+        run: npx next typegen
       - name: TypeScript diagnostics
         run: npx tsc --noEmit
       - name: Production build
