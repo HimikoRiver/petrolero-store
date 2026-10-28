@@ -113,8 +113,9 @@
 .petrolero-menu-logo {
   display: block;
   justify-self: start;
-  width: clamp(96px, 8.5vw, 130px);
+  width: clamp(74px, 5.5vw, 98px);
   line-height: 0;
+  transform: translateY(11px);
   text-decoration: none;
 }
 
@@ -535,7 +536,8 @@
   }
 
   .petrolero-menu-logo {
-    width: 100px;
+    width: 73px;
+    transform: translateY(9px);
   }
 
   .petrolero-menu-close {
