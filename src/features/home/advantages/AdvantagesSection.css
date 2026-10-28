@@ -194,15 +194,15 @@
 }
 
 
-/* The advantages heading is the 102px desktop alignment reference for
-   the pinned "About company" scene and the engine section. */
+/* Single reference for the LEFT EDGE of "ИНЖЕНЕРИЯ ЗАЩИТЫ / ПРЕИМУЩЕСТВА".
+   The reference is the actual advantage panel layout: viewport padding
+   clamp(24px, 4.2vw, 76px) plus a centered 1540px max-width inner container.
+   Only headings in the other sections follow this line; card widths stay intact. */
 @media (min-width: 901px) {
-  .petrolero-advantages {
-    align-items: flex-start;
-    padding-top: 102px;
-  }
-
-  .petrolero-advantages-inner {
-    max-height: calc(100svh - 148px);
+  .petrolero-home {
+    --petrolero-advantages-heading-left: max(
+      clamp(24px, 4.2vw, 76px),
+      calc((100vw - 1540px) / 2)
+    );
   }
 }
