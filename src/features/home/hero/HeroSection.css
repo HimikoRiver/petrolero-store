@@ -61,8 +61,8 @@
   z-index: 3;
   top: 51%;
   left: 50%;
-  width: calc(100% - 38px);
-  max-width: 1560px;
+  width: calc(100% - var(--petrolero-content-gutter) - var(--petrolero-content-gutter));
+  max-width: var(--petrolero-content-max);
   text-align: center;
   opacity: 0;
   pointer-events: none;
@@ -172,7 +172,7 @@
 
 @media (max-width: 520px) {
   .petrolero-home-hero { min-height: 520px; }
-  .petrolero-home-copy { width: calc(100% - 24px); top: 50%; }
+  .petrolero-home-copy { width: calc(100% - var(--petrolero-content-gutter) - var(--petrolero-content-gutter)); top: 50%; }
   .petrolero-home-copy h1 {
     font-size: clamp(28px, 7.3vw, 40px);
     line-height: 1.04;
