@@ -133,6 +133,7 @@ export default function MenuShowcase({
       )}
 
       <section
+        id="petrolero-site-menu"
         ref={menuRef}
         className={`menu-overlay ${
           isOpen ? "menu-overlay--open" : ""
