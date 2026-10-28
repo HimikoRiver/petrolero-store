@@ -292,3 +292,17 @@
     background-position: center, 68% center;
   }
 }
+
+
+/* Keep the company scene at the same vertical starting line as
+   the advantages heading. The pinned reveal and original widths stay intact. */
+@media (min-width: 901px) {
+  .petrolero-story-sticky {
+    align-items: flex-start;
+  }
+
+  .petrolero-story-content {
+    padding-top: 102px;
+    padding-bottom: 24px;
+  }
+}
