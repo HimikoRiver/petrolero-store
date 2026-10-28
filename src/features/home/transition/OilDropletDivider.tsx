@@ -19,6 +19,33 @@ const DROPLETS = Array.from({ length: 55 }, (_, index) => ({
 const DROP_PATH =
   "M18 2.8C16.5 7.3 13.8 12.4 10.5 17.8C7.7 22.5 5.8 26.9 5.8 32.1C5.8 39.6 11.3 45.6 18 45.6C24.7 45.6 30.2 39.6 30.2 32.1C30.2 26.9 28.3 22.5 25.5 17.8C22.2 12.4 19.5 7.3 18 2.8Z";
 
+// The footer PETROLERO wordmark uses deterministic dark/gold metallic flecks.
+// Reuse its palette and grain technique at droplet scale rather than a glossy lens.
+function createMetalGrain() {
+  let seed = 26371;
+  const random = () => {
+    seed = (Math.imul(1664525, seed) + 1013904223) >>> 0;
+    return seed / 4294967296;
+  };
+
+  const dark: string[] = [];
+  const light: string[] = [];
+
+  for (let i = 0; i < 160; i++) {
+    const x = (random() * 36).toFixed(2);
+    const y = (random() * 50).toFixed(2);
+    const size = 0.24 + random() * (i % 13 === 0 ? 1.1 : 0.65);
+    const w = size.toFixed(2);
+    const h = (size * (0.65 + random() * 0.65)).toFixed(2);
+    const fleck = `M${x} ${y}h${w}v${h}h-${w}Z`;
+    (random() > 0.35 ? dark : light).push(fleck);
+  }
+
+  return { dark: dark.join(""), light: light.join("") };
+}
+
+const METAL_GRAIN = createMetalGrain();
+
 export default function OilDropletDivider({
   reducedMotion = false,
 }: OilDropletDividerProps) {
@@ -30,9 +57,8 @@ export default function OilDropletDivider({
     >
       <div className="petrolero-oil-divider__row">
         {DROPLETS.map((drop) => {
-          const bodyId = `petrolero-divider-body-${drop.index}`;
-          const glossId = `petrolero-divider-gloss-${drop.index}`;
-          const lightId = `petrolero-divider-light-${drop.index}`;
+          const goldId = `petrolero-divider-gold-${drop.index}`;
+          const grainId = `petrolero-divider-grain-${drop.index}`;
 
           const variables = {
             "--drop-width": `${drop.width * (drop.isSmall ? 0.74 : 1)}px`,
@@ -55,57 +81,43 @@ export default function OilDropletDivider({
                 focusable="false"
               >
                 <defs>
-                  <linearGradient id={bodyId} x1="2%" y1="8%" x2="96%" y2="94%">
-                    <stop offset="0%" stopColor="#ffdf9f" />
-                    <stop offset="16%" stopColor="#bc7c31" />
-                    <stop offset="36%" stopColor="#3a2210" />
-                    <stop offset="56%" stopColor="#e1a854" />
-                    <stop offset="76%" stopColor="#7c4a20" />
-                    <stop offset="100%" stopColor="#160e09" />
+                  <linearGradient id={goldId} x1="0%" y1="0%" x2="16%" y2="100%">
+                    <stop offset="0%" stopColor="#ffe0a0" />
+                    <stop offset="24%" stopColor="#e4b96f" />
+                    <stop offset="55%" stopColor="#bc8643" />
+                    <stop offset="82%" stopColor="#e2ad65" />
+                    <stop offset="100%" stopColor="#92602a" />
                   </linearGradient>
-                  <linearGradient id={glossId} x1="0%" y1="0%" x2="85%" y2="100%">
-                    <stop offset="0%" stopColor="#fff3d8" stopOpacity=".94" />
-                    <stop offset="34%" stopColor="#ffe0a5" stopOpacity=".37" />
-                    <stop offset="66%" stopColor="#d78f3f" stopOpacity="0" />
-                    <stop offset="100%" stopColor="#f8cb7f" stopOpacity=".42" />
-                  </linearGradient>
-                  <radialGradient id={lightId} cx="37%" cy="29%" r="65%">
-                    <stop offset="0%" stopColor="#fff5df" stopOpacity=".94" />
-                    <stop offset="42%" stopColor="#d99c4c" stopOpacity=".39" />
-                    <stop offset="100%" stopColor="#c1853f" stopOpacity="0" />
-                  </radialGradient>
+                  <pattern
+                    id={grainId}
+                    patternUnits="userSpaceOnUse"
+                    width="36"
+                    height="50"
+                  >
+                    <path d={METAL_GRAIN.dark} fill="#140c04" opacity=".96" />
+                    <path d={METAL_GRAIN.light} fill="#ffdfa0" opacity=".68" />
+                  </pattern>
                 </defs>
 
                 <path
                   d={DROP_PATH}
-                  fill={`url(#${bodyId})`}
-                  stroke="#d6a364"
-                  strokeWidth=".75"
-                  strokeOpacity=".86"
-                />
-                <path d={DROP_PATH} fill={`url(#${lightId})`} opacity=".62" />
-                <path
-                  className="petrolero-oil-divider__gloss"
-                  d="M17.9 7.2C14.1 16.6 9.5 23.3 9.5 31.3C9.5 36.9 12.7 40.2 15.2 40.7C12.1 35 13 28.9 16.2 22.5C18 18.9 19.7 13.8 17.9 7.2Z"
-                  fill={`url(#${glossId})`}
+                  fill={`url(#${goldId})`}
+                  stroke="#b58447"
+                  strokeWidth=".6"
+                  strokeOpacity=".6"
                 />
                 <path
-                  d="M22.5 36.5C20.9 39.7 18.8 41.3 16.5 41.1"
-                  stroke="#ffdfa2"
-                  strokeWidth="1.4"
-                  strokeLinecap="round"
-                  strokeOpacity=".62"
+                  d={DROP_PATH}
+                  fill={`url(#${grainId})`}
+                  opacity=".9"
+                />
+                <path
+                  d="M11.5 26C13.8 20.4 16 16.2 17.7 10.3M9.6 31.7C9.6 35.7 11.3 38.8 14.1 40.7"
                   fill="none"
-                />
-                <ellipse
-                  className="petrolero-oil-divider__glint"
-                  cx="13.2"
-                  cy="26"
-                  rx="2.2"
-                  ry="4.9"
-                  transform="rotate(23 13.2 26)"
-                  fill="#fff0ce"
-                  opacity=".7"
+                  stroke="#ffe0a0"
+                  strokeWidth=".85"
+                  strokeLinecap="round"
+                  strokeOpacity=".36"
                 />
               </svg>
             </span>
