@@ -1,14 +1,17 @@
-/* Black and gold footer with a pointer-following metallic wordmark. */
+/* Compact black-and-gold footer. The lettering is deliberately low-contrast
+   until the user's pointer reveals the textured metallic finish. */
 .petrolero-site-footer {
   position: relative;
   isolation: isolate;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  height: clamp(290px, 34vw, 570px);
-  max-height: 78svh;
-  min-height: 245px;
+  height: auto;
+  min-height: 0;
   overflow: hidden;
   border-top: 1px solid rgba(211, 161, 84, 0.12);
+  padding-bottom: clamp(12px, 1.35vw, 26px);
   background: #111110;
   color: #e1c18c;
 }
@@ -20,9 +23,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px 26px;
+  flex-wrap: wrap;
+  gap: 14px 26px;
   width: 100%;
-  padding: clamp(24px, 2.7vw, 46px) clamp(19px, 3.4vw, 64px);
+  padding: clamp(19px, 2.1vw, 38px) clamp(19px, 3.4vw, 64px) 0;
 }
 
 .petrolero-site-footer-socials {
@@ -54,8 +58,7 @@
     color 260ms ease,
     border-color 260ms ease,
     background 260ms ease,
-    box-shadow 260ms ease,
-    transform 260ms ease;
+    box-shadow 260ms ease;
 }
 
 .petrolero-site-footer-social svg {
@@ -78,7 +81,6 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 233, 182, 0.25),
     0 0 17px rgba(205, 145, 62, 0.18);
-  transform: none;
 }
 
 .petrolero-site-footer-social:focus-visible {
@@ -87,7 +89,7 @@
 }
 
 .petrolero-site-footer-social:active {
-  transform: translateY(0) scale(0.97);
+  filter: brightness(1.25);
 }
 
 .petrolero-site-footer-credit {
@@ -105,17 +107,19 @@
   font-weight: 700;
 }
 
+/* The wordmark is in normal document flow: no giant blank gap below the icons. */
 .petrolero-site-footer-wordmark {
   --spot-x: 50%;
   --spot-y: 50%;
-  --spot-radius-x: clamp(160px, 21vw, 450px);
-  --spot-radius-y: clamp(140px, 16vw, 350px);
-  position: absolute;
+  --spot-radius-x: clamp(150px, 19vw, 390px);
+  --spot-radius-y: clamp(125px, 14vw, 300px);
+  position: relative;
   z-index: 1;
-  right: clamp(9px, 1.1vw, 22px);
-  bottom: clamp(15px, 1.8vw, 34px);
-  left: clamp(9px, 1.1vw, 22px);
-  aspect-ratio: 1200 / 230;
+  flex: 0 0 auto;
+  width: calc(100% - clamp(20px, 2.2vw, 44px));
+  max-width: 1880px;
+  aspect-ratio: 1200 / 190;
+  margin: clamp(8px, 1vw, 18px) auto 0;
   pointer-events: none;
 }
 
@@ -129,12 +133,12 @@
   display: block;
   width: 100%;
   height: 100%;
-  overflow: visible;
   user-select: none;
 }
 
+/* The default lettering should be barely visible on the dark background. */
 .petrolero-site-footer-wordmark-base {
-  opacity: 0.9;
+  opacity: 0.22;
 }
 
 .petrolero-site-footer-wordmark-reveal {
@@ -154,7 +158,7 @@
     rgba(0, 0, 0, 0.65) 58%,
     transparent 100%
   );
-  transition: opacity 450ms ease;
+  transition: opacity 280ms ease;
 }
 
 .petrolero-site-footer-wordmark[data-active="true"] .petrolero-site-footer-wordmark-reveal {
@@ -163,15 +167,12 @@
 
 @media (max-width: 700px) {
   .petrolero-site-footer {
-    height: clamp(245px, 58vw, 340px);
-    max-height: none;
+    padding-bottom: 18px;
   }
 
   .petrolero-site-footer-top {
-    align-items: flex-start;
-    flex-wrap: wrap;
-    padding: 24px 18px;
-    gap: 14px 20px;
+    padding: 22px 18px 0;
+    gap: 13px 20px;
   }
 
   .petrolero-site-footer-socials {
@@ -189,21 +190,16 @@
   }
 
   .petrolero-site-footer-wordmark {
-    right: 8px;
-    left: 8px;
-    bottom: 21px;
+    width: calc(100% - 16px);
+    margin-top: 15px;
   }
 }
 
 @media (max-width: 430px) {
-  .petrolero-site-footer {
-    height: clamp(240px, 72vw, 310px);
-  }
-
   .petrolero-site-footer-top {
     flex-direction: column;
     align-items: flex-start;
-    gap: 15px;
+    gap: 11px;
   }
 
   .petrolero-site-footer-credit {
@@ -214,18 +210,18 @@
     width: 33px;
     height: 33px;
   }
+
+  .petrolero-site-footer-wordmark {
+    margin-top: 12px;
+  }
 }
 
-/* On a touch device the gold texture is visible without a mouse gesture. */
+/* Touchscreens have no cursor, so display the textured metallic lettering. */
 @media (hover: none) {
   .petrolero-site-footer-wordmark-reveal {
     opacity: 1;
     -webkit-mask-image: none;
     mask-image: none;
-  }
-
-  .petrolero-site-footer-social:hover {
-    transform: none;
   }
 }
 
