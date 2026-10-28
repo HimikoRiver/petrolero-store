@@ -178,9 +178,34 @@ export default function ContactsSection() {
         </div>
 
         <div className="petrolero-contacts-bottom">
+          <aside className="petrolero-contacts-dealer">
+            <div className="petrolero-contacts-dealer-art" aria-hidden="true" />
+            <div className="petrolero-contacts-dealer-content">
+              <span className="petrolero-contacts-panel-number">01 / PETROLERO</span>
+              <h3>Дилерская сеть <em>Petrolero</em></h3>
+              <p>
+                Оригинальная продукция и помощь с подбором
+                моторных масел для вашей техники.
+              </p>
+              <div className="petrolero-contacts-benefits">
+                <div><span><ContactIcon name="shield" /></span><small>Оригинальная<br />продукция</small></div>
+                <div><span><ContactIcon name="delivery" /></span><small>Точки продаж<br />по России</small></div>
+                <div><span><ContactIcon name="support" /></span><small>Помощь<br />с подбором</small></div>
+              </div>
+              <a
+                className="petrolero-contacts-dealer-link"
+                href="https://petrolero.ru/contacts/stores/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Найти дилера <RightArrow />
+              </a>
+            </div>
+          </aside>
+
           <div className="petrolero-contact-form-panel">
             <div className="petrolero-contact-panel-heading">
-              <span className="petrolero-contacts-panel-number">01 / ОБРАТНАЯ СВЯЗЬ</span>
+              <span className="petrolero-contacts-panel-number">02 / ОБРАТНАЯ СВЯЗЬ</span>
               <h3>Напишите нам</h3>
               <p>Расскажите, что вас интересует, — подготовим письмо для отправки.</p>
             </div>
@@ -226,30 +251,6 @@ export default function ContactsSection() {
             </form>
           </div>
 
-          <aside className="petrolero-contacts-dealer">
-            <div className="petrolero-contacts-dealer-art" aria-hidden="true" />
-            <div className="petrolero-contacts-dealer-content">
-              <span className="petrolero-contacts-panel-number">02 / PETROLERO</span>
-              <h3>Дилерская сеть <em>Petrolero</em></h3>
-              <p>
-                Оригинальная продукция и помощь с подбором
-                моторных масел для вашей техники.
-              </p>
-              <div className="petrolero-contacts-benefits">
-                <div><span><ContactIcon name="shield" /></span><small>Оригинальная<br />продукция</small></div>
-                <div><span><ContactIcon name="delivery" /></span><small>Точки продаж<br />по России</small></div>
-                <div><span><ContactIcon name="support" /></span><small>Помощь<br />с подбором</small></div>
-              </div>
-              <a
-                className="petrolero-contacts-dealer-link"
-                href="https://petrolero.ru/contacts/stores/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Найти дилера <RightArrow />
-              </a>
-            </div>
-          </aside>
         </div>
       </div>
     </section>
