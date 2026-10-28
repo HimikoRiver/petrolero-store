@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { RefObject } from "react";
+import type { MouseEvent as ReactMouseEvent, RefObject } from "react";
 import BrandLogo from "../home/header/BrandLogo";
 import { MENU_ITEMS } from "./menuItems";
 import "./MenuShowcase.css";
@@ -102,6 +102,69 @@ export default function MenuShowcase({
     };
   }, [isOpen, closeMenu, embedded, triggerRef]);
 
+  const handleMenuLink = (
+    event: ReactMouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
+    // Preserve standard navigation for new tabs and separate pages.
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    const destination = new URL(href, window.location.href);
+
+    if (
+      destination.origin !== window.location.origin ||
+      destination.pathname !== window.location.pathname ||
+      !destination.hash
+    ) {
+      closeMenu();
+      return;
+    }
+
+    const sectionId = decodeURIComponent(destination.hash.slice(1));
+    const section = document.getElementById(sectionId);
+
+    if (!section) {
+      // Let the browser handle an unknown anchor normally.
+      closeMenu();
+      return;
+    }
+
+    event.preventDefault();
+    closeMenu();
+
+    // Update the address bar without triggering the browser's abrupt hash jump.
+    const nextLocation =
+      destination.pathname + destination.search + destination.hash;
+    const currentLocation =
+      window.location.pathname + window.location.search + window.location.hash;
+
+    if (nextLocation !== currentLocation) {
+      window.history.pushState(null, "", nextLocation);
+    }
+
+    // Let React close the menu and release the scroll lock first.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        section.scrollIntoView({
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
+            .matches
+            ? "auto"
+            : "smooth",
+          block: "start",
+        });
+      });
+    });
+  };
+
   const activeDetail = MENU_DETAILS[activeIndex];
 
   return (
@@ -199,7 +262,7 @@ export default function MenuShowcase({
                       tabIndex={isOpen ? 0 : -1}
                       onMouseEnter={() => setActiveIndex(index)}
                       onFocus={() => setActiveIndex(index)}
-                      onClick={closeMenu}
+                      onClick={(event) => handleMenuLink(event, item.href)}
                     >
                       <span className="petrolero-menu-link-number">
                         {item.number}
@@ -244,7 +307,9 @@ export default function MenuShowcase({
                 className="petrolero-menu-feature-details"
                 key={activeIndex}
                 href={MENU_ITEMS[activeIndex].href}
-                onClick={closeMenu}
+                onClick={(event) =>
+                  handleMenuLink(event, MENU_ITEMS[activeIndex].href)
+                }
                 tabIndex={isOpen ? 0 : -1}
                 aria-label={`Перейти: ${MENU_ITEMS[activeIndex].title}`}
               >
