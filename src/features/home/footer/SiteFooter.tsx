@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRef } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import "./SiteFooter.css";
@@ -235,6 +236,11 @@ export default function SiteFooter() {
               <SocialGlyph icon={link.icon} />
             </a>
           ))}
+        </nav>
+
+        <nav className="petrolero-site-footer-legal" aria-label="Юридические документы">
+          <Link href="/privacy">Политика конфиденциальности</Link>
+          <Link href="/terms">Условия пользования</Link>
         </nav>
 
         <p className="petrolero-site-footer-credit">
