@@ -192,3 +192,17 @@
     transform: none;
   }
 }
+
+
+/* The advantages heading is the 102px desktop alignment reference for
+   the pinned "About company" scene and the engine section. */
+@media (min-width: 901px) {
+  .petrolero-advantages {
+    align-items: flex-start;
+    padding-top: 102px;
+  }
+
+  .petrolero-advantages-inner {
+    max-height: calc(100svh - 148px);
+  }
+}
