@@ -69,7 +69,7 @@ export default function MolecularSection() {
 
       {/* Центрированный заголовок и описание */}
 
-      <div className="petrolero-molecular-heading relative z-40 mx-auto flex w-full max-w-[1600px] flex-col items-center px-5 pt-16 text-center sm:px-10 sm:pt-20 lg:px-16 lg:pt-24">
+      <div className="petrolero-molecular-heading relative z-40 mx-auto flex flex-col items-center pt-16 text-center sm:pt-20 lg:pt-24">
         <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.32em] text-[#d5b179] sm:text-xs">
           ТЕХНОЛОГИИ PETROLERO
         </p>
@@ -93,7 +93,7 @@ export default function MolecularSection() {
 
       {/* Плавающие бутылочки */}
 
-      <div className="petrolero-bottles-stage relative z-30 mx-auto mt-auto w-full max-w-[1500px] px-3 pb-9 pt-12 sm:px-8 lg:px-12">
+      <div className="petrolero-bottles-stage relative z-30 mx-auto mt-auto pb-9 pt-12">
         <div
           className="petrolero-bottles-glow"
           aria-hidden="true"
