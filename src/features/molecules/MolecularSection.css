@@ -276,3 +276,33 @@
 @media (prefers-reduced-motion: reduce) {
   .petrolero-bottle { animation: none !important; opacity: 1 !important; transform: none !important; }
 }
+
+
+/* Local shadow behind the explanatory additive copy: legible over moving
+   molecules without dimming the bottles or the rest of the section. */
+.petrolero-molecular-description {
+  isolation: isolate;
+}
+
+.petrolero-molecular-description::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -8px -22px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse closest-side,
+    rgba(0, 0, 0, .76) 0%,
+    rgba(0, 0, 0, .50) 58%,
+    transparent 100%
+  );
+  filter: blur(13px);
+  pointer-events: none;
+}
+
+.petrolero-molecular-description p {
+  text-shadow:
+    0 2px 3px rgba(0, 0, 0, .97),
+    0 3px 14px rgba(0, 0, 0, .94),
+    0 0 28px rgba(0, 0, 0, .8);
+}
