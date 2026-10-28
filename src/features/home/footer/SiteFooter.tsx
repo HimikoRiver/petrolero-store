@@ -117,7 +117,7 @@ function PetroleroWordmark({ illuminated }: { illuminated: boolean }) {
   return (
     <svg
       className="petrolero-site-footer-wordmark-svg"
-      viewBox="0 0 1200 230"
+      viewBox="0 35 1200 190"
       preserveAspectRatio="xMidYMid meet"
       aria-hidden="true"
       focusable="false"
