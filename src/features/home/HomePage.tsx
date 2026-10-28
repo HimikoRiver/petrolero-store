@@ -9,6 +9,7 @@ import SteelSection from "./steel/SteelSection";
 import MolecularSection from "../molecules/MolecularSection";
 import TechnologySection from "./technology/TechnologySection";
 import SiteFooter from "./footer/SiteFooter";
+import PageScrollControls from "./navigation/PageScrollControls";
 import useReducedMotion from "./hooks/useReducedMotion";
 
 export default function HomePage() {
@@ -67,6 +68,7 @@ export default function HomePage() {
       <TechnologySection reducedMotion={reducedMotion} />
       </main>
       <SiteFooter />
+      <PageScrollControls reducedMotion={reducedMotion} />
     </>
   );
 }
