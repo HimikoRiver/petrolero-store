@@ -3,6 +3,11 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Single content grid for the Petrolero homepage and its footer.
+     Full-bleed backgrounds remain separate from this content width. */
+  --petrolero-content-max: 1280px;
+  --petrolero-content-gutter: clamp(18px, 3vw, 54px);
 }
 
 @theme inline {
