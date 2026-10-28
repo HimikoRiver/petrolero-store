@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import BrandLogo from "../home/header/BrandLogo";
 import { MENU_ITEMS } from "./menuItems";
 import "./MenuShowcase.css";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -153,7 +154,7 @@ export default function MenuShowcase({
               className="menu-logo"
               tabIndex={isOpen ? 0 : -1}
             >
-              <span>P</span> petrolero
+              <BrandLogo animated={false} variant="gold" />
             </a>
 
             <button
@@ -164,8 +165,7 @@ export default function MenuShowcase({
               tabIndex={isOpen ? 0 : -1}
               aria-label="Закрыть меню"
             >
-              <span>ЗАКРЫТЬ</span>
-              <span className="menu-close-circle">×</span>
+              <span className="menu-close-circle" aria-hidden="true">×</span>
             </button>
           </header>
 
