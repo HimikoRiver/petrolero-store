@@ -371,7 +371,21 @@
   align-items: flex-start;
   gap: 12px;
   max-width: 500px;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
   animation: petrolero-menu-feature-in 460ms cubic-bezier(.18,.85,.23,1) both;
+}
+
+
+.petrolero-menu-feature-details:focus-visible {
+  outline: 2px solid #e5b66c;
+  outline-offset: 8px;
+}
+
+.petrolero-menu-feature-details:hover .petrolero-menu-feature-heading,
+.petrolero-menu-feature-details:focus-visible .petrolero-menu-feature-heading {
+  color: #ffdfa5;
 }
 
 .petrolero-menu-feature-kicker {
