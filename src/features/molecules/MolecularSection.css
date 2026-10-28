@@ -48,8 +48,6 @@
 }
 
 .petrolero-molecular-heading {
-  width: min(calc(100% - var(--petrolero-content-gutter) - var(--petrolero-content-gutter)), var(--petrolero-content-max));
-  max-width: var(--petrolero-content-max);
   pointer-events: none;
 }
 
@@ -60,12 +58,6 @@
 
 .petrolero-molecular-description p {
   text-wrap: pretty;
-}
-
-/* Bottles keep their existing sizes and floating motion within the same grid. */
-.petrolero-bottles-stage {
-  width: min(calc(100% - var(--petrolero-content-gutter) - var(--petrolero-content-gutter)), var(--petrolero-content-max));
-  max-width: var(--petrolero-content-max);
 }
 
 /* Бутылочки */
