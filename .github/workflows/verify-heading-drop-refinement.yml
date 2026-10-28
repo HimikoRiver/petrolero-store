@@ -1,0 +1,22 @@
+name: Verify headings and metal droplets
+on:
+  push:
+    branches:
+      - feature/liquid-intro-prototype
+    paths:
+      - .github/workflows/verify-heading-drop-refinement.yml
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npx next typegen
+      - run: npx tsc --noEmit
+      - run: npm run build
