@@ -471,3 +471,16 @@
     stroke-dashoffset: 0;
   }
 }
+
+
+/* Align the engine-section heading to the same vertical line as
+   the company/advantages headings, without changing the video dimensions. */
+.petrolero-tech-section-heading--engine {
+  margin-top: 0;
+}
+
+@media (min-width: 901px) {
+  .petrolero-technology {
+    padding-top: 102px;
+  }
+}
