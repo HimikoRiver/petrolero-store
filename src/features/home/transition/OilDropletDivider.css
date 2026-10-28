@@ -1,0 +1,160 @@
+/* Vector oil beads create a luminous seam between the two black sections. */
+.petrolero-oil-divider {
+  position: relative;
+  z-index: 4;
+  isolation: isolate;
+  width: 100%;
+  height: clamp(70px, 6.8vw, 105px);
+  margin-top: -18px;
+  margin-bottom: -16px;
+  overflow: hidden;
+  background: #050505;
+  pointer-events: none;
+}
+
+.petrolero-oil-divider::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 64% 28% at 50% 54%,
+    rgba(195, 125, 49, .13) 0%,
+    rgba(92, 53, 24, .045) 62%,
+    transparent 100%
+  );
+  filter: blur(18px);
+  opacity: .7;
+  animation: petrolero-divider-aura 8.5s ease-in-out infinite;
+}
+
+.petrolero-oil-divider__row {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(55, minmax(0, 1fr));
+  align-items: center;
+  width: min(100%, 1920px);
+  height: 100%;
+  margin-inline: auto;
+  padding-inline: clamp(18px, 3.3vw, 70px);
+  -webkit-mask-image: linear-gradient(
+    to right, transparent 0%, #000 4%, #000 96%, transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right, transparent 0%, #000 4%, #000 96%, transparent 100%
+  );
+}
+
+.petrolero-oil-divider__cell {
+  position: relative;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  height: 100%;
+  min-width: 0;
+  opacity: var(--drop-opacity);
+  transform: translate3d(0, var(--drop-offset), 0);
+  animation: petrolero-divider-float var(--drop-duration) ease-in-out var(--drop-delay) infinite;
+}
+
+.petrolero-oil-divider__drop {
+  display: block;
+  width: min(var(--drop-width), 88%);
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 2px rgba(241, 176, 88, .32));
+  animation: petrolero-divider-shimmer 5.1s ease-in-out var(--drop-delay) infinite;
+}
+
+.petrolero-oil-divider__gloss,
+.petrolero-oil-divider__glint {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: petrolero-divider-glint 4.2s ease-in-out var(--drop-delay) infinite;
+}
+
+@keyframes petrolero-divider-float {
+  0%, 100% {
+    transform: translate3d(0, calc(var(--drop-offset) + 2px), 0);
+    opacity: calc(var(--drop-opacity) * .81);
+  }
+  50% {
+    transform: translate3d(0, calc(var(--drop-offset) - 4px), 0);
+    opacity: var(--drop-opacity);
+  }
+}
+
+@keyframes petrolero-divider-shimmer {
+  0%, 100% {
+    filter: brightness(.72) saturate(.9) drop-shadow(0 0 1px rgba(200, 133, 55, .2));
+  }
+  44% {
+    filter: brightness(1.4) saturate(1.12) drop-shadow(0 0 6px rgba(247, 184, 103, .52));
+  }
+  62% {
+    filter: brightness(1.07) saturate(1.04) drop-shadow(0 0 3px rgba(238, 166, 80, .3));
+  }
+}
+
+@keyframes petrolero-divider-glint {
+  0%, 100% { opacity: .28; }
+  41% { opacity: 1; }
+  60% { opacity: .55; }
+}
+
+@keyframes petrolero-divider-aura {
+  0%, 100% { opacity: .4; transform: scaleX(.9); }
+  50% { opacity: .88; transform: scaleX(1.08); }
+}
+
+@media (max-width: 840px) {
+  .petrolero-oil-divider {
+    height: 76px;
+    margin-top: -15px;
+    margin-bottom: -12px;
+  }
+
+  .petrolero-oil-divider__row {
+    grid-template-columns: repeat(27, minmax(0, 1fr));
+    padding-inline: 15px;
+  }
+
+  .petrolero-oil-divider__cell:nth-child(n+28) {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .petrolero-oil-divider {
+    height: 60px;
+    margin-top: -12px;
+    margin-bottom: -9px;
+  }
+
+  .petrolero-oil-divider__row {
+    grid-template-columns: repeat(19, minmax(0, 1fr));
+    padding-inline: 10px;
+  }
+
+  .petrolero-oil-divider__cell:nth-child(n+20) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petrolero-oil-divider::before,
+  .petrolero-oil-divider__cell,
+  .petrolero-oil-divider__drop,
+  .petrolero-oil-divider__gloss,
+  .petrolero-oil-divider__glint {
+    animation: none !important;
+  }
+}
+
+.petrolero-oil-divider[data-reduced-motion="true"]::before,
+.petrolero-oil-divider[data-reduced-motion="true"] .petrolero-oil-divider__cell,
+.petrolero-oil-divider[data-reduced-motion="true"] .petrolero-oil-divider__drop,
+.petrolero-oil-divider[data-reduced-motion="true"] .petrolero-oil-divider__gloss,
+.petrolero-oil-divider[data-reduced-motion="true"] .petrolero-oil-divider__glint {
+  animation: none !important;
+}
