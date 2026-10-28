@@ -216,7 +216,6 @@ export default function SiteFooter() {
 
   return (
     <footer
-      id="contacts"
       className="petrolero-site-footer"
       aria-label="Подвал сайта Petrolero"
       onPointerMove={handlePointerMove}
