@@ -4,6 +4,58 @@
   z-index: 80;
   inset: 0;
   pointer-events: none;
+  transition: transform 540ms cubic-bezier(.22,.8,.24,1);
+  will-change: transform;
+}
+
+/* The header slides above the viewport; the top chevron handle does not. */
+.petrolero-fixed-header[data-hidden="true"] {
+  transform: translate3d(0, -100px, 0);
+}
+
+/* Always-visible handle at the top center, independent from the header. */
+.petrolero-nav-visibility-toggle {
+  position: fixed;
+  z-index: 85;
+  top: 0;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 29px;
+  padding: 1px 0 3px;
+  border: 1px solid rgba(222, 177, 105, .45);
+  border-top: 0;
+  border-radius: 0 0 12px 12px;
+  color: #e7bf80;
+  background: rgba(18, 16, 13, .80);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 4px 16px rgba(0,0,0,.20);
+  transform: translateX(-50%);
+  cursor: pointer;
+  transition: color 240ms ease, border-color 240ms ease, background 240ms ease;
+}
+
+.petrolero-nav-visibility-toggle:hover,
+.petrolero-nav-visibility-toggle:focus-visible {
+  color: #ffe4ae;
+  border-color: rgba(244, 207, 136, .8);
+  background: rgba(42, 31, 19, .94);
+}
+
+.petrolero-nav-visibility-toggle:focus-visible {
+  outline: 2px solid #e5b975;
+  outline-offset: 3px;
+}
+
+.petrolero-nav-visibility-chevron {
+  display: block;
+  transition: transform 420ms cubic-bezier(.2,.7,.2,1);
+}
+
+.petrolero-nav-visibility-toggle[data-hidden="true"] .petrolero-nav-visibility-chevron {
+  transform: rotate(180deg);
 }
 
 /* One continuous frosted-grey glass plane behind both logo and controls. */
@@ -323,6 +375,9 @@
 
 @media (max-width: 620px) {
   .petrolero-fixed-header::before { height: 70px; }
+  .petrolero-fixed-header[data-hidden="true"] { transform: translate3d(0, -82px, 0); }
+  .petrolero-nav-visibility-toggle { width: 50px; height: 25px; border-radius: 0 0 10px 10px; }
+  .petrolero-nav-visibility-chevron { width: 17px; height: 17px; }
   .petrolero-fixed-brand { width: clamp(145px, 46vw, 235px); }
   .petrolero-fixed-actions-area { height: 70px; padding: 11px 14px; }
   .petrolero-nav-actions { gap: 5px; }
@@ -331,7 +386,7 @@
   .petrolero-nav-search-field,
   .petrolero-nav-search-field input { height: 38px; }
   .petrolero-nav-search[data-open="true"] .petrolero-nav-search-field {
-    width: min(235px, calc(100vw - 167px));
+    width: min(210px, calc(100vw - 218px));
   }
   .petrolero-fixed-header[data-phase="2"] .petrolero-fixed-brand,
   .petrolero-fixed-header[data-phase="3"] .petrolero-fixed-brand {
@@ -344,7 +399,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .petrolero-fixed-brand { transition: none !important; }
+  .petrolero-fixed-brand,
+  .petrolero-fixed-header,
+  .petrolero-nav-visibility-chevron,
+  .petrolero-nav-visibility-toggle { transition: none !important; }
   .petrolero-nav-search-field,
   .petrolero-nav-search-field input { transition: none !important; }
   .petrolero-nav-search-outline rect { animation: none !important; stroke-dashoffset: 0; }
