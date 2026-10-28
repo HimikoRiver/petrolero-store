@@ -18,11 +18,13 @@
   flex-direction: column;
   justify-content: center;
   gap: clamp(34px, 5vh, 64px);
-  width: min(calc(100% - var(--petrolero-content-gutter) - var(--petrolero-content-gutter)), var(--petrolero-content-max));
+  width: min(100%, 1620px);
   min-height: 100svh;
   margin: 0 auto;
-  padding-block: clamp(118px, 14vh, 150px) clamp(90px, 11vh, 125px);
-  padding-inline: 0;
+  padding:
+    clamp(118px, 14vh, 150px)
+    clamp(24px, 5vw, 92px)
+    clamp(90px, 11vh, 125px);
 }
 
 .petrolero-steel-copy {
@@ -187,7 +189,7 @@
 
 @media (max-width: 1024px) {
   .petrolero-steel-layout {
-    padding-inline: 0;
+    padding-inline: 4vw;
   }
 
   .petrolero-steel-copy {
@@ -217,7 +219,7 @@
 
   .petrolero-steel-layout {
     gap: 32px;
-    padding: 145px 0 85px;
+    padding: 145px 18px 85px;
   }
 
   .petrolero-steel-copy {
@@ -371,7 +373,7 @@
 
 @media (max-width: 700px) {
   .petrolero-steel-layout {
-    padding: 125px 0 75px;
+    padding: 125px 18px 75px;
   }
 
   .petrolero-steel-cards {
