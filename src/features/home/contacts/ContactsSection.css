@@ -450,7 +450,7 @@ a.petrolero-contacts-detail-value:focus-visible {
   background-image:
     linear-gradient(180deg, rgba(4,4,3,.25) 0%, rgba(3,3,3,.36) 38%, rgba(2,2,2,.91) 78%, #050504 100%),
     linear-gradient(85deg, rgba(0,0,0,.66), transparent 78%),
-    url("/home/images/fon3.webp");
+    url("/home/images/fon6.webp");
   background-position: center, center, 65% center;
   background-size: cover;
   transform: scale(1.015);
@@ -820,7 +820,7 @@ a.petrolero-contacts-detail-value:focus-visible {
 
 /* A slim gap joins the two panels into one intentional composition. */
 .petrolero-contacts-bottom {
-  grid-template-columns: minmax(0, 1.33fr) minmax(290px, .9fr);
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.33fr);
   gap: clamp(12px, 1.3vw, 18px);
 }
 
@@ -929,7 +929,7 @@ a.petrolero-contacts-detail-value:focus-visible {
 @media (max-width: 1180px) {
   .petrolero-contacts-copy { width: 70%; }
   .petrolero-contacts-bottom {
-    grid-template-columns: minmax(0, 1.3fr) minmax(270px, .85fr);
+    grid-template-columns: minmax(0, .85fr) minmax(0, 1.3fr);
     gap: 14px;
   }
   .petrolero-contact-form-panel { padding: 19px; }
