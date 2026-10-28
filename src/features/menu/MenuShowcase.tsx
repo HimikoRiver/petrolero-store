@@ -1,15 +1,10 @@
 "use client";
 
-import Image from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { RefObject } from "react";
 import BrandLogo from "../home/header/BrandLogo";
 import { MENU_ITEMS } from "./menuItems";
 import "./MenuShowcase.css";
-import { useCallback, useEffect, useRef, useState } from "react";
-import type {
-  CSSProperties,
-  RefObject,
-  PointerEvent as ReactPointerEvent,
-} from "react";
 
 type MenuShowcaseProps = {
   open?: boolean;
@@ -17,8 +12,29 @@ type MenuShowcaseProps = {
   triggerRef?: RefObject<HTMLButtonElement | null>;
 };
 
-// Without props this is the original /menu-demo showcase.
-// When controlled, the same overlay opens from the homepage header.
+const MENU_DETAILS = [
+  {
+    kicker: "01 / ПРОДУКЦИЯ",
+    heading: "Для каждого двигателя.",
+    detail: "Моторные масла и присадки Petrolero.",
+  },
+  {
+    kicker: "02 / ФИЛОСОФИЯ",
+    heading: "Инженерия защиты.",
+    detail: "Подход Petrolero к продуктам и их разработке.",
+  },
+  {
+    kicker: "03 / РАЗРАБОТКИ",
+    heading: "Формулы в действии.",
+    detail: "Технологии, составы и работа масла.",
+  },
+  {
+    kicker: "04 / СВЯЗЬ",
+    heading: "Остаёмся на связи.",
+    detail: "Контактная информация и обратная связь.",
+  },
+] as const;
+
 export default function MenuShowcase({
   open,
   onClose,
@@ -27,18 +43,17 @@ export default function MenuShowcase({
   const embedded = typeof open === "boolean";
   const [demoOpen, setDemoOpen] = useState(true);
   const isOpen = embedded ? Boolean(open) : demoOpen;
-  const [activeCard, setActiveCard] = useState<number | null>(
-    null
-  );
-
+  const [activeIndex, setActiveIndex] = useState(0);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const openButtonRef = useRef<HTMLButtonElement>(null);
-  const menuRef = useRef<HTMLElement>(null);
+  const demoButtonRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLElement>(null);
 
   const closeMenu = useCallback(() => {
-    setActiveCard(null);
-    if (embedded) onClose?.();
-    else setDemoOpen(false);
+    if (embedded) {
+      onClose?.();
+    } else {
+      setDemoOpen(false);
+    }
   }, [embedded, onClose]);
 
   useEffect(() => {
@@ -46,262 +61,210 @@ export default function MenuShowcase({
 
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-
     closeButtonRef.current?.focus();
 
-    const handleKeyDown = (event: KeyboardEvent) => {
+    const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        event.preventDefault();
         closeMenu();
         return;
       }
 
-      if (event.key !== "Tab" || !menuRef.current) {
-        return;
-      }
+      if (event.key !== "Tab" || !dialogRef.current) return;
 
       const focusable = Array.from(
-        menuRef.current.querySelectorAll<HTMLElement>(
+        dialogRef.current.querySelectorAll<HTMLElement>(
           'a[href], button:not([disabled])'
         )
-      ).filter((element) => element.tabIndex !== -1);
+      ).filter((element) => element.tabIndex >= 0);
+
+      if (focusable.length === 0) return;
 
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
 
-      if (!first || !last) return;
-
-      if (
-        event.shiftKey &&
-        document.activeElement === first
-      ) {
+      if (event.shiftKey && document.activeElement === first) {
         event.preventDefault();
         last.focus();
-      } else if (
-        !event.shiftKey &&
-        document.activeElement === last
-      ) {
+      } else if (!event.shiftKey && document.activeElement === last) {
         event.preventDefault();
         first.focus();
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keydown", onKeyDown);
 
     return () => {
       document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keydown", onKeyDown);
       if (embedded) triggerRef?.current?.focus();
-      else openButtonRef.current?.focus();
+      else demoButtonRef.current?.focus();
     };
   }, [isOpen, closeMenu, embedded, triggerRef]);
 
-  const handleCardMove = (
-    event: ReactPointerEvent<HTMLAnchorElement>
-  ) => {
-    if (event.pointerType !== "mouse") return;
-
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = (event.clientX - rect.left) / rect.width - 0.5;
-    const y = (event.clientY - rect.top) / rect.height - 0.5;
-
-    event.currentTarget.style.setProperty(
-      "--rotate-x",
-      `${(-y * 5).toFixed(2)}deg`
-    );
-
-    event.currentTarget.style.setProperty(
-      "--rotate-y",
-      `${(x * 6).toFixed(2)}deg`
-    );
-  };
-
-  const resetCardTilt = (element: HTMLAnchorElement) => {
-    element.style.setProperty("--rotate-x", "0deg");
-    element.style.setProperty("--rotate-y", "0deg");
-  };
-
-  const Wrapper = embedded ? "div" : "main";
+  const activeDetail = MENU_DETAILS[activeIndex];
 
   return (
-    <Wrapper className={embedded ? "menu-inline-root" : "menu-demo-page"}>
-      {embedded && isOpen && (
-        <button
-          type="button"
-          className="menu-inline-scrim"
-          onClick={closeMenu}
-          aria-label="Закрыть меню"
-          tabIndex={-1}
-        />
-      )}
+    <div className={embedded ? "petrolero-menu-root" : "petrolero-menu-demo"}>
       {!isOpen && !embedded && (
         <button
-          ref={openButtonRef}
+          ref={demoButtonRef}
           type="button"
-          className="menu-open-button"
+          className="petrolero-menu-demo-trigger"
           onClick={() => setDemoOpen(true)}
         >
           ОТКРЫТЬ МЕНЮ
         </button>
       )}
 
+      {isOpen && (
+        <button
+          type="button"
+          className="petrolero-menu-backdrop"
+          aria-label="Закрыть меню"
+          onClick={closeMenu}
+          tabIndex={-1}
+        />
+      )}
+
       <section
         id="petrolero-site-menu"
-        ref={menuRef}
-        className={`menu-overlay ${
-          isOpen ? "menu-overlay--open" : ""
-        }`}
-        aria-hidden={!isOpen}
-        inert={!isOpen}
+        ref={dialogRef}
+        className={
+          "petrolero-menu-overlay" +
+          (isOpen ? " petrolero-menu-overlay--open" : "")
+        }
         role="dialog"
         aria-modal={isOpen ? true : undefined}
-        aria-label="Навигация Petrolero"
+        aria-label="Меню Petrolero"
+        aria-hidden={!isOpen}
+        inert={!isOpen}
       >
-        <div className="menu-shell">
-          <header className="menu-header">
+        <div className="petrolero-menu-shell">
+          <header className="petrolero-menu-header">
             <a
+              className="petrolero-menu-logo"
               href="/"
-              className="menu-logo"
+              aria-label="Petrolero — главная"
               tabIndex={isOpen ? 0 : -1}
             >
               <BrandLogo animated={false} variant="gold" />
             </a>
 
+            <span className="petrolero-menu-header-label" aria-hidden="true">
+              PETROLERO / НАВИГАЦИЯ
+            </span>
+
             <button
               ref={closeButtonRef}
+              className="petrolero-menu-close"
               type="button"
-              className="menu-close"
               onClick={closeMenu}
-              tabIndex={isOpen ? 0 : -1}
               aria-label="Закрыть меню"
+              tabIndex={isOpen ? 0 : -1}
             >
-              <span className="menu-close-circle" aria-hidden="true">×</span>
+              <svg
+                viewBox="0 0 28 28"
+                width="23"
+                height="23"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
+                <path d="M6 6L22 22M22 6L6 22" />
+              </svg>
             </button>
           </header>
 
-          <section className="menu-stage">
+          <div className="petrolero-menu-body">
             <nav
+              className="petrolero-menu-nav"
               aria-label="Основные разделы Petrolero"
-              className="menu-nav"
             >
-              <ul
-                className="menu-card-list"
-                data-active={
-                  activeCard === null
-                    ? "none"
-                    : String(activeCard)
-                }
-              >
+              <p className="petrolero-menu-eyebrow">ВЫБЕРИТЕ РАЗДЕЛ</p>
+
+              <ul className="petrolero-menu-list">
                 {MENU_ITEMS.map((item, index) => (
-                  <li
-                    key={item.number}
-                    className="menu-card-slot"
-                    style={
-                      {
-                        "--entry-delay": `${
-                          120 + index * 90
-                        }ms`,
-                      } as CSSProperties
-                    }
-                  >
+                  <li className="petrolero-menu-item" key={item.number}>
                     <a
+                      className={
+                        "petrolero-menu-link" +
+                        (activeIndex === index
+                          ? " petrolero-menu-link--active"
+                          : "")
+                      }
                       href={item.href}
-                      className={`menu-card ${
-                        activeCard === index
-                          ? "menu-card--active"
-                          : ""
-                      }`}
                       tabIndex={isOpen ? 0 : -1}
-                      style={
-                        {
-                          "--rotate-x": "0deg",
-                          "--rotate-y": "0deg",
-                        } as CSSProperties
-                      }
-                      onPointerEnter={() =>
-                        setActiveCard(index)
-                      }
-                      onPointerMove={handleCardMove}
-                      onPointerLeave={(event) => {
-                        setActiveCard(null);
-                        resetCardTilt(event.currentTarget);
-                      }}
-                      onFocus={() => setActiveCard(index)}
-                      onBlur={(event) => {
-                        setActiveCard(null);
-                        resetCardTilt(event.currentTarget);
-                      }}
+                      onMouseEnter={() => setActiveIndex(index)}
+                      onFocus={() => setActiveIndex(index)}
+                      onClick={closeMenu}
                     >
-                      <div
-                        className="menu-card-float"
-                        style={
-                          {
-                            "--float-x1": item.float.x1,
-                            "--float-y1": item.float.y1,
-                            "--float-r1": item.float.r1,
-                            "--float-x2": item.float.x2,
-                            "--float-y2": item.float.y2,
-                            "--float-r2": item.float.r2,
-                            "--float-x3": item.float.x3,
-                            "--float-y3": item.float.y3,
-                            "--float-r3": item.float.r3,
-                            "--float-duration":
-                              item.float.duration,
-                            "--float-delay": item.float.delay,
-                          } as CSSProperties
-                        }
-                      >
-                        <Image
-                          src={item.image}
-                          alt=""
-                          width={656}
-                          height={1642}
-                          sizes="(max-width: 520px) 42vw, (max-width: 860px) 180px, 205px"
-                          className="menu-card-image"
-                          priority={index < 2}
-                          draggable={false}
-                        />
-
-                        <span className="menu-card-content">
-                          <span className="menu-card-number">
-                            {item.number}
-                          </span>
-
-                          {/* Градиент только за названием */}
-                          <span className="menu-card-title">
-                            {item.title}
-                          </span>
-                        </span>
-
-                        <span
-                          className="menu-card-arrow"
-                          aria-hidden="true"
+                      <span className="petrolero-menu-link-number">
+                        {item.number}
+                      </span>
+                      <span className="petrolero-menu-link-text">
+                        {item.title}
+                      </span>
+                      <span className="petrolero-menu-link-arrow" aria-hidden="true">
+                        <svg
+                          width="29"
+                          height="29"
+                          viewBox="0 0 32 32"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         >
-                          <svg
-                            width="28"
-                            height="28"
-                            viewBox="0 0 32 32"
-                            fill="none"
-                          >
-                            <path
-                              d="M7 16H25M17 8L25 16L17 24"
-                              stroke="currentColor"
-                              strokeWidth="1.7"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </span>
-                      </div>
+                          <path d="M5 16H27M19 8L27 16L19 24" />
+                        </svg>
+                      </span>
                     </a>
                   </li>
                 ))}
               </ul>
             </nav>
-          </section>
+
+            <aside className="petrolero-menu-feature" aria-hidden="true">
+              {isOpen && (
+                <video
+                  className="petrolero-menu-oil"
+                  src="/home/video/oil.webm"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="metadata"
+                />
+              )}
+              <div className="petrolero-menu-feature-grain" />
+              <div className="petrolero-menu-feature-details" key={activeIndex}>
+                <span className="petrolero-menu-feature-kicker">
+                  {activeDetail.kicker}
+                </span>
+                <span className="petrolero-menu-feature-heading">
+                  {activeDetail.heading}
+                </span>
+                <span className="petrolero-menu-feature-description">
+                  {activeDetail.detail}
+                </span>
+              </div>
+              <div className="petrolero-menu-feature-index">
+                {MENU_ITEMS[activeIndex].number}
+              </div>
+            </aside>
+          </div>
+
+          <div className="petrolero-menu-bottom" aria-hidden="true">
+            <span>МОТОРНЫЕ МАСЛА</span>
+            <span>ПРИСАДКИ</span>
+            <span>ТЕХНОЛОГИИ</span>
+            <span className="petrolero-menu-bottom-brand">PETROLERO</span>
+          </div>
         </div>
       </section>
-
-      
-    </Wrapper>
+    </div>
   );
 }
