@@ -3,14 +3,29 @@
 import Image from "next/image";
 import { MENU_ITEMS } from "./menuItems";
 import "./MenuShowcase.css";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type {
   CSSProperties,
+  RefObject,
   PointerEvent as ReactPointerEvent,
 } from "react";
 
-export default function MenuShowcase() {
-  const [isOpen, setIsOpen] = useState(true);
+type MenuShowcaseProps = {
+  open?: boolean;
+  onClose?: () => void;
+  triggerRef?: RefObject<HTMLButtonElement | null>;
+};
+
+// Without props this is the original /menu-demo showcase.
+// When controlled, the same overlay opens from the homepage header.
+export default function MenuShowcase({
+  open,
+  onClose,
+  triggerRef,
+}: MenuShowcaseProps = {}) {
+  const embedded = typeof open === "boolean";
+  const [demoOpen, setDemoOpen] = useState(true);
+  const isOpen = embedded ? Boolean(open) : demoOpen;
   const [activeCard, setActiveCard] = useState<number | null>(
     null
   );
@@ -18,6 +33,12 @@ export default function MenuShowcase() {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const openButtonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLElement>(null);
+
+  const closeMenu = useCallback(() => {
+    setActiveCard(null);
+    if (embedded) onClose?.();
+    else setDemoOpen(false);
+  }, [embedded, onClose]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -29,8 +50,7 @@ export default function MenuShowcase() {
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setActiveCard(null);
-        setIsOpen(false);
+        closeMenu();
         return;
       }
 
@@ -69,9 +89,10 @@ export default function MenuShowcase() {
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKeyDown);
-      openButtonRef.current?.focus();
+      if (embedded) triggerRef?.current?.focus();
+      else openButtonRef.current?.focus();
     };
-  }, [isOpen]);
+  }, [isOpen, closeMenu, embedded, triggerRef]);
 
   const handleCardMove = (
     event: ReactPointerEvent<HTMLAnchorElement>
@@ -98,19 +119,14 @@ export default function MenuShowcase() {
     element.style.setProperty("--rotate-y", "0deg");
   };
 
-  const closeMenu = () => {
-    setActiveCard(null);
-    setIsOpen(false);
-  };
-
   return (
-    <main className="menu-demo-page">
-      {!isOpen && (
+    <main className={embedded ? "menu-inline-root" : "menu-demo-page"}>
+      {!isOpen && !embedded && (
         <button
           ref={openButtonRef}
           type="button"
           className="menu-open-button"
-          onClick={() => setIsOpen(true)}
+          onClick={() => setDemoOpen(true)}
         >
           ОТКРЫТЬ МЕНЮ
         </button>
