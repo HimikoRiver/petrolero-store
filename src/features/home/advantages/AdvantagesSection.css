@@ -7,7 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 102px clamp(24px, 4.2vw, 76px) 46px;
+  padding: 102px var(--petrolero-content-gutter) 46px;
   box-sizing: border-box;
   opacity: 0;
   visibility: hidden;
@@ -32,7 +32,7 @@
 
 .petrolero-advantages-inner {
   width: 100%;
-  max-width: 1540px;
+  max-width: var(--petrolero-content-max);
   max-height: calc(100svh - 124px);
   overflow-y: auto;
   scrollbar-width: thin;
@@ -170,7 +170,7 @@
 }
 
 @media (max-width: 600px) {
-  .petrolero-advantages { padding: 86px 16px 14px; align-items: flex-start; }
+  .petrolero-advantages { padding: 86px var(--petrolero-content-gutter) 14px; align-items: flex-start; }
   .petrolero-advantages-inner { max-height: calc(100svh - 101px); }
   .petrolero-advantages-heading { margin-bottom: 18px; gap: 12px; }
   .petrolero-advantages-heading h2 { font-size: clamp(25px, 7vw, 39px); }
