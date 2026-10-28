@@ -87,6 +87,7 @@ export default function TechnologySection({
 
   return (
     <section
+      id="technologies"
       className="petrolero-technology"
       aria-label="Технологии защиты двигателя"
     >
