@@ -121,8 +121,8 @@ export default function ContactsSection() {
       <div className="petrolero-contacts-inner">
         <div className="petrolero-contacts-intro">
           <div className="petrolero-contacts-copy">
-            <p className="petrolero-contacts-index">04 <span>КОНТАКТЫ</span></p>
-            <h2 id="petrolero-contacts-title">Контакты</h2>
+            <p className="petrolero-contacts-index">КОНТАКТЫ</p>
+            <h2 id="petrolero-contacts-title">Свяжитесь с нами</h2>
             <p className="petrolero-contacts-lead">Мы всегда на связи</p>
             <p className="petrolero-contacts-description">
               Поможем разобраться в продукции Petrolero,
@@ -212,10 +212,6 @@ export default function ContactsSection() {
                 <button type="submit" className="petrolero-contact-submit">
                   Подготовить письмо <RightArrow />
                 </button>
-                <p>
-                  Откроется почтовая программа. Письмо отправится только после
-                  вашего подтверждения.
-                </p>
               </div>
               <p className="petrolero-contact-form-privacy">
                 Отправляя письмо, вы соглашаетесь с{" "}
