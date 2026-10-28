@@ -473,14 +473,27 @@
 }
 
 
-/* Align the engine-section heading to the same vertical line as
-   the company/advantages headings, without changing the video dimensions. */
-.petrolero-tech-section-heading--engine {
-  margin-top: 0;
-}
-
+/* Match "Внутри двигателя" + "МАСЛО В РАБОТЕ" to the left edge of
+   "ИНЖЕНЕРИЯ ЗАЩИТЫ / ПРЕИМУЩЕСТВА".
+   Only the heading is offset: the engine video, markers, and cards retain
+   their own original centering and dimensions. */
 @media (min-width: 901px) {
-  .petrolero-technology {
-    padding-top: 102px;
+  .petrolero-tech-section-heading--engine {
+    justify-items: start;
+    left: calc(
+      var(--petrolero-advantages-heading-left, clamp(24px, 4.2vw, 76px))
+      - max(clamp(18px, 3vw, 58px), calc((100vw - 1530px) / 2))
+    );
+  }
+
+  .petrolero-tech-section-heading--engine .petrolero-tech-heading-eyebrow {
+    position: static;
+    max-width: none;
+    margin-bottom: 12px;
+  }
+
+  .petrolero-tech-section-heading--engine .petrolero-tech-heading-copy {
+    align-items: flex-start;
+    text-align: left;
   }
 }
