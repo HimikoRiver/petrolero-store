@@ -83,6 +83,7 @@ export default function BrandStory({ reducedMotion }: BrandStoryProps) {
   return (
     <section
       ref={sectionRef}
+      id="company"
       className="petrolero-story"
       aria-label="О компании Petrolero"
     >
