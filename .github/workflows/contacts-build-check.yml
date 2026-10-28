@@ -1,0 +1,25 @@
+name: Verify contacts section build
+on:
+  push:
+    branches:
+      - feature/liquid-intro-prototype
+    paths:
+      - .github/workflows/contacts-build-check.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install exact dependencies
+        run: npm ci --no-audit --no-fund
+      - name: TypeScript diagnostics
+        run: npx tsc --noEmit
+      - name: Production build
+        run: npm run build
