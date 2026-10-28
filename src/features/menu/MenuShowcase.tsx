@@ -124,6 +124,15 @@ export default function MenuShowcase({
 
   return (
     <Wrapper className={embedded ? "menu-inline-root" : "menu-demo-page"}>
+      {embedded && isOpen && (
+        <button
+          type="button"
+          className="menu-inline-scrim"
+          onClick={closeMenu}
+          aria-label="Закрыть меню"
+          tabIndex={-1}
+        />
+      )}
       {!isOpen && !embedded && (
         <button
           ref={openButtonRef}
