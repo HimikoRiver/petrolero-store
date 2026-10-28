@@ -294,15 +294,14 @@
 }
 
 
-/* Keep the company scene at the same vertical starting line as
-   the advantages heading. The pinned reveal and original widths stay intact. */
+/* Match the left edge of "ИНЖЕНЕРИЯ ЗАЩИТЫ / ПРЕИМУЩЕСТВА" precisely.
+   Do NOT change the pinned scene's vertical centering, content width,
+   background, or scroll-driven animation. */
 @media (min-width: 901px) {
-  .petrolero-story-sticky {
-    align-items: flex-start;
-  }
-
   .petrolero-story-content {
-    padding-top: 102px;
-    padding-bottom: 24px;
+    margin-left: var(
+      --petrolero-advantages-heading-left,
+      clamp(24px, 4.2vw, 76px)
+    );
   }
 }
