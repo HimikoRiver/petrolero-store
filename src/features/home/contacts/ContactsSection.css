@@ -1001,3 +1001,28 @@ a.petrolero-contacts-detail-value:focus-visible {
   .petrolero-contact-form-grid { grid-template-columns: 1fr; }
   .petrolero-contacts-dealer { min-height: 320px; }
 }
+
+
+/* Desktop contacts alignment with the Advantages heading left edge. */
+@media (min-width: 901px) {
+  .petrolero-contacts {
+    --petrolero-contacts-alignment-offset: calc(
+      var(
+        --petrolero-advantages-heading-left,
+        max(clamp(24px, 4.2vw, 76px), calc((100vw - 1540px) / 2))
+      )
+      - max(
+        clamp(20px, 3vw, 54px),
+        calc((100vw - 1280px) / 2)
+      )
+    );
+  }
+
+  /* Move the actual content, not the backgrounds or the image locator.
+     Card width, grid proportions and typography remain exactly the same. */
+  .petrolero-contacts-copy,
+  .petrolero-contacts-bottom {
+    position: relative;
+    left: var(--petrolero-contacts-alignment-offset);
+  }
+}
