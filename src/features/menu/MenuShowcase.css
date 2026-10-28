@@ -606,3 +606,26 @@
             transition-duration: 0.01ms !important;
           }
         }
+
+
+/* Reuse the exact four-card menu as a controlled overlay on the homepage.
+   No full-screen demo container or extra document height is introduced. */
+.menu-inline-root {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #fff;
+}
+
+.menu-inline-root *,
+.menu-inline-root *::before,
+.menu-inline-root *::after {
+  box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-inline-root *,
+  .menu-inline-root *::before,
+  .menu-inline-root *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}
