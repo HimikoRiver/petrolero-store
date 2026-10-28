@@ -1,0 +1,26 @@
+name: Verify swapped Petrolero contact cards
+on:
+  push:
+    branches:
+      - feature/liquid-intro-prototype
+    paths:
+      - .github/workflows/verify-dealer-card-swap.yml
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install
+        run: npm ci --no-audit --no-fund
+      - name: Generate route types
+        run: npx next typegen
+      - name: TypeScript
+        run: npx tsc --noEmit
+      - name: Production build
+        run: npm run build
