@@ -1,0 +1,134 @@
+/* Compact floating gold-glass navigation, separate from the header. */
+.petrolero-page-scroll {
+  position: fixed;
+  z-index: 76;
+  right: clamp(13px, 1.8vw, 32px);
+  bottom: max(18px, env(safe-area-inset-bottom, 0px) + 18px);
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 46px;
+  padding: 4px;
+  border: 1px solid rgba(222, 175, 105, .40);
+  border-radius: 24px;
+  background: linear-gradient(155deg, rgba(58, 42, 25, .57), rgba(11, 10, 9, .70) 55%, rgba(65, 43, 18, .55));
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  backdrop-filter: blur(16px) saturate(120%);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(254, 221, 154, .20);
+  overflow: hidden;
+  animation: petrolero-scroll-breathe 5.5s ease-in-out infinite;
+}
+
+.petrolero-page-scroll::before {
+  content: "";
+  position: absolute;
+  inset: -85% -80%;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 34%, rgba(251, 202, 126, .16) 48%, transparent 63%);
+  transform: translateX(-85%);
+  animation: petrolero-scroll-sheen 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.petrolero-page-scroll-button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 42px;
+  padding: 0;
+  border: 0;
+  border-radius: 19px;
+  background: transparent;
+  color: #e0b371;
+  cursor: pointer;
+  transition: background 250ms ease, color 250ms ease, box-shadow 250ms ease;
+}
+
+.petrolero-page-scroll-button svg {
+  display: block;
+  transition: transform 280ms cubic-bezier(.2,.72,.2,1);
+}
+
+.petrolero-page-scroll-button--top:hover svg,
+.petrolero-page-scroll-button--top:focus-visible svg {
+  transform: translateY(-3px);
+}
+
+.petrolero-page-scroll-button--bottom:hover svg,
+.petrolero-page-scroll-button--bottom:focus-visible svg {
+  transform: translateY(3px);
+}
+
+.petrolero-page-scroll-button:hover,
+.petrolero-page-scroll-button:focus-visible {
+  color: #ffdfa2;
+  background: rgba(218, 154, 65, .15);
+  box-shadow: inset 0 0 15px rgba(221, 149, 54, .08);
+}
+
+.petrolero-page-scroll-button:focus-visible {
+  outline: 2px solid #edc27b;
+  outline-offset: -2px;
+}
+
+.petrolero-page-scroll-button:active {
+  background: rgba(218, 154, 65, .25);
+}
+
+.petrolero-page-scroll-divider {
+  width: 19px;
+  height: 1px;
+  margin: 1px 0;
+  background: linear-gradient(90deg, transparent, rgba(231, 185, 103, .47), transparent);
+  pointer-events: none;
+}
+
+@keyframes petrolero-scroll-breathe {
+  0%, 100% {
+    border-color: rgba(222, 175, 105, .34);
+    box-shadow: 0 8px 32px rgba(0,0,0,.34), inset 0 1px 0 rgba(254,221,154,.16);
+  }
+  50% {
+    border-color: rgba(237, 190, 116, .61);
+    box-shadow: 0 8px 32px rgba(0,0,0,.34), 0 0 17px rgba(209,143,57,.12), inset 0 1px 0 rgba(254,221,154,.22);
+  }
+}
+
+@keyframes petrolero-scroll-sheen {
+  0%, 18%, 100% { transform: translateX(-85%); opacity: 0; }
+  30% { opacity: 1; }
+  55%, 85% { transform: translateX(90%); opacity: 0; }
+}
+
+@media (max-width: 620px) {
+  .petrolero-page-scroll {
+    right: 12px;
+    bottom: max(14px, env(safe-area-inset-bottom, 0px) + 14px);
+    width: 42px;
+    padding: 3px;
+  }
+
+  .petrolero-page-scroll-button {
+    width: 34px;
+    height: 37px;
+  }
+
+  .petrolero-page-scroll-button svg {
+    width: 19px;
+    height: 19px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petrolero-page-scroll,
+  .petrolero-page-scroll::before {
+    animation: none;
+  }
+
+  .petrolero-page-scroll-button,
+  .petrolero-page-scroll-button svg {
+    transition: none;
+  }
+}
