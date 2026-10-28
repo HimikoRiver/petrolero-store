@@ -20,9 +20,9 @@ export const MENU_ITEMS = [
   },
   {
     number: "02",
-    title: "О бренде",
+    title: "О компании",
     image: "/menu/images/2.webp",
-    href: "/about",
+    href: "/#company",
     float: {
       x1: "-6px",
       y1: "-10px",
@@ -41,7 +41,7 @@ export const MENU_ITEMS = [
     number: "03",
     title: "Технологии",
     image: "/menu/images/3.webp",
-    href: "/technologies",
+    href: "/#technologies",
     float: {
       x1: "7px",
       y1: "-9px",
