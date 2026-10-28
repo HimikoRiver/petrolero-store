@@ -60,7 +60,7 @@ export const MENU_ITEMS = [
     number: "04",
     title: "Контакты",
     image: "/menu/images/4.webp",
-    href: "/contacts",
+    href: "/#contacts",
     float: {
       x1: "-5px",
       y1: "-13px",
