@@ -84,6 +84,33 @@ function SocialGlyph({ icon }: { icon: SocialIcon }) {
   }
 }
 
+// A dense deterministic stipple, drawn as only two SVG paths per wordmark.
+// Unlike a blurred turbulence overlay, individual flecks remain visible.
+function createGrain() {
+  let seed = 26371;
+  const random = () => {
+    seed = (Math.imul(1664525, seed) + 1013904223) >>> 0;
+    return seed / 4294967296;
+  };
+
+  const dark: string[] = [];
+  const light: string[] = [];
+
+  for (let i = 0; i < 1450; i++) {
+    const x = (random() * 128).toFixed(2);
+    const y = (random() * 128).toFixed(2);
+    const size = 0.5 + random() * (i % 11 === 0 ? 2.7 : 1.5);
+    const w = size.toFixed(2);
+    const h = (size * (0.65 + random() * 0.65)).toFixed(2);
+    const fleck = `M${x} ${y}h${w}v${h}h-${w}Z`;
+    (random() > 0.35 ? dark : light).push(fleck);
+  }
+
+  return { dark: dark.join(""), light: light.join("") };
+}
+
+const GRAIN = createGrain();
+
 function PetroleroWordmark({ illuminated }: { illuminated: boolean }) {
   const id = illuminated ? "petrolero-footer-lit" : "petrolero-footer-dark";
 
@@ -107,35 +134,28 @@ function PetroleroWordmark({ illuminated }: { illuminated: boolean }) {
             </>
           ) : (
             <>
-              <stop offset="0%" stopColor="#46372a" />
-              <stop offset="60%" stopColor="#2a251e" />
-              <stop offset="100%" stopColor="#1c1a18" />
+              <stop offset="0%" stopColor="#32291e" />
+              <stop offset="60%" stopColor="#231e18" />
+              <stop offset="100%" stopColor="#191716" />
             </>
           )}
         </linearGradient>
 
-        <filter id={id + "-noise"} x="0" y="0" width="100%" height="100%">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.66"
-            numOctaves="3"
-            seed="9"
-            stitchTiles="stitch"
-          />
-          <feColorMatrix type="saturate" values="0" />
-        </filter>
-
         <pattern
           id={id + "-grain"}
           patternUnits="userSpaceOnUse"
-          width="120"
-          height="120"
+          width="128"
+          height="128"
         >
-          <rect
-            width="120"
-            height="120"
-            filter={`url(#${id}-noise)`}
-            opacity={illuminated ? "0.48" : "0.18"}
+          <path
+            d={GRAIN.dark}
+            fill="#140c04"
+            opacity={illuminated ? "0.96" : "0.5"}
+          />
+          <path
+            d={GRAIN.light}
+            fill="#ffdfa0"
+            opacity={illuminated ? "0.68" : "0.12"}
           />
         </pattern>
       </defs>
@@ -163,7 +183,7 @@ function PetroleroWordmark({ illuminated }: { illuminated: boolean }) {
           textLength="1160"
           lengthAdjust="spacingAndGlyphs"
           fill={`url(#${id}-grain)`}
-          opacity={illuminated ? "0.22" : "0.38"}
+          opacity={illuminated ? "0.9" : "0.2"}
         >
           PETROLERO
         </text>
