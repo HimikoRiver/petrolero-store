@@ -19,13 +19,13 @@ const MENU_DETAILS = [
     detail: "Моторные масла и присадки Petrolero.",
   },
   {
-    kicker: "02 / ФИЛОСОФИЯ",
-    heading: "Инженерия защиты.",
-    detail: "Подход Petrolero к продуктам и их разработке.",
+    kicker: "02 / О КОМПАНИИ",
+    heading: "Больше, чем масло.",
+    detail: "Компания Petrolero, её подход и продукция.",
   },
   {
-    kicker: "03 / РАЗРАБОТКИ",
-    heading: "Формулы в действии.",
+    kicker: "03 / ТЕХНОЛОГИИ",
+    heading: "Инженерия защиты.",
     detail: "Технологии, составы и работа масла.",
   },
   {
@@ -227,7 +227,7 @@ export default function MenuShowcase({
               </ul>
             </nav>
 
-            <aside className="petrolero-menu-feature" aria-hidden="true">
+            <aside className="petrolero-menu-feature">
               {isOpen && (
                 <video
                   className="petrolero-menu-oil"
@@ -240,7 +240,14 @@ export default function MenuShowcase({
                 />
               )}
               <div className="petrolero-menu-feature-grain" />
-              <div className="petrolero-menu-feature-details" key={activeIndex}>
+              <a
+                className="petrolero-menu-feature-details"
+                key={activeIndex}
+                href={MENU_ITEMS[activeIndex].href}
+                onClick={closeMenu}
+                tabIndex={isOpen ? 0 : -1}
+                aria-label={`Перейти: ${MENU_ITEMS[activeIndex].title}`}
+              >
                 <span className="petrolero-menu-feature-kicker">
                   {activeDetail.kicker}
                 </span>
@@ -250,8 +257,8 @@ export default function MenuShowcase({
                 <span className="petrolero-menu-feature-description">
                   {activeDetail.detail}
                 </span>
-              </div>
-              <div className="petrolero-menu-feature-index">
+              </a>
+              <div className="petrolero-menu-feature-index" aria-hidden="true">
                 {MENU_ITEMS[activeIndex].number}
               </div>
             </aside>
