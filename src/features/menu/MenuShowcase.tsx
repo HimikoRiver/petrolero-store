@@ -119,8 +119,10 @@ export default function MenuShowcase({
     element.style.setProperty("--rotate-y", "0deg");
   };
 
+  const Wrapper = embedded ? "div" : "main";
+
   return (
-    <main className={embedded ? "menu-inline-root" : "menu-demo-page"}>
+    <Wrapper className={embedded ? "menu-inline-root" : "menu-demo-page"}>
       {!isOpen && !embedded && (
         <button
           ref={openButtonRef}
@@ -291,6 +293,6 @@ export default function MenuShowcase({
       </section>
 
       
-    </main>
+    </Wrapper>
   );
 }
