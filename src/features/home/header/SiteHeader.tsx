@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import BrandLogo from "./BrandLogo";
+import MenuShowcase from "../../menu/MenuShowcase";
 import { SearchIcon, AccountIcon, CartIcon } from "./HeaderIcons";
 import "./SiteHeader.css";
 
@@ -16,10 +17,56 @@ type PetroleroHeaderProps = {
 export default function SiteHeader({ phase, reducedMotion }: PetroleroHeaderProps) {
   const searchRef = useRef<HTMLInputElement>(null);
   const searchWrapRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [searchSubmitted, setSearchSubmitted] = useState(false);
   const [panel, setPanel] = useState<Panel>(null);
+  const [navHidden, setNavHidden] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
+
+  // Scroll down to tuck navigation away; up to bring it back.
+  // The chevron toggle always remains accessible for manual control.
+  useEffect(() => {
+    let lastY = Math.max(0, window.scrollY);
+
+    const handleScroll = () => {
+      const currentY = Math.max(0, window.scrollY);
+      const delta = currentY - lastY;
+      if (Math.abs(delta) < 6) return;
+      lastY = currentY;
+
+      if (currentY < 35) {
+        setNavHidden(false);
+        return;
+      }
+
+      // Do not interrupt intro animation or currently open header controls.
+      if (phase !== 3 || menuOpen || searchOpen || panel !== null) return;
+
+      if (delta > 0 && currentY > 125) {
+        setNavHidden(true);
+      } else if (delta < 0) {
+        setNavHidden(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [phase, menuOpen, searchOpen, panel]);
+
+  useEffect(() => {
+    if (phase === 3 && window.scrollY > 125) setNavHidden(true);
+  }, [phase]);
+
+  useEffect(() => {
+    if (navHidden) {
+      setSearchOpen(false);
+      setPanel(null);
+    }
+  }, [navHidden]);
 
   useEffect(() => {
     if (!searchOpen) return;
@@ -52,14 +99,27 @@ export default function SiteHeader({ phase, reducedMotion }: PetroleroHeaderProp
   }, [panel]);
 
   const toggleSearch = () => {
+    setNavHidden(false);
     setPanel(null);
     setSearchSubmitted(false);
     setSearchOpen((current) => !current);
   };
 
   const openPanel = (next: Exclude<Panel, null>) => {
+    setNavHidden(false);
     setSearchOpen(false);
     setPanel((current) => current === next ? null : next);
+  };
+
+  const toggleMenu = () => {
+    setSearchOpen(false);
+    setPanel(null);
+    setNavHidden(false);
+    setMenuOpen((current) => !current);
+  };
+
+  const toggleNavVisibility = () => {
+    setNavHidden((current) => !current);
   };
 
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
@@ -69,7 +129,11 @@ export default function SiteHeader({ phase, reducedMotion }: PetroleroHeaderProp
 
   return (
     <>
-      <div className="petrolero-fixed-header" data-phase={phase}>
+      <div
+        className="petrolero-fixed-header"
+        data-phase={phase}
+        data-hidden={navHidden && phase === 3}
+      >
         <div className="petrolero-fixed-brand">
           <BrandLogo animated={!reducedMotion} variant="gold" />
         </div>
@@ -140,9 +204,47 @@ export default function SiteHeader({ phase, reducedMotion }: PetroleroHeaderProp
               <CartIcon />
               <span className="petrolero-nav-cart-count">0</span>
             </button>
+            <button
+              ref={menuButtonRef}
+              type="button"
+              className="petrolero-nav-button petrolero-nav-menu-button"
+              aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"}
+              aria-controls="petrolero-site-menu"
+              aria-expanded={menuOpen}
+              onClick={toggleMenu}
+            >
+              <svg viewBox="0 0 28 28" width="25" height="25" fill="none" stroke="currentColor" strokeWidth="1.55" strokeLinecap="round" aria-hidden="true">
+                <path d="M5 8H23M5 14H23M5 20H23" />
+              </svg>
+            </button>
           </nav>
         </header>
       </div>
+
+      <button
+        className="petrolero-nav-visibility-toggle"
+        type="button"
+        onClick={toggleNavVisibility}
+        aria-label={navHidden ? "Показать навигацию" : "Скрыть навигацию"}
+        aria-expanded={!navHidden}
+        title={navHidden ? "Показать навигацию" : "Скрыть навигацию"}
+        data-hidden={navHidden}
+      >
+        <svg
+          className="petrolero-nav-visibility-chevron"
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M5 13L12 6L19 13M5 19L12 12L19 19" />
+        </svg>
+      </button>
 
       {panel && (
         <div className="petrolero-nav-dialog-backdrop" onClick={() => setPanel(null)}>
@@ -165,6 +267,12 @@ export default function SiteHeader({ phase, reducedMotion }: PetroleroHeaderProp
           </section>
         </div>
       )}
+
+      <MenuShowcase
+        open={menuOpen}
+        onClose={closeMenu}
+        triggerRef={menuButtonRef}
+      />
     </>
   );
 }
