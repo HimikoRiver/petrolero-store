@@ -25,9 +25,8 @@
   align-items: center;
   column-gap: clamp(18px, 2vw, 34px);
   row-gap: 14px;
-  width: min(calc(100% - var(--petrolero-content-gutter) - var(--petrolero-content-gutter)), var(--petrolero-content-max));
-  margin-inline: auto;
-  padding: clamp(19px, 2.1vw, 38px) 0 0;
+  width: 100%;
+  padding: clamp(19px, 2.1vw, 38px) clamp(19px, 3.4vw, 64px) 0;
 }
 
 .petrolero-site-footer-socials {
@@ -221,7 +220,7 @@
     grid-template-columns: 1fr;
     justify-items: center;
     row-gap: 13px;
-    padding: 22px 0 0;
+    padding: 22px 18px 0;
   }
 
   .petrolero-site-footer-socials {
