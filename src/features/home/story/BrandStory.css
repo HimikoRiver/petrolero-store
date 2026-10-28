@@ -292,3 +292,27 @@
     background-position: center, 68% center;
   }
 }
+
+
+/* Shared Petrolero content left edge.
+   Only position the copy inside the pinned scene; leave the full-bleed
+   backgrounds and existing scroll/letter animations untouched. */
+.petrolero-story-content {
+  margin-left: max(
+    var(--petrolero-content-gutter),
+    calc((100% - var(--petrolero-content-max)) / 2)
+  );
+}
+
+@media (max-width: 900px) {
+  .petrolero-story-content {
+    margin-left: var(--petrolero-content-gutter);
+  }
+}
+
+@media (max-width: 620px) {
+  .petrolero-story-content {
+    width: calc(100% - var(--petrolero-content-gutter) - var(--petrolero-content-gutter));
+    margin-inline: var(--petrolero-content-gutter);
+  }
+}
