@@ -1,0 +1,190 @@
+
+"use client";
+
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import "./SteelSection.css";
+
+type SteelSectionProps = {
+  reducedMotion: boolean;
+};
+
+const VEHICLE_LOADS = [
+  {
+    id: "cars",
+    type: "ЛЕГКОВЫЕ",
+    title: "ЧАСТЫЕ ОСТАНОВКИ И ЗАПУСКИ",
+    image: "/home/images/cards/1.webp",
+    detail: "Городской режим, частые пуски и перепады температур.",
+    icon: "/home/images/icons/petrolero-gold-icon-1.webp?v=a8a85109",
+    alt: "Легковой автомобиль в плотном ночном потоке на мокрой дороге",
+  },
+  {
+    id: "moto",
+    type: "МОТО",
+    title: "ВЫСОКИЕ ОБОРОТЫ",
+    image: "/home/images/cards/2.webp",
+    detail: "Повышенные обороты и интенсивный нагрев двигателя.",
+    icon: "/home/images/icons/petrolero-gold-icon-22.webp",
+    alt: "Мотоциклист проходит поворот горной дороги",
+  },
+  {
+    id: "trucks",
+    type: "ГРУЗОВЫЕ",
+    title: "ДЛИТЕЛЬНЫЕ НАГРУЗКИ",
+    image: "/home/images/cards/3.webp",
+    detail: "Тяжёлый груз, высокое давление и длительные пробеги.",
+    icon: "/home/images/icons/petrolero-gold-icon-3.webp?v=4db78ad9",
+    alt: "Тяжёлый грузовик преодолевает горный подъём",
+  },
+] as const;
+
+const badgeStyle = {
+  position: "absolute",
+  top: "clamp(14px, 2vw, 24px)",
+  left: "clamp(14px, 2vw, 24px)",
+  zIndex: 3,
+  display: "flex",
+  alignItems: "center",
+  gap: "clamp(6px, 0.8vw, 12px)",
+  maxWidth: "calc(100% - 28px)",
+  pointerEvents: "none",
+} as const;
+
+const iconStyle = {
+  position: "relative",
+  width: "clamp(62px, 7vw, 94px)",
+  height: "clamp(48px, 5vw, 66px)",
+  margin: 0,
+  flex: "0 0 auto",
+  border: 0,
+} as const;
+
+const typeStyle = {
+  margin: 0,
+  color: "#f2d395",
+  fontSize: "clamp(10px, 0.9vw, 13px)",
+  fontWeight: 700,
+  lineHeight: 1.3,
+  letterSpacing: "0.08em",
+  textAlign: "left",
+  textShadow: "0 2px 10px rgba(0,0,0,0.9)",
+} as const;
+
+/** A monochrome visual explanation of the loads engines experience. */
+export default function SteelSection({ reducedMotion }: SteelSectionProps) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    if (reducedMotion || !("IntersectionObserver" in window)) {
+      setVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { threshold: 0.08 },
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [reducedMotion]);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="petrolero-steel"
+      aria-labelledby="petrolero-steel-heading"
+      data-visible={visible || reducedMotion}
+    >
+      <div className="petrolero-steel-layout">
+        <div className="petrolero-steel-copy">
+          <h2 id="petrolero-steel-heading" className="petrolero-steel-title">
+            <strong>МЕТАЛЛ</strong>
+            <span>
+              ПОД <em>НАГРУЗКОЙ</em>
+            </span>
+          </h2>
+
+          <div className="petrolero-steel-description">
+            <p>
+              Когда двигатель работает, его детали постоянно испытывают
+              экстремальные условия:
+              <span>
+                {" "}высокое давление, сильный нагрев и постоянное трение.
+              </span>
+              <br />
+              Нагрузка зависит от типа техники и условий эксплуатации.
+            </p>
+
+            <p>
+              Моторное масло должно сохранять защитную плёнку между
+              движущимися поверхностями, помогая
+              <span> уменьшать трение и износ.</span> Поэтому важно учитывать
+              требования двигателя и условия, в которых он работает.
+            </p>
+          </div>
+        </div>
+
+        <div
+          className="petrolero-steel-cards"
+          aria-label="Нагрузки на разные виды техники"
+        >
+          {VEHICLE_LOADS.map((vehicle) => (
+            <article key={vehicle.id} className="petrolero-steel-card">
+              <Image
+                className="petrolero-steel-card-image"
+                src={vehicle.image}
+                alt={vehicle.alt}
+                width={680}
+                height={768}
+                sizes="(max-width: 700px) 90vw, (max-width: 1024px) 30vw, 340px"
+                loading="lazy"
+              />
+
+              <div
+                className="petrolero-steel-card-badge"
+                style={badgeStyle}
+              >
+                <div
+                  className="petrolero-steel-card-icon"
+                  style={iconStyle}
+                  aria-hidden="true"
+                >
+                  <Image
+                    src={vehicle.icon}
+                    alt=""
+                    width={724}
+                    height={480}
+                    sizes="(max-width: 700px) 62px, 94px"
+                  />
+                </div>
+
+                <p
+                  className="petrolero-steel-card-type"
+                  style={typeStyle}
+                >
+                  {vehicle.type}
+                </p>
+              </div>
+
+              <div className="petrolero-steel-card-copy">
+                <h3 className="petrolero-steel-card-title">
+                  {vehicle.title}
+                </h3>
+
+                <p className="petrolero-steel-card-detail">
+                  {vehicle.detail}
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -1,0 +1,190 @@
+.petrolero-home {
+  --petrolero-accent: #d7b47c;
+  position: relative;
+  width: 100%;
+  background: #000;
+  color: #fff;
+  overflow: clip;
+}
+
+.petrolero-home-hero {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 100svh;
+  min-height: 580px;
+  overflow: hidden;
+  background: #090705;
+}
+
+.petrolero-home-oil,
+.petrolero-home-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.petrolero-home-oil {
+  z-index: 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse 85% 72% at 64% 44%, #2d1b0e, #080706 72%);
+}
+
+.petrolero-home-oil > div {
+  position: absolute !important;
+  inset: 0;
+}
+
+.petrolero-home-video,
+.petrolero-home-oil canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.petrolero-home-video { object-fit: cover; }
+
+/* Keep the video and the WebGL ripple layer vivid and unobscured.
+   The former full-screen dark vignette is intentionally disabled. */
+.petrolero-home-oil {
+  filter: brightness(1.08) saturate(1.06);
+}
+
+.petrolero-home-vignette {
+  display: none;
+}
+
+.petrolero-home-copy {
+  position: absolute;
+  z-index: 3;
+  top: 51%;
+  left: 50%;
+  width: calc(100% - 38px);
+  max-width: 1560px;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, calc(-50% + 30px));
+  transition: opacity 850ms ease, transform 1100ms cubic-bezier(.19,1,.22,1);
+}
+
+.petrolero-home-copy[data-visible="true"] {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.petrolero-home-eyebrow {
+  max-width: 100%;
+  margin: 0 auto clamp(18px, 3vh, 34px);
+  padding: 0;
+  background: none;
+  color: #f1c992;
+  font-size: clamp(10px, .85vw, 13px);
+  font-weight: 700;
+  letter-spacing: clamp(.16em, .32vw, .34em);
+  line-height: 1.6;
+  text-shadow:
+    0 1px 3px rgba(0,0,0,.95),
+    0 2px 12px rgba(0,0,0,.92),
+    0 0 30px rgba(0,0,0,.68);
+}
+
+.petrolero-home-copy h1 {
+  margin: 0;
+  font-size: clamp(44px, 6.3vw, 116px);
+  font-weight: 900;
+  line-height: .97;
+  letter-spacing: -.068em;
+  text-transform: uppercase;
+  text-shadow: 0 5px 55px rgba(0,0,0,.72);
+}
+
+.petrolero-home-copy h1 span {
+  display: block;
+  white-space: nowrap;
+}
+
+.petrolero-home-copy h1 span + span { margin-top: .09em; }
+
+.petrolero-home-copy h1 em {
+  color: #ddb67d;
+  font-style: normal;
+}
+
+.petrolero-home-slogan {
+  max-width: 100%;
+  margin: clamp(25px, 3.2vw, 43px) auto 0;
+  padding: 0;
+  background: none;
+  color: rgba(255,250,238,.82);
+  font-size: clamp(9px, 1vw, 13px);
+  font-weight: 650;
+  letter-spacing: .19em;
+  line-height: 1.8;
+  text-shadow:
+    0 1px 3px rgba(0,0,0,.97),
+    0 2px 12px rgba(0,0,0,.92),
+    0 0 30px rgba(0,0,0,.72);
+}
+
+.petrolero-home-scroll {
+  position: absolute;
+  z-index: 4;
+  bottom: clamp(24px, 3vw, 48px);
+  left: 50%;
+  display: grid;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  place-items: center;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--petrolero-accent);
+  transform: translateX(-50%);
+  cursor: pointer;
+  transition: background 180ms ease, color 180ms ease;
+  animation: petrolero-home-arrow 2.5s ease-in-out infinite;
+}
+
+.petrolero-home-scroll:hover {
+  color: #fff5e6;
+  background: rgba(211,158,87,.12);
+}
+
+.petrolero-home-scroll:focus-visible {
+  outline: 2px solid var(--petrolero-accent);
+  outline-offset: 4px;
+}
+
+@keyframes petrolero-home-arrow {
+  0%, 100% { transform: translate(-50%,0); }
+  50% { transform: translate(-50%,7px); }
+}
+
+@media (max-width: 900px) {
+  .petrolero-home-copy h1 { font-size: clamp(34px, 6.15vw, 74px); }
+  .petrolero-home-copy h1 span { white-space: normal; }
+  .petrolero-home-slogan { letter-spacing: .15em; }
+}
+
+@media (max-width: 520px) {
+  .petrolero-home-hero { min-height: 520px; }
+  .petrolero-home-copy { width: calc(100% - 24px); top: 50%; }
+  .petrolero-home-copy h1 {
+    font-size: clamp(28px, 7.3vw, 40px);
+    line-height: 1.04;
+    letter-spacing: -.075em;
+  }
+  .petrolero-home-copy h1 span + span { margin-top: .2em; }
+  .petrolero-home-eyebrow { font-size: 9px; letter-spacing: .13em; margin-bottom: 23px; }
+  .petrolero-home-slogan { margin-top: 25px; font-size: 9px; line-height: 1.8; letter-spacing: .1em; }
+  .petrolero-home-scroll { width: 43px; height: 43px; bottom: 25px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petrolero-home-copy { transition: none !important; }
+  .petrolero-home-scroll { animation: none; }
+}

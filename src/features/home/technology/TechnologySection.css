@@ -1,0 +1,499 @@
+/* Fourth screen: black metallic technology, minimal gold engineering accents. */
+.petrolero-technology {
+  position: relative;
+  isolation: isolate;
+  background: #050505;
+  color: #fff;
+  padding: clamp(86px, 10vh, 126px) clamp(18px, 3vw, 58px) clamp(70px, 9vh, 135px);
+  overflow: clip;
+}
+
+.petrolero-tech-inner {
+  width: min(100%, 1530px);
+  margin-inline: auto;
+}
+
+/* Engine-oil schematic label: compact industrial typography, not giant slogan. */
+.petrolero-tech-section-heading {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  width: 100%;
+  margin: 0 auto clamp(30px, 4.8vh, 51px);
+}
+
+.petrolero-tech-heading-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+  text-align: center;
+}
+
+.petrolero-tech-heading-eyebrow {
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  max-width: 22%;
+  font-size: clamp(9px, .67vw, 11px);
+  color: rgba(222,180,114,.75);
+  letter-spacing: .17em;
+  font-weight: 650;
+}
+
+.petrolero-tech-section-heading h2 {
+  margin: 0;
+  color: #f3eee7;
+  font-size: clamp(27px, 3.05vw, 46px);
+  font-weight: 560;
+  letter-spacing: -.046em;
+  line-height: 1.08;
+}
+
+.petrolero-tech-section-heading h2 em {
+  font-style: italic;
+  font-weight: 490;
+  color: #cda46d;
+}
+
+.petrolero-tech-section-heading p {
+  margin: 0;
+  color: rgba(229,215,196,.58);
+  font-size: clamp(11px, .85vw, 14px);
+  line-height: 1.45;
+  letter-spacing: .015em;
+}
+
+.petrolero-tech-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 1.3vw, 24px);
+  margin-inline: auto;
+  width: min(100%, 1160px);
+}
+
+.petrolero-tech-vehicle {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: clamp(160px, 16vw, 215px);
+  padding: 16px 20px;
+  border: 1px solid rgba(218,166,88,.53);
+  border-radius: 0;
+  background:
+    radial-gradient(ellipse at 53% 40%, rgba(150,114,68,.12), transparent 60%),
+    linear-gradient(145deg, #161514, #050505);
+  box-shadow: inset 0 0 24px rgba(217,158,83,.04), 0 6px 26px rgba(0,0,0,.24);
+  overflow: hidden;
+}
+
+.petrolero-tech-vehicle-index {
+  align-self: flex-end;
+  color: rgba(210,167,104,.42);
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: .13em;
+}
+
+.petrolero-tech-vehicle-placeholder {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  min-height: 96px;
+}
+
+.petrolero-tech-vehicle-placeholder svg {
+  width: clamp(120px, 13vw, 198px);
+  max-width: 78%;
+  height: auto;
+  color: rgba(197,160,110,.35);
+  filter: drop-shadow(0 0 14px rgba(219,155,79,.12));
+}
+
+.petrolero-tech-vehicle-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #efdfc8;
+  font-size: clamp(11px, .86vw, 14px);
+  font-weight: 750;
+  letter-spacing: .06em;
+}
+
+.petrolero-tech-vehicle-arrow {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(214,172,109,.47);
+  color: #e8bb7c;
+  font-size: 17px;
+}
+
+.petrolero-tech-section-heading--engine {
+  width: 100%;
+  margin-top: clamp(60px, 8vh, 115px);
+  margin-bottom: 0;
+  position: relative;
+  z-index: 3;
+}
+
+/* The video and caption overlap slightly to lose the hard top seam. */
+.petrolero-tech-section-heading--engine + .petrolero-tech-stage {
+  margin-top: 28px;
+}
+
+.petrolero-tech-stage {
+  position: relative;
+  width: 50vw;
+  width: 50dvw;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-inline: auto;
+  background: #050505;
+  overflow: visible;
+}
+
+.petrolero-tech-video {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  /* Fade the actual video pixels into the section background without any light halo. */
+  -webkit-mask-image: radial-gradient(ellipse 66% 75% at center, #000 45%, rgba(0, 0, 0, .95) 58%, rgba(0, 0, 0, .58) 78%, transparent 100%);
+  mask-image: radial-gradient(ellipse 66% 75% at center, #000 45%, rgba(0, 0, 0, .95) 58%, rgba(0, 0, 0, .58) 78%, transparent 100%);
+}
+
+/* Gentle shadow on each video edge, without restoring section-wide glow. */
+.petrolero-tech-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, #050505 0%, rgba(5, 5, 5, .90) 6%, transparent 24%),
+    linear-gradient(to top, #050505 0%, rgba(5, 5, 5, .90) 6%, transparent 24%),
+    linear-gradient(to right, #050505 0%, rgba(5, 5, 5, .88) 7%, transparent 24%),
+    linear-gradient(to left, #050505 0%, rgba(5, 5, 5, .88) 7%, transparent 24%);
+}
+
+.petrolero-tech-annotations {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+}
+
+.petrolero-tech-connections {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  overflow: visible;
+}
+
+.petrolero-tech-connection {
+  opacity: 0;
+  transition: opacity 650ms ease;
+}
+
+.petrolero-tech-connection.is-visible {
+  opacity: 1;
+}
+
+.petrolero-tech-connection .petrolero-tech-connection-path--compact {
+  display: none;
+}
+
+.petrolero-tech-connection path {
+  stroke: #dfae67;
+  stroke-width: 1.25;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+}
+
+.petrolero-tech-connection.is-visible path {
+  animation: petrolero-tech-connector-draw 950ms ease-out forwards;
+}
+
+.petrolero-tech-dot {
+  fill: #ffe0aa;
+  filter: drop-shadow(0 0 4px #ffad54);
+}
+
+.petrolero-tech-dot-glow {
+  fill: rgba(250,175,79,.25);
+  filter: drop-shadow(0 0 8px rgba(240,151,49,.68));
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.petrolero-tech-connection.is-visible .petrolero-tech-dot-glow {
+  animation: petrolero-tech-dot-pulse 2.6s 600ms ease-in-out infinite;
+}
+
+.petrolero-tech-note {
+  position: absolute;
+  width: 19.5%;
+  display: flex;
+  gap: clamp(7px, .8vw, 14px);
+  align-items: center;
+  opacity: 0;
+  transform: translateY(calc(-50% + 9px));
+  transition: opacity 520ms ease, transform 650ms cubic-bezier(.19,.8,.23,1);
+}
+
+.petrolero-tech-note.is-visible {
+  opacity: 1;
+  transform: translateY(-50%);
+}
+
+/* Annotation labels share the endpoint Y of the SVG connector. */
+.petrolero-tech-note--left-top { left: -9%; top: 29.93%; }
+.petrolero-tech-note--left-bottom { left: -9%; top: 74.07%; }
+.petrolero-tech-note--right-top { right: -9%; top: 29.93%; }
+.petrolero-tech-note--right-bottom { right: -9.2%; top: 73.2%; }
+
+.petrolero-tech-note-icon {
+  display: grid;
+  flex: 0 0 clamp(28px, 3.1vw, 49px);
+  width: clamp(28px, 3.1vw, 49px);
+  height: clamp(28px, 3.1vw, 49px);
+  place-items: center;
+  color: #e5ae65;
+}
+
+.petrolero-tech-note-icon-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.petrolero-tech-note-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: #f6e6cc;
+  font-size: clamp(9px, .79vw, 13px);
+  line-height: 1.35;
+  text-shadow: 0 2px 10px #000;
+}
+
+.petrolero-tech-note-copy strong {
+  font-weight: 700;
+}
+
+.petrolero-tech-note-copy > span {
+  color: rgba(241,228,207,.72);
+}
+
+.petrolero-tech-play {
+  --size: 56px;
+  position: absolute;
+  z-index: 5;
+  bottom: 20px;
+  left: 50%;
+  width: var(--size);
+  height: var(--size);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: #efc78a;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  transform: translateX(-50%);
+  cursor: pointer;
+  transition:
+    bottom 950ms cubic-bezier(.19,.75,.18,1),
+    background 400ms ease,
+    color 300ms ease,
+    box-shadow 400ms ease;
+}
+
+.petrolero-tech-play > svg:not(.petrolero-tech-play-outline) {
+  position: relative;
+  z-index: 1;
+}
+
+.petrolero-tech-stage.is-user-paused .petrolero-tech-play {
+  bottom: calc(50% - 28px);
+  color: #ffe5b3;
+  background: #070707;
+  box-shadow: 0 0 22px rgba(217,146,58,.14), 0 12px 35px rgba(0,0,0,.3);
+}
+
+.petrolero-tech-play:hover {
+  color: #fff4d6;
+}
+
+.petrolero-tech-play:focus-visible {
+  outline: 2px solid #f5d09b;
+  outline-offset: 5px;
+}
+
+.petrolero-tech-play-outline {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.petrolero-tech-play-outline rect {
+  fill: none;
+  stroke: #ffd592;
+  stroke-width: 1.6;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+}
+
+.petrolero-tech-stage.is-user-paused .petrolero-tech-play-outline rect {
+  opacity: 1;
+  animation: petrolero-tech-border-trace 1050ms 480ms ease both;
+}
+
+.petrolero-tech-error {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 41%;
+  width: min(80%, 420px);
+  margin: 0;
+  padding: 14px 18px;
+  background: rgba(0,0,0,.85);
+  color: #eed0a0;
+  border: 1px solid #a57b46;
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes petrolero-tech-connector-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes petrolero-tech-dot-pulse {
+  0%, 100% { opacity: .55; transform: scale(.88); }
+  50% { opacity: 1; transform: scale(1.6); }
+}
+
+@keyframes petrolero-tech-border-trace {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+
+@media (min-width: 701px) and (max-width: 1050px) {
+  .petrolero-tech-section-heading { padding-top: 32px; }
+  .petrolero-tech-heading-eyebrow { max-width: 40%; }
+}
+
+@media (max-width: 1050px) {
+  .petrolero-tech-connection .petrolero-tech-connection-path--wide { display: none; }
+  .petrolero-tech-connection .petrolero-tech-connection-path--compact { display: initial; }
+  .petrolero-tech-stage { width: 100%; height: auto; aspect-ratio: 16 / 9; }
+  .petrolero-tech-note { width: 24%; }
+  .petrolero-tech-note-icon { flex-basis: 34px; width: 34px; height: 34px; }
+  .petrolero-tech-note-copy { font-size: clamp(9px, 1vw, 12px); }
+  .petrolero-tech-note--left-top { left: 2%; top: 29.93%; }
+  .petrolero-tech-note--right-top { right: 2%; top: 29.93%; }
+  .petrolero-tech-note--left-bottom { left: 2%; top: 74.07%; }
+  .petrolero-tech-note--right-bottom { right: 2%; top: 74.07%; }
+}
+
+@media (max-width: 700px) {
+  .petrolero-technology { padding: 76px 14px 70px; }
+  .petrolero-tech-section-heading { gap: 18px; margin-bottom: 24px; }
+  .petrolero-tech-heading-eyebrow {
+    position: static;
+    justify-self: start;
+    max-width: 100%;
+  }
+  .petrolero-tech-heading-mark { flex-basis: 37px; width: 37px; height: 37px; }
+  .petrolero-tech-heading-eyebrow { font-size: 9px; letter-spacing: .1em; }
+  .petrolero-tech-section-heading h2 { font-size: clamp(23px, 6vw, 36px); letter-spacing: -.04em; }
+  .petrolero-tech-section-heading p { font-size: 10px; }
+  .petrolero-tech-section-heading--engine { margin-bottom: 0; }
+  .petrolero-tech-section-heading--engine + .petrolero-tech-stage { margin-top: -8px; }
+  .petrolero-tech-cards { gap: 8px; }
+  .petrolero-tech-vehicle { min-height: 116px; padding: 9px; }
+  .petrolero-tech-vehicle-placeholder { min-height: 62px; }
+  .petrolero-tech-vehicle-placeholder svg { width: 120px; max-width: 93%; }
+  .petrolero-tech-vehicle-index { font-size: 8px; }
+  .petrolero-tech-vehicle-footer { font-size: 10px; }
+  .petrolero-tech-vehicle-arrow { width: 20px; height: 20px; flex-basis: 20px; font-size: 12px; }
+  .petrolero-tech-section-heading--engine { margin-top: 72px; }
+  .petrolero-tech-stage { width: 100%; height: auto; aspect-ratio: 16 / 9; }
+  .petrolero-tech-video { object-fit: cover; object-position: center; }
+
+  .petrolero-tech-note { width: 44%; gap: 7px; }
+  .petrolero-tech-note--left-top { left: 2%; top: 23%; }
+  .petrolero-tech-note--right-top { right: 2%; top: 23%; }
+  .petrolero-tech-note--left-bottom { left: 2%; top: 77%; }
+  .petrolero-tech-note--right-bottom { right: 2%; top: 77%; }
+  .petrolero-tech-note-icon { width: 29px; height: 29px; flex-basis: 29px; }
+  .petrolero-tech-note-copy { font-size: 9px; line-height: 1.3; }
+  .petrolero-tech-connections { opacity: .67; }
+  .petrolero-tech-connection path { display: none; }
+  .petrolero-tech-play { --size: 46px; bottom: 12px; }
+  .petrolero-tech-stage.is-user-paused .petrolero-tech-play { bottom: calc(50% - 23px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petrolero-tech-play,
+  .petrolero-tech-note,
+  .petrolero-tech-connection,
+
+  .petrolero-tech-connection.is-visible path,
+  .petrolero-tech-stage.is-user-paused .petrolero-tech-play-outline rect,
+  .petrolero-tech-connection.is-visible .petrolero-tech-dot-glow {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+
+/* Match "Внутри двигателя" + "МАСЛО В РАБОТЕ" to the left edge of
+   "ИНЖЕНЕРИЯ ЗАЩИТЫ / ПРЕИМУЩЕСТВА".
+   Only the heading is offset: the engine video, markers, and cards retain
+   their own original centering and dimensions. */
+@media (min-width: 901px) {
+  .petrolero-tech-section-heading--engine {
+    justify-items: start;
+    left: calc(
+      var(--petrolero-advantages-heading-left, clamp(24px, 4.2vw, 76px))
+      - max(clamp(18px, 3vw, 58px), calc((100vw - 1530px) / 2))
+    );
+  }
+
+  .petrolero-tech-section-heading--engine .petrolero-tech-heading-eyebrow {
+    position: static;
+    max-width: none;
+    margin-bottom: 12px;
+  }
+
+  .petrolero-tech-section-heading--engine .petrolero-tech-heading-copy {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
