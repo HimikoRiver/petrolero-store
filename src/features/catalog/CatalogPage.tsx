@@ -4,7 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import SiteFooter from "@/features/home/footer/SiteFooter";
-import StorefrontHeader from "@/features/storefront/StorefrontHeader";
+import SiteHeader from "@/features/home/header/SiteHeader";
+import useReducedMotion from "@/features/home/hooks/useReducedMotion";
+import { HeartIcon, CompareIcon, ChevronDownIcon, ArrowRightIcon } from "./CatalogIcons";
 import {
   CATALOG_CATEGORIES,
   CATALOG_PRODUCTS,
@@ -19,6 +21,7 @@ type SortOrder = "default" | "newest" | "price-asc" | "price-desc";
 type FilterKey = "viscosity" | "acea" | "api" | "approvals" | "ilsac";
 type FilterSelections = Record<FilterKey, string[]>;
 type CartLine = { id: string; quantity: number };
+type CatalogFeedback = { message: string; target?: "cart" | "compare" };
 
 const FILTERS: readonly { key: FilterKey; label: string }[] = [
   { key: "viscosity", label: "Вязкость, SAE" },
@@ -57,26 +60,38 @@ function ProductCard({
   product,
   onPreview,
   onAdd,
+  isFavorite,
+  isCompared,
+  onFavorite,
+  onCompare,
 }: {
   product: CatalogProduct;
   onPreview: (product: CatalogProduct) => void;
   onAdd: (product: CatalogProduct) => void;
+  isFavorite: boolean;
+  isCompared: boolean;
+  onFavorite: (product: CatalogProduct) => void;
+  onCompare: (product: CatalogProduct) => void;
 }) {
   return (
     <article className="petrolero-catalog-item">
       <div className="petrolero-catalog-item__media">
         <span className="petrolero-catalog-item__demo">ДЕМО</span>
-        {product.image ? (
-          <Image
-            src={product.image}
-            alt={product.title}
-            width={520}
-            height={580}
-            sizes="(max-width: 650px) 100vw, (max-width: 1050px) 50vw, 33vw"
-          />
-        ) : (
-          <span className="petrolero-catalog-no-image" role="img" aria-label="Фото пока отсутствует">Фото готовится</span>
-        )}
+        <div className="petrolero-catalog-item__picture">
+          {product.image ? (
+            <Image
+              src={product.image}
+              alt={product.title}
+              fill
+              sizes="(max-width: 570px) 88vw, (max-width: 1050px) 44vw, (max-width: 1280px) 28vw, 22vw"
+              style={{ objectFit: "contain", objectPosition: "center" }}
+            />
+          ) : (
+            <span className="petrolero-catalog-no-image" role="img" aria-label="Фото пока отсутствует">
+              Фото готовится
+            </span>
+          )}
+        </div>
         <button
           className="petrolero-catalog-item__quick"
           type="button"
@@ -97,16 +112,33 @@ function ProductCard({
         </button>
         <div className="petrolero-catalog-item__properties">
           {product.viscosity && <span>SAE {product.viscosity}</span>}
-          {product.volumeLiters && <span>{product.volumeLiters * 1000 < 1000 ? product.volumeLiters * 1000 + " мл" : product.volumeLiters + " л"}</span>}
+          {product.volumeLiters && <span>{product.volumeLiters < 1 ? product.volumeLiters * 1000 + " мл" : product.volumeLiters + " л"}</span>}
         </div>
         <div className="petrolero-catalog-item__bottom">
-          <div>
+          <div className="petrolero-catalog-item__price">
             <strong>{priceLabel(product.priceKopecks)}</strong>
             <span>Тестовая цена</span>
           </div>
-          <button type="button" onClick={() => onAdd(product)} aria-label={"Добавить в корзину: " + product.title}>
-            В корзину <span aria-hidden="true">+</span>
-          </button>
+          <div className="petrolero-catalog-item__actions">
+            <button type="button" className="petrolero-catalog-add petrolero-catalog-liquid-button"
+              onClick={() => onAdd(product)} aria-label={"Добавить в корзину: " + product.title}>
+              <span>В корзину</span>
+            </button>
+            <button type="button" className="petrolero-catalog-item__action-icon"
+              aria-label={(isFavorite ? "Убрать из избранного: " : "В избранное: ") + product.title}
+              title={isFavorite ? "Убрать из избранного" : "В избранное"}
+              aria-pressed={isFavorite}
+              onClick={() => onFavorite(product)}>
+              <HeartIcon filled={isFavorite} />
+            </button>
+            <button type="button" className="petrolero-catalog-item__action-icon"
+              aria-label={(isCompared ? "Убрать из сравнения: " : "Сравнить: ") + product.title}
+              title={isCompared ? "Убрать из сравнения" : "Сравнить"}
+              aria-pressed={isCompared}
+              onClick={() => onCompare(product)}>
+              <CompareIcon />
+            </button>
+          </div>
         </div>
       </div>
     </article>
