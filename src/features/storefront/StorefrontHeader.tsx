@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { AccountIcon, CartIcon, SearchIcon } from "@/features/home/header/HeaderIcons";
 import "./StorefrontHeader.css";
 
@@ -23,7 +24,7 @@ export default function StorefrontHeader({
     <header className="petrolero-shop-header">
       <div className="petrolero-shop-header__inner">
         <Link className="petrolero-shop-header__logo" href="/" aria-label="Petrolero — главная">
-          <img src="/home/images/petrolero-logo.svg" alt="Petrolero" width="132" height="55" />
+          <Image src="/home/images/petrolero-logo.svg" alt="Petrolero" width={132} height={55} unoptimized />
         </Link>
         <nav className="petrolero-shop-header__nav" aria-label="Разделы магазина">
           <Link href="/">Главная</Link>
