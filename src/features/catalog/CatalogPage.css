@@ -1,0 +1,727 @@
+.petrolero-catalog {
+  --catalog-bg: #080808;
+  --catalog-surface: #111110;
+  --catalog-gold: #d9b77f;
+  --catalog-muted: #938c82;
+  --catalog-border: rgba(204, 164, 104, .17);
+  min-height: 100vh;
+  color: #e9e2d7;
+  background: var(--catalog-bg);
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  overflow-x: clip;
+}
+
+.petrolero-catalog button,
+.petrolero-catalog input,
+.petrolero-catalog select {
+  font: inherit;
+}
+
+.petrolero-catalog button:focus-visible,
+.petrolero-catalog input:focus-visible,
+.petrolero-catalog select:focus-visible,
+.petrolero-catalog a:focus-visible {
+  outline: 2px solid #d9b77f;
+  outline-offset: 3px;
+}
+
+.petrolero-catalog-container {
+  width: min(100% - clamp(44px, 10.4vw, 172px), 1392px);
+  margin-inline: auto;
+}
+
+.petrolero-catalog-eyebrow {
+  color: #d1aa73;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+}
+
+.petrolero-catalog-hero {
+  position: relative;
+  min-height: clamp(490px, 58vw, 650px);
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 72% 46%, rgba(116, 79, 34, .12), transparent 40%),
+    linear-gradient(115deg, #070707 13%, #10100f 54%, #080808 100%);
+}
+
+.petrolero-catalog-hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 120px;
+  background: linear-gradient(transparent, #080808);
+  pointer-events: none;
+}
+
+.petrolero-catalog-hero__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: inherit;
+}
+
+.petrolero-catalog-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding-top: 37px;
+  color: #77736c;
+  font-size: 11px;
+  letter-spacing: .02em;
+}
+
+.petrolero-catalog-breadcrumbs a {
+  color: inherit;
+  text-decoration: none;
+  transition: color .2s ease;
+}
+
+.petrolero-catalog-breadcrumbs a:hover {
+  color: #e2be88;
+}
+
+.petrolero-catalog-breadcrumbs span:last-child {
+  color: #c6b7a2;
+}
+
+.petrolero-catalog-hero__content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  padding-block: 75px 95px;
+}
+
+.petrolero-catalog-hero__content > div:first-child {
+  position: relative;
+  z-index: 2;
+  width: min(660px, 70%);
+}
+
+.petrolero-catalog-hero h1 {
+  margin: 21px 0 24px;
+  color: #eee6da;
+  font-size: clamp(70px, 10vw, 144px);
+  line-height: .93;
+  letter-spacing: -.085em;
+  font-weight: 510;
+}
+
+.petrolero-catalog-hero h1 span {
+  color: #c9a06b;
+}
+
+.petrolero-catalog-hero__description {
+  max-width: 460px;
+  color: #a9a197;
+  font-size: clamp(14px, 1.25vw, 17px);
+  line-height: 1.8;
+}
+
+.petrolero-catalog-hero__graphic {
+  position: absolute;
+  top: 0;
+  right: -5%;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  width: min(48%, 650px);
+  opacity: .88;
+  pointer-events: none;
+}
+
+.petrolero-catalog-hero__graphic::before {
+  content: "";
+  position: absolute;
+  width: 90%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(190, 135, 68, .1), transparent 64%);
+  filter: blur(30px);
+}
+
+.petrolero-catalog-hero__orb {
+  position: absolute;
+  border-radius: 50%;
+  aspect-ratio: 1;
+  transform: rotate(-32deg) scaleY(.76);
+}
+
+.petrolero-catalog-hero__orb--outer {
+  width: 90%;
+  border: 1px solid rgba(198, 152, 87, .16);
+  box-shadow: inset 0 0 60px rgba(207, 149, 72, .025);
+}
+
+.petrolero-catalog-hero__orb--middle {
+  width: 68%;
+  border: 1px solid rgba(214, 164, 102, .29);
+  box-shadow: 0 -1px 22px rgba(210, 150, 77, .08);
+}
+
+.petrolero-catalog-hero__orb--inner {
+  width: 45%;
+  border: 1px solid rgba(224, 179, 110, .48);
+  background: radial-gradient(circle at 30% 30%, rgba(181, 121, 45, .045), transparent 65%);
+  box-shadow: inset 0 0 48px rgba(181, 121, 45, .05), 0 -1px 28px rgba(217, 163, 88, .08);
+}
+
+.petrolero-catalog-hero__graphic-label {
+  color: rgba(224, 184, 126, .28);
+  font-size: 12px;
+  letter-spacing: .24em;
+}
+
+.petrolero-catalog-hero__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 35px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .17em;
+  color: #777065;
+}
+
+.petrolero-catalog-categories {
+  padding: clamp(65px, 8vw, 122px) 0 clamp(77px, 9vw, 140px);
+}
+
+.petrolero-catalog-section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 36px;
+}
+
+.petrolero-catalog-section-head h2 {
+  margin: 16px 0 0;
+  color: #e9e1d6;
+  font-size: clamp(32px, 3.4vw, 52px);
+  font-weight: 480;
+  line-height: 1.1;
+  letter-spacing: -.05em;
+}
+
+.petrolero-catalog-section-head > p {
+  margin: 0 0 6px;
+  color: #918a7f;
+  font-size: 12px;
+}
+
+.petrolero-catalog-category-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.petrolero-catalog-category {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: clamp(325px, 30vw, 440px);
+  padding: 23px 22px 25px;
+  color: inherit;
+  background:
+    radial-gradient(ellipse at 50% 41%, rgba(98, 77, 51, .12), transparent 55%),
+    linear-gradient(150deg, #191918, #0c0c0c 77%);
+  border: 1px solid var(--catalog-border);
+  text-align: left;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 280ms ease, background-color 280ms ease, transform 280ms ease;
+}
+
+.petrolero-catalog-category:hover,
+.petrolero-catalog-category--active {
+  border-color: rgba(224, 175, 105, .56);
+}
+
+.petrolero-catalog-category:hover {
+  transform: translateY(-4px);
+}
+
+.petrolero-catalog-category::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 2px;
+  background: #cda36e;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 300ms ease;
+}
+
+.petrolero-catalog-category:hover::after,
+.petrolero-catalog-category--active::after {
+  transform: scaleX(1);
+}
+
+.petrolero-catalog-category__number {
+  position: relative;
+  z-index: 1;
+  color: #ae987d;
+  font-size: 10px;
+  font-weight: 640;
+  letter-spacing: .2em;
+}
+
+.petrolero-catalog-category__image {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  flex: 1;
+  min-height: 170px;
+  margin: 14px 0;
+}
+
+.petrolero-catalog-category__image img {
+  max-width: 106%;
+  width: 100%;
+  max-height: 220px;
+  height: auto;
+  object-fit: contain;
+  opacity: .85;
+  filter: grayscale(.25) brightness(.8);
+  transition: filter 300ms ease, transform 400ms ease, opacity 300ms ease;
+}
+
+.petrolero-catalog-category:hover .petrolero-catalog-category__image img,
+.petrolero-catalog-category--active .petrolero-catalog-category__image img {
+  filter: grayscale(0) brightness(1);
+  opacity: 1;
+  transform: scale(1.06);
+}
+
+.petrolero-catalog-category__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.petrolero-catalog-category__bottom strong {
+  font-size: clamp(18px, 1.65vw, 24px);
+  font-weight: 570;
+  letter-spacing: -.035em;
+}
+
+.petrolero-catalog-category__bottom > span {
+  color: #dbb37c;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.petrolero-catalog-category__description {
+  display: block;
+  margin-top: 8px;
+  color: #888178;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.petrolero-catalog-products {
+  scroll-margin-top: 30px;
+  padding: clamp(60px, 7vw, 110px) 0 clamp(95px, 9vw, 140px);
+  background: linear-gradient(180deg, #11100f, #090909 38%);
+  border-top: 1px solid rgba(218, 174, 116, .12);
+}
+
+.petrolero-catalog-section-head--products {
+  margin-bottom: 39px;
+}
+
+.petrolero-catalog-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 35px;
+}
+
+.petrolero-catalog-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.petrolero-catalog-filters button {
+  padding: 13px 20px;
+  border: 1px solid rgba(184, 159, 127, .2);
+  background: rgba(255, 255, 255, .015);
+  color: #9d968d;
+  font-size: 11px;
+  font-weight: 550;
+  cursor: pointer;
+  transition: color .2s ease, border-color .2s ease, background .2s ease;
+}
+
+.petrolero-catalog-filters button:hover,
+.petrolero-catalog-filters button[aria-pressed="true"] {
+  color: #e5c394;
+  background: rgba(201, 154, 85, .085);
+  border-color: rgba(214, 166, 100, .5);
+}
+
+.petrolero-catalog-control-fields {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.petrolero-catalog-search,
+.petrolero-catalog-sort {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  border: 1px solid rgba(179, 151, 109, .23);
+  background: #0c0c0c;
+  color: #b4a48c;
+}
+
+.petrolero-catalog-search {
+  flex: 1;
+  min-width: 0;
+  max-width: 500px;
+  gap: 12px;
+  padding: 0 17px;
+}
+
+.petrolero-catalog-search input,
+.petrolero-catalog-sort select {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: #ece0d0;
+  outline: none;
+  font-size: 12px;
+}
+
+.petrolero-catalog-search input::placeholder {
+  color: #7f7972;
+}
+
+.petrolero-catalog-sort {
+  width: 208px;
+  padding: 0 14px;
+}
+
+.petrolero-catalog-sort select {
+  cursor: pointer;
+  color-scheme: dark;
+}
+
+.petrolero-catalog-product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.petrolero-catalog-product {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--catalog-border);
+  background: #10100f;
+}
+
+.petrolero-catalog-product__image {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  background: #151413;
+  padding: 25px;
+}
+
+.petrolero-catalog-product__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.petrolero-catalog-product__no-image {
+  color: #514638;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .12em;
+}
+
+.petrolero-catalog-product__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: start;
+  padding: 20px;
+}
+
+.petrolero-catalog-product__sku {
+  color: #a88d69;
+  font-size: 10px;
+  letter-spacing: .12em;
+}
+
+.petrolero-catalog-product h3 {
+  margin: 13px 0 23px;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.petrolero-catalog-product__price {
+  margin-top: auto;
+  color: #e3c18c;
+  font-size: 18px;
+  font-weight: 550;
+}
+
+.petrolero-catalog-product__stock {
+  margin-top: 10px;
+  color: #a29a8b;
+  font-size: 11px;
+}
+
+.petrolero-catalog-empty {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 330px;
+  padding: 70px 25px;
+  border: 1px solid rgba(199, 165, 113, .17);
+  background: radial-gradient(ellipse at center, rgba(136, 94, 43, .08), transparent 70%), #0c0c0c;
+  text-align: center;
+  overflow: hidden;
+}
+
+.petrolero-catalog-empty__index {
+  position: absolute;
+  left: 25px;
+  top: 22px;
+  color: #786852;
+  font-size: 10px;
+  letter-spacing: .2em;
+}
+
+.petrolero-catalog-empty__symbol {
+  display: grid;
+  place-items: center;
+  width: 75px;
+  height: 75px;
+  margin-bottom: 23px;
+  border: 1px solid rgba(205, 159, 91, .4);
+  border-radius: 50%;
+  color: #b8935e;
+  font-size: 30px;
+  font-style: italic;
+  font-weight: 550;
+}
+
+.petrolero-catalog-empty h3 {
+  margin: 0 0 10px;
+  font-size: clamp(22px, 2.4vw, 32px);
+  font-weight: 480;
+  letter-spacing: -.035em;
+}
+
+.petrolero-catalog-empty p {
+  max-width: 390px;
+  color: #948d84;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.petrolero-catalog-empty button {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 23px;
+  padding: 12px 16px;
+  border: 1px solid rgba(217, 177, 117, .4);
+  color: #e9c797;
+  background: transparent;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.petrolero-catalog-bottom {
+  border-top: 1px solid rgba(205, 170, 124, .12);
+  background: #0a0a0a;
+}
+
+.petrolero-catalog-bottom__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 105px;
+  color: #857668;
+}
+
+.petrolero-catalog-bottom__inner p {
+  font-size: 16px;
+  font-weight: 550;
+  letter-spacing: -.035em;
+  color: #c5a16b;
+}
+
+.petrolero-catalog-bottom__inner span {
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+
+@media (max-width: 1100px) {
+  .petrolero-catalog-category-grid,
+  .petrolero-catalog-product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .petrolero-catalog-category {
+    min-height: 385px;
+  }
+
+  .petrolero-catalog-hero__graphic {
+    width: 55%;
+    right: -13%;
+  }
+}
+
+@media (max-width: 650px) {
+  .petrolero-catalog-container {
+    width: calc(100% - 40px);
+  }
+
+  .petrolero-catalog-hero {
+    min-height: 450px;
+  }
+
+  .petrolero-catalog-breadcrumbs {
+    padding-top: 25px;
+  }
+
+  .petrolero-catalog-hero__content {
+    padding-block: 60px 80px;
+  }
+
+  .petrolero-catalog-hero__content > div:first-child {
+    width: 100%;
+  }
+
+  .petrolero-catalog-hero h1 {
+    font-size: clamp(67px, 17vw, 100px);
+  }
+
+  .petrolero-catalog-hero__description {
+    max-width: 320px;
+  }
+
+  .petrolero-catalog-hero__graphic {
+    right: -44%;
+    width: 90%;
+    opacity: .34;
+  }
+
+  .petrolero-catalog-hero__meta {
+    padding-bottom: 28px;
+  }
+
+  .petrolero-catalog-section-head {
+    display: block;
+    margin-bottom: 25px;
+  }
+
+  .petrolero-catalog-section-head > p {
+    margin-top: 12px;
+  }
+
+  .petrolero-catalog-category-grid {
+    gap: 10px;
+  }
+
+  .petrolero-catalog-category {
+    min-height: 290px;
+    padding: 18px 14px;
+  }
+
+  .petrolero-catalog-category__image {
+    min-height: 115px;
+    margin: 8px 0;
+  }
+
+  .petrolero-catalog-category__image img {
+    max-height: 135px;
+  }
+
+  .petrolero-catalog-category__bottom strong {
+    font-size: 17px;
+  }
+
+  .petrolero-catalog-category__description {
+    font-size: 10px;
+  }
+
+  .petrolero-catalog-control-fields {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .petrolero-catalog-search,
+  .petrolero-catalog-sort {
+    max-width: none;
+    width: 100%;
+  }
+
+  .petrolero-catalog-filters {
+    gap: 6px;
+  }
+
+  .petrolero-catalog-filters button {
+    padding: 11px 12px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .petrolero-catalog-category-grid,
+  .petrolero-catalog-product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .petrolero-catalog-category {
+    min-height: 310px;
+    padding: 21px;
+  }
+
+  .petrolero-catalog-category__image img {
+    max-height: 185px;
+  }
+
+  .petrolero-catalog-category__bottom strong {
+    font-size: 23px;
+  }
+
+  .petrolero-catalog-category__description {
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petrolero-catalog-category,
+  .petrolero-catalog-category::after,
+  .petrolero-catalog-category__image img {
+    transition-duration: .01ms;
+  }
+
+  .petrolero-catalog-category:hover,
+  .petrolero-catalog-category:hover .petrolero-catalog-category__image img {
+    transform: none;
+  }
+}
