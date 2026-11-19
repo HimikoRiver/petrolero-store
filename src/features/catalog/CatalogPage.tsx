@@ -425,7 +425,7 @@ export default function CatalogPage() {
         onAccountOpen={() => { closeLayers(); setAccountOpen(true); }}
       />
 
-      <main className="petrolero-catalog-main" id="petrolero-catalog-products">
+      <main className="petrolero-catalog-main">
         <nav className="petrolero-catalog-breadcrumbs" aria-label="Навигационная цепочка">
           <Link href="/">Главная</Link><span aria-hidden="true">/</span>
           <span>Каталог</span><span aria-hidden="true">/</span>
@@ -467,7 +467,7 @@ export default function CatalogPage() {
           </div>
         )}
 
-        <div className="petrolero-catalog-toolbar" ref={filtersRef}>
+        <div className="petrolero-catalog-toolbar" ref={filtersRef} id="petrolero-catalog-products">
           <div className="petrolero-catalog-filter-buttons" role="group" aria-label="Фильтры товаров">
             <div className="petrolero-catalog-filter">
               <button
@@ -540,13 +540,26 @@ export default function CatalogPage() {
           </div>
 
           <div className="petrolero-catalog-toolbar__bottom">
-            <span className="petrolero-catalog-results">{products.length} товаров</span>
+            <div className="petrolero-catalog-collection-controls">
+              <span className="petrolero-catalog-results">{products.length} товаров</span>
+              <button type="button" className="petrolero-catalog-collection-button"
+                aria-pressed={favoritesOnly} onClick={() => setFavoritesOnly((value) => !value)}>
+                <HeartIcon filled={favoritesOnly} />
+                <span>Избранное{favoriteIds.length ? " · " + favoriteIds.length : ""}</span>
+              </button>
+              <button type="button" className="petrolero-catalog-collection-button"
+                onClick={() => { closeLayers(); setCompareOpen(true); }}>
+                <CompareIcon />
+                <span>Сравнение{compareIds.length ? " · " + compareIds.length : ""}</span>
+              </button>
+            </div>
             <div className="petrolero-catalog-sort-view">
-              <label>
+              <label className="petrolero-catalog-sort">
                 <span className="sr-only">Сортировка каталога</span>
                 <select value={sortOrder} onChange={(event) => setSortOrder(event.target.value as SortOrder)}>
                   {SORT_OPTIONS.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
                 </select>
+                <ChevronDownIcon />
               </label>
               <div className="petrolero-catalog-view-buttons" role="group" aria-label="Вид списка товаров">
                 <button type="button" aria-label="Плитка" aria-pressed={view === "grid"} onClick={() => setView("grid")}>
@@ -675,6 +688,71 @@ export default function CatalogPage() {
               </div>
             )}
           </aside>
+        </div>
+      )}
+
+      {compareOpen && (
+        <div className="petrolero-catalog-overlay" onPointerDown={(event) => { if (event.target === event.currentTarget) setCompareOpen(false); }}>
+          <section className="petrolero-catalog-compare-dialog" role="dialog" aria-modal="true" aria-label="Сравнение товаров">
+            <header className="petrolero-catalog-compare-dialog__header">
+              <div>
+                <p>ВЫБРАННЫЕ ТОВАРЫ</p>
+                <h2>Сравнение <span>({comparedProducts.length}/3)</span></h2>
+              </div>
+              <button type="button" className="petrolero-catalog-close" aria-label="Закрыть сравнение" onClick={() => setCompareOpen(false)}>×</button>
+            </header>
+            {comparedProducts.length ? (
+              <>
+                <div className="petrolero-catalog-compare-scroll">
+                  <table className="petrolero-catalog-compare-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Параметр</th>
+                        {comparedProducts.map((item) => (
+                          <th scope="col" key={item.id}>
+                            <div className="petrolero-catalog-compare-table__photo">
+                              {item.image
+                                ? <Image src={item.image} alt={item.title} fill sizes="180px" style={{ objectFit: "contain" }} />
+                                : <span>Фото готовится</span>}
+                            </div>
+                            <strong>{item.title}</strong>
+                            <button type="button" onClick={() => toggleCompare(item)} aria-label={"Убрать из сравнения: " + item.title}>Убрать ×</button>
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {([
+                        ["Цена", (item: CatalogProduct) => priceLabel(item.priceKopecks)],
+                        ["Категория", (item: CatalogProduct) => item.category === "additives" ? "Присадки" : CATALOG_CATEGORIES.find((category) => category.id === item.category)?.title ?? "Моторные масла"],
+                        ["Объём", (item: CatalogProduct) => item.volumeLiters ? (item.volumeLiters < 1 ? item.volumeLiters * 1000 + " мл" : item.volumeLiters + " л") : "—"],
+                        ["SAE", (item: CatalogProduct) => item.viscosity || "—"],
+                        ["ACEA", (item: CatalogProduct) => item.acea.join(", ") || "—"],
+                        ["API", (item: CatalogProduct) => item.api.join(", ") || "—"],
+                        ["ILSAC", (item: CatalogProduct) => item.ilsac.join(", ") || "—"],
+                        ["Одобрения", (item: CatalogProduct) => item.approvals.join(", ") || "—"],
+                      ] as const).map(([label, getValue]) => (
+                        <tr key={label}>
+                          <th scope="row">{label}</th>
+                          {comparedProducts.map((item) => <td key={item.id}>{getValue(item)}</td>)}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="petrolero-catalog-compare-dialog__footer">
+                  <span>Тестовые характеристики. Реальные данные позже загрузим через админ-панель.</span>
+                  <button type="button" onClick={() => setCompareIds([])}>Очистить сравнение</button>
+                </div>
+              </>
+            ) : (
+              <div className="petrolero-catalog-compare-dialog__empty">
+                <CompareIcon />
+                <p>Выберите товары значком сравнения рядом с кнопкой «В корзину».</p>
+                <button type="button" className="petrolero-catalog-liquid-button" onClick={() => setCompareOpen(false)}>К товарам</button>
+              </div>
+            )}
+          </section>
         </div>
       )}
 
