@@ -104,6 +104,10 @@
   transform: translateY(-50%);
 }
 
+.petrolero-fixed-brand[data-catalog="true"] { pointer-events: auto; }
+.petrolero-fixed-brand__link { display: block; width: 100%; text-decoration: none; }
+.petrolero-fixed-brand__link:focus-visible { outline: 2px solid #e5b975; outline-offset: 4px; }
+
 .petrolero-fixed-brand .petrolero-logo__image {
   filter: brightness(0) saturate(100%) invert(86%) sepia(22%) saturate(697%) hue-rotate(342deg) brightness(100%) contrast(92%);
 }
