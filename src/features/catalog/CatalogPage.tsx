@@ -183,6 +183,7 @@ export default function CatalogPage() {
           "id" in item &&
           "quantity" in item &&
           typeof item.id === "string" &&
+          typeof item.quantity === "number" &&
           Number.isInteger(item.quantity) &&
           item.quantity > 0 &&
           CATALOG_PRODUCTS.some((product) => product.id === item.id),
