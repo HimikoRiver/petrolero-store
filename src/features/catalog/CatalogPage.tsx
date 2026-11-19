@@ -102,7 +102,7 @@ function ProductCard({
       </div>
 
       <div className="petrolero-catalog-item__body">
-        <p className="petrolero-catalog-item__sku">{product.sku} / ТЕСТ</p>
+        <p className="petrolero-catalog-item__sku">АРТ. {product.sku}</p>
         <button
           className="petrolero-catalog-item__name"
           type="button"
@@ -625,7 +625,7 @@ export default function CatalogPage() {
                 : <span className="petrolero-catalog-no-image" role="img" aria-label="Фото пока отсутствует">Фото готовится</span>}
             </div>
             <div className="petrolero-catalog-quickview__content">
-              <p className="petrolero-catalog-item__sku">ТЕСТОВАЯ КАРТОЧКА / {preview.sku}</p>
+              <p className="petrolero-catalog-item__sku">АРТ. {preview.sku}</p>
               <h2>{preview.title}</h2>
               <p>{preview.description}</p>
               <dl>
@@ -665,7 +665,7 @@ export default function CatalogPage() {
                         )}
                         <div>
                           <strong>{product.title}</strong>
-                          <p>{priceLabel(product.priceKopecks)} / тест</p>
+                          <p>{priceLabel(product.priceKopecks)}</p>
                           <div className="petrolero-catalog-quantity">
                             <button type="button" aria-label={"Уменьшить количество " + product.title} onClick={() => updateQuantity(product.id, -1)}>−</button>
                             <span>{line.quantity}</span>
@@ -678,13 +678,13 @@ export default function CatalogPage() {
                 </div>
                 <div className="petrolero-catalog-drawer__summary">
                   <p><span>Итого (демо)</span><strong>{priceLabel(cartTotal)}</strong></p>
-                  <small>Заказы и оплата пока не подключены. Корзина предназначена для проверки интерфейса.</small>
+                  <small>Оформление заказа временно недоступно.</small>
                 </div>
               </>
             ) : (
               <div className="petrolero-catalog-drawer__empty">
                 <h3>Корзина пуста</h3>
-                <p>Добавь тестовый товар из каталога.</p>
+                <p>Выберите товары в каталоге.</p>
               </div>
             )}
           </aside>
@@ -741,7 +741,7 @@ export default function CatalogPage() {
                   </table>
                 </div>
                 <div className="petrolero-catalog-compare-dialog__footer">
-                  <span>Тестовые характеристики. Реальные данные позже загрузим через админ-панель.</span>
+                  
                   <button type="button" onClick={() => setCompareIds([])}>Очистить сравнение</button>
                 </div>
               </>
@@ -762,7 +762,7 @@ export default function CatalogPage() {
             <button type="button" className="petrolero-catalog-close" aria-label="Закрыть" onClick={() => setAccountOpen(false)}>×</button>
             <p>ЛИЧНЫЙ КАБИНЕТ</p>
             <h2>Вход в аккаунт</h2>
-            <span>Авторизацию подключим отдельно с защищённым хранением пользователей и заказов. Сейчас доступна демонстрация каталога.</span>
+            <span>Вход временно недоступен.</span>
           </section>
         </div>
       )}
