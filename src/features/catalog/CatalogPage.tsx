@@ -10,7 +10,6 @@ import {
   CATALOG_PRODUCTS,
   type CatalogProduct,
   type ProductCategory,
-  type ProductPackaging,
 } from "./catalogData";
 import "./CatalogPage.css";
 
@@ -54,43 +53,6 @@ function filterValues(product: CatalogProduct, key: FilterKey): string[] {
     : product[key];
 }
 
-function ProductVisual({
-  packaging,
-  title,
-  viscosity,
-  compact = false,
-}: {
-  packaging: ProductPackaging;
-  title: string;
-  viscosity?: string;
-  compact?: boolean;
-}) {
-  return (
-    <div
-      className={"petrolero-product-visual petrolero-product-visual--" + packaging +
-        (compact ? " petrolero-product-visual--compact" : "")}
-      role="img"
-      aria-label={"Демонстрационная упаковка " + title}
-    >
-      <div className="petrolero-product-visual__shadow" />
-      <div className="petrolero-product-visual__pack">
-        {packaging !== "drum" && (
-          <div className="petrolero-product-visual__neck" aria-hidden="true" />
-        )}
-        <div className="petrolero-product-visual__rim" aria-hidden="true" />
-        <div className="petrolero-product-visual__ribs" aria-hidden="true" />
-        <div className="petrolero-product-visual__label">
-          <span className="petrolero-product-visual__brand">petrolero</span>
-          <span className="petrolero-product-visual__spec">
-            {viscosity || "ADDITIVE"}
-          </span>
-        </div>
-        <div className="petrolero-product-visual__base" aria-hidden="true" />
-      </div>
-    </div>
-  );
-}
-
 function ProductCard({
   product,
   onPreview,
@@ -113,11 +75,7 @@ function ProductCard({
             sizes="(max-width: 650px) 100vw, (max-width: 1050px) 50vw, 33vw"
           />
         ) : (
-          <ProductVisual
-            packaging={product.packaging}
-            title={product.title}
-            viscosity={product.viscosity}
-          />
+          <span className="petrolero-catalog-no-image" role="img" aria-label="Фото пока отсутствует">Фото готовится</span>
         )}
         <button
           className="petrolero-catalog-item__quick"
@@ -385,7 +343,7 @@ export default function CatalogPage() {
 
         {department === "oils" && (
           <div className="petrolero-catalog-subcategories" aria-label="Категории моторных масел">
-            {CATALOG_CATEGORIES.map((item, index) => (
+            {CATALOG_CATEGORIES.map((item) => (
               <button
                 className="petrolero-catalog-subcategory"
                 data-active={category === item.id}
@@ -394,10 +352,13 @@ export default function CatalogPage() {
                 aria-pressed={category === item.id}
                 key={item.id}
               >
-                <ProductVisual
-                  packaging={index === 1 ? "canister" : "drum"}
-                  title={item.title}
-                  compact
+                <Image
+                  className="petrolero-catalog-subcategory__image"
+                  src="/catalog/products/oils/petrolero-drum.avif"
+                  alt=""
+                  width={59}
+                  height={66}
+                  sizes="59px"
                 />
                 <span>{item.title}</span>
                 <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
@@ -540,7 +501,7 @@ export default function CatalogPage() {
             <div className="petrolero-catalog-quickview__media">
               {preview.image
                 ? <Image src={preview.image} alt={preview.title} width={420} height={460}/>
-                : <ProductVisual packaging={preview.packaging} title={preview.title} viscosity={preview.viscosity} />}
+                : <span className="petrolero-catalog-no-image" role="img" aria-label="Фото пока отсутствует">Фото готовится</span>}
             </div>
             <div className="petrolero-catalog-quickview__content">
               <p className="petrolero-catalog-item__sku">ТЕСТОВАЯ КАРТОЧКА / {preview.sku}</p>
@@ -576,7 +537,11 @@ export default function CatalogPage() {
                     if (!product) return null;
                     return (
                       <div className="petrolero-catalog-drawer__item" key={line.id}>
-                        <ProductVisual packaging={product.packaging} title={product.title} viscosity={product.viscosity} compact />
+                        {product.image ? (
+                          <Image src={product.image} alt={product.title} width={90} height={100} sizes="90px" />
+                        ) : (
+                          <span className="petrolero-catalog-no-image" role="img" aria-label="Фото пока отсутствует">Нет фото</span>
+                        )}
                         <div>
                           <strong>{product.title}</strong>
                           <p>{priceLabel(product.priceKopecks)} / тест</p>
