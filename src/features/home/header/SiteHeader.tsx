@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
+import Link from "next/link";
 import BrandLogo from "./BrandLogo";
 import MenuShowcase from "../../menu/MenuShowcase";
 import { SearchIcon, AccountIcon, CartIcon } from "./HeaderIcons";
@@ -12,9 +13,24 @@ type Panel = "account" | "cart" | null;
 type PetroleroHeaderProps = {
   phase: 0 | 1 | 2 | 3;
   reducedMotion: boolean;
+  mode?: "home" | "catalog";
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
+  cartCount?: number;
+  onCartOpen?: () => void;
+  onAccountOpen?: () => void;
 };
 
-export default function SiteHeader({ phase, reducedMotion }: PetroleroHeaderProps) {
+export default function SiteHeader({
+  phase,
+  reducedMotion,
+  mode = "home",
+  searchValue,
+  onSearchChange,
+  cartCount = 0,
+  onCartOpen,
+  onAccountOpen,
+}: PetroleroHeaderProps) {
   const searchRef = useRef<HTMLInputElement>(null);
   const searchWrapRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -124,7 +140,30 @@ export default function SiteHeader({ phase, reducedMotion }: PetroleroHeaderProp
 
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (mode === "catalog") {
+      setSearchOpen(false);
+      document.getElementById("petrolero-catalog-products")?.scrollIntoView({ behavior: reducedMotion ? "instant" : "smooth" });
+      return;
+    }
     if (search.trim()) setSearchSubmitted(true);
+  };
+
+  const handleAccountClick = () => {
+    if (mode === "catalog" && onAccountOpen) {
+      setSearchOpen(false);
+      onAccountOpen();
+      return;
+    }
+    openPanel("account");
+  };
+
+  const handleCartClick = () => {
+    if (mode === "catalog" && onCartOpen) {
+      setSearchOpen(false);
+      onCartOpen();
+      return;
+    }
+    openPanel("cart");
   };
 
   return (
@@ -134,8 +173,12 @@ export default function SiteHeader({ phase, reducedMotion }: PetroleroHeaderProp
         data-phase={phase}
         data-hidden={navHidden && phase === 3}
       >
-        <div className="petrolero-fixed-brand">
-          <BrandLogo animated={!reducedMotion} variant="gold" />
+        <div className="petrolero-fixed-brand" data-catalog={mode === "catalog"}>
+          {mode === "catalog" ? (
+            <Link href="/" aria-label="На главную Petrolero" className="petrolero-fixed-brand__link">
+              <BrandLogo animated={false} variant="gold" />
+            </Link>
+          ) : <BrandLogo animated={!reducedMotion} variant="gold" />}
         </div>
         <header className="petrolero-fixed-actions-area">
           <nav className="petrolero-nav-actions" aria-label="Действия магазина">
@@ -160,8 +203,12 @@ export default function SiteHeader({ phase, reducedMotion }: PetroleroHeaderProp
                   ref={searchRef}
                   type="search"
                   autoComplete="off"
-                  value={search}
-                  onChange={(event) => { setSearch(event.target.value); setSearchSubmitted(false); }}
+                  value={mode === "catalog" ? (searchValue ?? "") : search}
+                  onChange={(event) => {
+                    if (mode === "catalog") onSearchChange?.(event.target.value);
+                    else setSearch(event.target.value);
+                    setSearchSubmitted(false);
+                  }}
                   tabIndex={searchOpen ? 0 : -1}
                   placeholder="Название масла или вязкость"
                 />
@@ -171,7 +218,7 @@ export default function SiteHeader({ phase, reducedMotion }: PetroleroHeaderProp
                   <rect className="petrolero-nav-search-head" x="1.2" y="1.2" width="337.6" height="41.6" pathLength={100} />
                 </svg>
                 <span className="petrolero-nav-search-status" role="status">
-                  {searchSubmitted ? "Поиск подключим вместе с каталогом." : ""}
+                  {mode === "home" && searchSubmitted ? "Поиск подключим вместе с каталогом." : ""}
                 </span>
               </form>
               <button
@@ -190,19 +237,19 @@ export default function SiteHeader({ phase, reducedMotion }: PetroleroHeaderProp
               className="petrolero-nav-button"
               aria-label="Личный кабинет"
               aria-expanded={panel === "account"}
-              onClick={() => openPanel("account")}
+              onClick={handleAccountClick}
             >
               <AccountIcon />
             </button>
             <button
               type="button"
               className="petrolero-nav-button petrolero-nav-cart"
-              aria-label="Корзина"
+              aria-label={mode === "catalog" ? `Корзина, товаров: ${cartCount}` : "Корзина"}
               aria-expanded={panel === "cart"}
-              onClick={() => openPanel("cart")}
+              onClick={handleCartClick}
             >
               <CartIcon />
-              <span className="petrolero-nav-cart-count">0</span>
+              <span className="petrolero-nav-cart-count">{mode === "catalog" ? cartCount : 0}</span>
             </button>
             <button
               ref={menuButtonRef}
