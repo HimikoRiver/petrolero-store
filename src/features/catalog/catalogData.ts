@@ -58,7 +58,7 @@ const DEMO_ADDITIVE_IMAGES = {
 
 const createDemoProduct = (product: DemoInput): CatalogProduct => ({
   ...product,
-  description: product.description ?? "Тестовая карточка. Описание, параметры, наличие и стоимость будут заполнены через админ-панель.",
+  description: product.description ?? (product.category === "additives" ? "Присадка Petrolero. Характеристики представлены ниже." : "Моторное масло Petrolero. Характеристики представлены ниже."),
   image: product.image ?? (product.category === "additives" ? null : DEMO_OIL_IMAGE),
   published: true,
   stockQuantity: 12,
