@@ -466,7 +466,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   background: linear-gradient(to top, rgba(202, 143, 73, .22), rgba(202, 143, 73, .07) 65%, transparent);
   opacity: 0;
   transform: translateY(28%);
