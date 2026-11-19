@@ -59,8 +59,12 @@
 }
 .petrolero-catalog-subcategory > span:nth-child(2) {flex: 1; font-size: 14px; font-weight: 530}
 .petrolero-catalog-subcategory > svg {flex: 0 0 16px; color: #b99465; opacity: .7}
-.petrolero-catalog-subcategory > .petrolero-product-visual {
-  flex: 0 0 59px; height: 66px; min-width: 59px;
+.petrolero-catalog-subcategory__image {
+  flex: 0 0 59px;
+  display: block;
+  width: 59px;
+  height: 66px;
+  object-fit: contain;
 }
 .petrolero-catalog-toolbar {
   display: flex; flex-direction: column; gap: 17px;
@@ -223,75 +227,16 @@
 .petrolero-catalog-no-results p {color: #9b8e7e; font-size: 13px}
 .petrolero-catalog-no-results button {margin-top: 18px; padding: 11px 15px; border: 1px solid #9c7549; background: #2d2116; color: #e2b980}
 
-/* Clearly labelled temporary packaging renderings: no fictitious brand photos. */
-.petrolero-product-visual {
-  position: relative; display: grid; place-items: center;
-  width: 100%; height: 100%; min-height: 0; isolation: isolate; pointer-events: none;
+.petrolero-catalog-no-image {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  color: #a69175;
+  font-size: 12px;
+  text-align: center;
 }
-.petrolero-product-visual__shadow {
-  position: absolute; left: 27%; right: 27%; bottom: 11%; height: 7%;
-  border-radius: 50%; background: #000; filter: blur(18px); opacity: .8;
-}
-.petrolero-product-visual__pack {
-  position: relative; display: flex; flex-direction: column; justify-content: center;
-  align-items: center; width: 45%; height: 66%;
-  background: linear-gradient(90deg, #08090a 0%, #414143 13%, #18191b 28%, #070708 52%, #303033 76%, #0c0c0d 94%, #4f4d4a 100%);
-  border: 1px solid #4a4947; border-radius: 9% 9% 5% 5% / 4% 4% 5% 5%;
-  box-shadow: inset 11px 0 18px rgba(255,255,255,.03), inset -13px 0 22px rgba(0,0,0,.65), 8px 17px 20px rgba(0,0,0,.5);
-  transform: perspective(600px) rotateY(-7deg);
-}
-.petrolero-product-visual--drum .petrolero-product-visual__pack {width: 52%; height: 60%; border-radius: 7% 7% 5% 5% / 4% 4% 5% 5%}
-.petrolero-product-visual--canister .petrolero-product-visual__pack {width: 40%; height: 67%; border-radius: 13% 16% 5% 6% / 8% 14% 4% 4%}
-.petrolero-product-visual--bottle .petrolero-product-visual__pack {width: 29%; height: 58%; border-radius: 10% 10% 6% 6% / 7% 7% 5% 5%}
-.petrolero-product-visual__neck {
-  position: absolute; width: 35%; height: 12%; bottom: 98%; right: 16%;
-  background: linear-gradient(90deg,#18191a,#545353 34%,#101113 84%);
-  border-radius: 5px 5px 0 0; border-top: 4px solid #b18d59;
-}
-.petrolero-product-visual--bottle .petrolero-product-visual__neck {right: 31%}
-.petrolero-product-visual__rim {
-  position: absolute; top: 0; width: 98%; height: 8%;
-  border-radius: 50%; border: 2px solid #79746b;
-  background: linear-gradient(150deg,#4b4844,#111110 44%,#89827a 82%,#151515);
-  box-shadow: 0 3px 1px #090a0b;
-}
-.petrolero-product-visual--canister .petrolero-product-visual__rim,
-.petrolero-product-visual--bottle .petrolero-product-visual__rim {display: none}
-.petrolero-product-visual__ribs {
-  position: absolute; inset: 11% 0 5%;
-  opacity: .63; background: repeating-linear-gradient(
-    to bottom, transparent 0%,transparent 7%, rgba(188,186,181,.22) 8.2%,rgba(0,0,0,.65) 10%, transparent 12.2%
-  );
-}
-.petrolero-product-visual--canister .petrolero-product-visual__ribs,
-.petrolero-product-visual--bottle .petrolero-product-visual__ribs {opacity: .09}
-.petrolero-product-visual__label {
-  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 14%; width: 100%; min-height: 35%; margin-top: 6%;
-  border-top: 2px solid #b18c58; border-bottom: 2px solid #7e623b;
-  background: linear-gradient(180deg,#090a0c,#202023 48%,#090a0b);
-  box-shadow: 0 5px 13px #060606; z-index: 1; padding: 8px 4px;
-}
-.petrolero-product-visual__brand {
-  color: #f8f5ef; font-weight: 800; font-size: clamp(12px,2vw,29px);
-  letter-spacing: -.06em; font-style: italic; line-height: 1;
-}
-.petrolero-product-visual__spec {
-  color: #c7a46a; font-weight: 700; font-size: clamp(9px,1vw,14px);
-  letter-spacing: .13em; white-space: nowrap;
-}
-.petrolero-product-visual--bottle .petrolero-product-visual__brand {font-size: clamp(9px,1.35vw,17px)}
-.petrolero-product-visual--bottle .petrolero-product-visual__spec {font-size: clamp(8px,.8vw,11px)}
-.petrolero-product-visual__base {
-  position: absolute; bottom: 0; height: 5%; width: 98%;
-  border-radius: 40%; background: linear-gradient(90deg,#171717,#66615a,#101010);
-}
-.petrolero-product-visual--compact .petrolero-product-visual__pack {width: 52%; height: 69%}
-.petrolero-product-visual--compact.petrolero-product-visual--canister .petrolero-product-visual__pack {width: 42%; height: 67%}
-.petrolero-product-visual--compact .petrolero-product-visual__label {min-height: 32%; padding: 2px}
-.petrolero-product-visual--compact .petrolero-product-visual__brand {font-size: 7px}
-.petrolero-product-visual--compact .petrolero-product-visual__spec {font-size: 5px}
-.petrolero-product-visual--compact .petrolero-product-visual__shadow {filter: blur(6px)}
 
 /* Dialogs, the preview, and the working demo cart. */
 .petrolero-catalog-overlay {
@@ -349,7 +294,16 @@
   display: grid; grid-template-columns: 90px 1fr; gap: 15px; padding: 17px 0;
   border-bottom: 1px solid #312820;
 }
-.petrolero-catalog-drawer__item > .petrolero-product-visual {height: 100px; background: #1f1c19}
+.petrolero-catalog-drawer__item > img {
+  width: 90px;
+  height: 100px;
+  object-fit: contain;
+  background: #1f1c19;
+}
+.petrolero-catalog-drawer__item > .petrolero-catalog-no-image {
+  min-height: 100px;
+  background: #1f1c19;
+}
 .petrolero-catalog-drawer__item > div:last-child {display: flex; flex-direction: column; align-items: start}
 .petrolero-catalog-drawer__item strong {font-size: 13px; font-weight: 540; line-height: 1.45}
 .petrolero-catalog-drawer__item p {color: #b59a77; font-size: 12px; margin: 8px 0 11px}
@@ -393,7 +347,7 @@
   .petrolero-catalog-main h1 {margin: 22px 0 25px; font-size: clamp(27px, 7vw, 39px)}
   .petrolero-catalog-subcategories {grid-template-columns: 1fr; gap: 8px}
   .petrolero-catalog-subcategory {min-height: 70px}
-  .petrolero-catalog-subcategory > .petrolero-product-visual {height: 49px; flex-basis: 47px; min-width: 47px}
+  .petrolero-catalog-subcategory__image {width: 47px; height: 49px; flex-basis: 47px; min-width: 47px}
   .petrolero-catalog-filter-buttons {gap: 7px}
   .petrolero-catalog-filter > button {padding: 9px 11px; font-size: 11px; min-height: 38px}
   .petrolero-catalog-toolbar__bottom {align-items: start; flex-wrap: wrap}
@@ -413,7 +367,6 @@
   .petrolero-catalog-items[data-view="list"] .petrolero-catalog-item__name {font-size: 14px}
   .petrolero-catalog-items[data-view="list"] .petrolero-catalog-item__bottom {display: block; padding-top: 12px}
   .petrolero-catalog-items[data-view="list"] .petrolero-catalog-item__bottom > button {margin-top: 11px; font-size: 10px}
-  .petrolero-catalog-items[data-view="list"] .petrolero-product-visual__brand {font-size: 11px}
   .petrolero-catalog-view-buttons {display: none}
   .petrolero-catalog-demo-note {font-size: 10px}
   .petrolero-catalog-overlay {padding: 12px}
