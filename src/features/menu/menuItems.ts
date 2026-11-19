@@ -3,7 +3,7 @@ export const MENU_ITEMS = [
     number: "01",
     title: "Каталог",
     image: "/menu/images/1.webp",
-    href: "/catalog/motornye-masla/legkovye-masla-moto/",
+    href: "/catalog",
     float: {
       x1: "4px",
       y1: "-14px",
