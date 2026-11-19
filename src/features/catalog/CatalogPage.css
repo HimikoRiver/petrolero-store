@@ -214,15 +214,9 @@
   display: flex; flex-direction: column; align-items: stretch; gap: 15px;
   margin-top: auto; padding-top: 23px;
 }
-.petrolero-catalog-item__bottom > div {display: grid; gap: 4px}
+.petrolero-catalog-item__bottom > .petrolero-catalog-item__price {display: grid; gap: 4px}
 .petrolero-catalog-item__bottom strong {color: #dfc29b; font-size: clamp(16px,1.5vw,21px); font-weight: 630}
-.petrolero-catalog-item__bottom > div span {font-size: 10px; color: #8c806f}
-.petrolero-catalog-item__bottom > button {
-  display: flex; align-items: center; gap: 13px; min-height: 40px;
-  padding: 8px 11px; border: 1px solid #826343;
-  background: #2c2116; color: #e6c294; font-size: 11px; white-space: nowrap;
-}
-.petrolero-catalog-item__bottom > button:hover {background: #45301b}
+.petrolero-catalog-item__bottom > .petrolero-catalog-item__price span {font-size: 10px; color: #8c806f}
 .petrolero-catalog-items[data-view="list"] {display: flex; flex-direction: column}
 .petrolero-catalog-items[data-view="list"] .petrolero-catalog-item {display: grid; grid-template-columns: 280px minmax(0,1fr)}
 .petrolero-catalog-items[data-view="list"] .petrolero-catalog-item__media {aspect-ratio: 1.3}
@@ -373,32 +367,39 @@
 .petrolero-catalog-item__picture .petrolero-catalog-no-image {
   display: grid; place-items: center; padding: 20px;
 }
-.petrolero-catalog-item__actions {
-  display: flex; width: 100%; align-items: stretch; gap: 7px;
+.petrolero-catalog-item__bottom > .petrolero-catalog-item__actions {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 9px;
 }
 .petrolero-catalog-item__price { display: grid; gap: 5px; }
 .petrolero-catalog-add {
   flex: 1; min-width: 0; min-height: 42px;
-  padding: 9px 12px; border: 1px solid #997245; border-radius: 0;
-  background: linear-gradient(100deg, #332316, #2c1d11 70%, #241910);
-  color: #f5d5a7; font-size: 11px; font-weight: 550; letter-spacing: .015em;
+  padding: 9px 12px; border: 1px solid rgba(211, 172, 111, .52); border-radius: 7px;
+  background: linear-gradient(180deg, rgba(45, 34, 23, .82), rgba(26, 22, 18, .9));
+  color: #f3d4a3; font-size: 11px; font-weight: 560; letter-spacing: .015em;
+  transition: border-color .3s ease, background-color .3s ease, color .3s ease;
   white-space: nowrap;
 }
 .petrolero-catalog-add:hover {
-  background: linear-gradient(100deg, #4a3019, #342415 70%, #2d1e12);
-  border-color: #e1b47e;
+  border-color: #e5bc81;
+  color: #ffe1b4;
 }
 .petrolero-catalog-item__action-icon {
-  display: grid; place-items: center; flex: 0 0 42px; height: 42px;
-  padding: 0; border: 1px solid rgba(209,164,103,.29);
-  background: #1d1813; color: #ab936f;
-  transition: color .24s, border-color .24s, background .24s;
+  display: grid; place-items: center; flex: 0 0 34px; height: 42px;
+  padding: 0; border: 1px solid transparent; border-radius: 6px;
+  background: transparent; color: #bfa683;
+  transition: color .3s ease, border-color .3s ease, background-color .3s ease;
 }
 .petrolero-catalog-item__action-icon svg { width: 19px; height: 19px; }
 .petrolero-catalog-item__action-icon:hover,
 .petrolero-catalog-item__action-icon[aria-pressed="true"] {
-  color: #ffd294; border-color: rgba(237,183,110,.74);
-  background: #332515;
+  color: #ffd294; border-color: rgba(237,183,110,.2);
+  background: rgba(180,123,55,.09);
 }
 .petrolero-catalog-item__action-icon[aria-pressed="true"] svg {
   filter: drop-shadow(0 0 5px rgba(213,151,74,.2));
@@ -441,6 +442,7 @@
 .petrolero-catalog-view-buttons button[aria-pressed="true"] {
   color: #eac187; border-color: #9d7647;
 }
+/* Gentle golden rise on hover, replacing the aggressive diagonal sweep. */
 .petrolero-catalog-liquid-button,
 .petrolero-catalog-subcategory,
 .petrolero-catalog-departments button,
@@ -449,7 +451,9 @@
 .petrolero-catalog-dropdown__done,
 .petrolero-catalog-collection-button,
 .petrolero-catalog-item__quick {
-  position: relative; isolation: isolate; overflow: hidden;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
 }
 .petrolero-catalog-liquid-button::before,
 .petrolero-catalog-subcategory::before,
@@ -459,10 +463,15 @@
 .petrolero-catalog-dropdown__done::before,
 .petrolero-catalog-collection-button::before,
 .petrolero-catalog-item__quick::before {
-  content: ""; position: absolute; z-index: 0; inset: -25% -20%;
-  background: linear-gradient(112deg, transparent 26%, rgba(255,190,101,.05) 42%, rgba(230,169,91,.18) 52%, transparent 68%);
-  transform: translateX(-140%); pointer-events: none;
-  transition: transform 660ms cubic-bezier(.2,.7,.24,1);
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to top, rgba(202, 143, 73, .22), rgba(202, 143, 73, .07) 65%, transparent);
+  opacity: 0;
+  transform: translateY(28%);
+  pointer-events: none;
+  transition: opacity 420ms ease, transform 470ms cubic-bezier(.22, .73, .24, 1);
 }
 .petrolero-catalog-liquid-button:hover::before,
 .petrolero-catalog-subcategory:hover::before,
@@ -472,7 +481,37 @@
 .petrolero-catalog-dropdown__done:hover::before,
 .petrolero-catalog-collection-button:hover::before,
 .petrolero-catalog-item__quick:hover::before {
-  transform: translateX(130%);
+  opacity: 1;
+  transform: translateY(0);
+}
+.petrolero-catalog-liquid-button::after,
+.petrolero-catalog-subcategory::after,
+.petrolero-catalog-departments button::after,
+.petrolero-catalog-item__action-icon::after,
+.petrolero-catalog-filter > button::after,
+.petrolero-catalog-dropdown__done::after,
+.petrolero-catalog-collection-button::after,
+.petrolero-catalog-item__quick::after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #d9ad74, transparent);
+  transform: scaleX(0);
+  pointer-events: none;
+  transition: transform 420ms cubic-bezier(.24, .72, .25, 1);
+}
+.petrolero-catalog-liquid-button:hover::after,
+.petrolero-catalog-subcategory:hover::after,
+.petrolero-catalog-departments button:hover::after,
+.petrolero-catalog-item__action-icon:hover::after,
+.petrolero-catalog-filter > button:hover::after,
+.petrolero-catalog-dropdown__done:hover::after,
+.petrolero-catalog-collection-button:hover::after,
+.petrolero-catalog-item__quick:hover::after {
+  transform: scaleX(1);
 }
 .petrolero-catalog-subcategory > * { position: relative; z-index: 1; }
 .petrolero-catalog-quickview__content > .petrolero-catalog-liquid-button {
@@ -584,8 +623,10 @@
   .petrolero-catalog-items[data-view="list"] .petrolero-catalog-item__media {aspect-ratio: auto; min-height: 230px}
   .petrolero-catalog-items[data-view="list"] .petrolero-catalog-item__body {padding: 15px}
   .petrolero-catalog-items[data-view="list"] .petrolero-catalog-item__name {font-size: 14px}
-  .petrolero-catalog-items[data-view="list"] .petrolero-catalog-item__bottom {display: block; padding-top: 12px}
-  .petrolero-catalog-items[data-view="list"] .petrolero-catalog-item__bottom > button {margin-top: 11px; font-size: 10px}
+  .petrolero-catalog-items[data-view="list"] .petrolero-catalog-item__bottom {display: flex; flex-direction: column; gap: 10px; padding-top: 12px}
+  .petrolero-catalog-items[data-view="list"] .petrolero-catalog-add {font-size: 10px}
+  .petrolero-catalog-items[data-view="list"] .petrolero-catalog-item__bottom > .petrolero-catalog-item__actions {gap: 2px}
+  .petrolero-catalog-items[data-view="list"] .petrolero-catalog-item__action-icon {flex-basis: 28px}
   .petrolero-catalog-view-buttons {display: none}
   .petrolero-catalog-overlay {padding: 12px}
   .petrolero-catalog-account {padding: 42px 28px 32px}
@@ -613,7 +654,16 @@
   .petrolero-catalog-filter > button::before,
   .petrolero-catalog-dropdown__done::before,
   .petrolero-catalog-collection-button::before,
-  .petrolero-catalog-item__quick::before {
-    transition: none !important; transform: none !important; opacity: 0 !important;
+  .petrolero-catalog-item__quick::before,
+  .petrolero-catalog-liquid-button::after,
+  .petrolero-catalog-subcategory::after,
+  .petrolero-catalog-departments button::after,
+  .petrolero-catalog-item__action-icon::after,
+  .petrolero-catalog-filter > button::after,
+  .petrolero-catalog-dropdown__done::after,
+  .petrolero-catalog-collection-button::after,
+  .petrolero-catalog-item__quick::after {
+    transition: none !important;
+    opacity: 0 !important;
   }
 }
