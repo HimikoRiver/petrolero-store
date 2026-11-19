@@ -1,0 +1,113 @@
+.petrolero-store-header {
+  position: relative;
+  z-index: 20;
+  color: #f4eee4;
+  background: #080808;
+  border-bottom: 1px solid rgba(212, 173, 112, .16);
+}
+
+.petrolero-store-header__inner {
+  display: flex;
+  align-items: center;
+  min-height: 88px;
+  max-width: 1560px;
+  margin: 0 auto;
+  padding: 0 clamp(22px, 5.2vw, 86px);
+  gap: clamp(26px, 5vw, 82px);
+}
+
+.petrolero-store-header__brand {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: clamp(118px, 11.5vw, 176px);
+  align-items: center;
+  text-decoration: none;
+}
+
+.petrolero-store-header__brand .petrolero-logo {
+  width: 100%;
+}
+
+.petrolero-store-header__brand img {
+  width: 100%;
+  filter: brightness(0) saturate(100%) invert(87%) sepia(15%) saturate(850%) hue-rotate(345deg);
+}
+
+.petrolero-store-header__navigation {
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 3vw, 42px);
+  align-self: stretch;
+}
+
+.petrolero-store-header__navigation a {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  color: #a9a39a;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 560;
+  letter-spacing: .07em;
+  transition: color .2s ease;
+}
+
+.petrolero-store-header__navigation a:hover,
+.petrolero-store-header__navigation a:focus-visible,
+.petrolero-store-header__navigation .petrolero-store-header__active {
+  color: #e4c494;
+}
+
+.petrolero-store-header__navigation .petrolero-store-header__active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: #c9a26d;
+}
+
+.petrolero-store-header__signature {
+  margin-left: auto;
+  white-space: nowrap;
+  color: #82786b;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: .22em;
+}
+
+.petrolero-store-header__signature span {
+  color: #caa36e;
+  padding-inline: 6px;
+}
+
+.petrolero-store-header a:focus-visible {
+  outline: 2px solid #caa36e;
+  outline-offset: 5px;
+}
+
+@media (max-width: 600px) {
+  .petrolero-store-header__inner {
+    min-height: 72px;
+    gap: 22px;
+  }
+
+  .petrolero-store-header__brand {
+    width: 108px;
+  }
+
+  .petrolero-store-header__navigation {
+    margin-left: auto;
+    gap: 17px;
+  }
+
+  .petrolero-store-header__navigation a {
+    font-size: 11px;
+    letter-spacing: 0;
+  }
+
+  .petrolero-store-header__signature {
+    display: none;
+  }
+}
