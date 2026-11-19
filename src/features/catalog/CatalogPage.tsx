@@ -146,6 +146,7 @@ function ProductCard({
 }
 
 export default function CatalogPage() {
+  const reducedMotion = useReducedMotion();
   const [department, setDepartment] = useState<Department>("oils");
   const [category, setCategory] = useState<OilCategory>("all");
   const [search, setSearch] = useState("");
@@ -160,7 +161,12 @@ export default function CatalogPage() {
   const [accountOpen, setAccountOpen] = useState(false);
   const [cartLines, setCartLines] = useState<CartLine[]>([]);
   const [cartHydrated, setCartHydrated] = useState(false);
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
+  const [compareIds, setCompareIds] = useState<string[]>([]);
+  const [collectionsReady, setCollectionsReady] = useState(false);
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const [compareOpen, setCompareOpen] = useState(false);
+  const [feedback, setFeedback] = useState<CatalogFeedback | null>(null);
   const filtersRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -195,6 +201,37 @@ export default function CatalogPage() {
     }
   }, [cartLines, cartHydrated]);
 
+  // Favorites and comparison selections are a local demo until accounts are available.
+  useEffect(() => {
+    try {
+      for (const [key, update] of [
+        ["petrolero-demo-favorites", setFavoriteIds],
+        ["petrolero-demo-comparison", setCompareIds],
+      ] as const) {
+        const saved: unknown = JSON.parse(localStorage.getItem(key) || "[]");
+        if (Array.isArray(saved)) {
+          const uniqueIds = [...new Set(saved.filter(
+            (id): id is string => typeof id === "string" && CATALOG_PRODUCTS.some((item) => item.id === id),
+          ))];
+          update(key === "petrolero-demo-comparison" ? uniqueIds.slice(0, 3) : uniqueIds);
+        }
+      }
+    } catch {
+      // Storage may be disabled or contain invalid data.
+    }
+    setCollectionsReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!collectionsReady) return;
+    try {
+      localStorage.setItem("petrolero-demo-favorites", JSON.stringify(favoriteIds));
+      localStorage.setItem("petrolero-demo-comparison", JSON.stringify(compareIds));
+    } catch {
+      // Keep the demo interactive even with restricted storage.
+    }
+  }, [collectionsReady, favoriteIds, compareIds]);
+
   useEffect(() => {
     if (!openFilter) return;
     const onPointerDown = (event: PointerEvent) => {
@@ -214,7 +251,7 @@ export default function CatalogPage() {
   }, [openFilter]);
 
   useEffect(() => {
-    if (!preview && !cartOpen && !accountOpen) return;
+    if (!preview && !cartOpen && !accountOpen && !compareOpen) return;
     const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const handleKey = (event: KeyboardEvent) => {
@@ -222,6 +259,7 @@ export default function CatalogPage() {
         setPreview(null);
         setCartOpen(false);
         setAccountOpen(false);
+        setCompareOpen(false);
       }
     };
     document.addEventListener("keydown", handleKey);
@@ -229,7 +267,7 @@ export default function CatalogPage() {
       document.body.style.overflow = overflow;
       document.removeEventListener("keydown", handleKey);
     };
-  }, [preview, cartOpen, accountOpen]);
+  }, [preview, cartOpen, accountOpen, compareOpen]);
 
   const scopedProducts = useMemo(
     () => CATALOG_PRODUCTS.filter((product) =>
@@ -254,6 +292,7 @@ export default function CatalogPage() {
   const products = useMemo(() => {
     const normalizedSearch = search.trim().toLocaleLowerCase("ru");
     const filtered = scopedProducts.filter((product) => {
+      if (favoritesOnly && !favoriteIds.includes(product.id)) return false;
       if (normalizedSearch && ![
         product.title, product.sku, product.description, product.viscosity || "",
       ].join(" ").toLocaleLowerCase("ru").includes(normalizedSearch)) return false;
@@ -281,11 +320,12 @@ export default function CatalogPage() {
       });
     }
     return filtered;
-  }, [scopedProducts, search, minPrice, maxPrice, selectedFilters, sortOrder]);
+  }, [scopedProducts, search, minPrice, maxPrice, selectedFilters, sortOrder, favoritesOnly, favoriteIds]);
 
   const filterCount = Object.values(selectedFilters).reduce((total, selected) => total + selected.length, 0)
     + Number(Boolean(minPrice || maxPrice));
   const cartCount = cartLines.reduce((sum, line) => sum + line.quantity, 0);
+  const comparedProducts = useMemo(() => compareIds.map((id) => CATALOG_PRODUCTS.find((item) => item.id === id)).filter((item): item is CatalogProduct => Boolean(item)), [compareIds]);
   const cartTotal = cartLines.reduce((sum, line) => {
     const product = CATALOG_PRODUCTS.find((item) => item.id === line.id);
     return sum + (product?.priceKopecks || 0) * line.quantity;
@@ -330,7 +370,32 @@ export default function CatalogPage() {
 
   const addToCart = (product: CatalogProduct) => {
     updateQuantity(product.id, 1);
-    setFeedback("Добавлено в демонстрационную корзину");
+    setFeedback({ message: "Товар добавлен в корзину", target: "cart" });
+  };
+
+  const toggleFavorite = (product: CatalogProduct) => {
+    const wasFavorite = favoriteIds.includes(product.id);
+    setFavoriteIds((current) => current.includes(product.id)
+      ? current.filter((id) => id !== product.id)
+      : [...current, product.id],
+    );
+    setFeedback({ message: wasFavorite ? "Убрано из избранного" : "Добавлено в избранное" });
+  };
+
+  const toggleCompare = (product: CatalogProduct) => {
+    const alreadyCompared = compareIds.includes(product.id);
+    if (!alreadyCompared && compareIds.length >= 3) {
+      setFeedback({ message: "Для сравнения можно выбрать до трёх товаров", target: "compare" });
+      return;
+    }
+    setCompareIds((current) => current.includes(product.id)
+      ? current.filter((id) => id !== product.id)
+      : [...current, product.id],
+    );
+    setFeedback({
+      message: alreadyCompared ? "Убрано из сравнения" : "Добавлено в сравнение",
+      target: "compare",
+    });
   };
 
   const heading = department === "additives"
@@ -344,19 +409,23 @@ export default function CatalogPage() {
     setPreview(null);
     setCartOpen(false);
     setAccountOpen(false);
+    setCompareOpen(false);
   };
 
   return (
     <div className="petrolero-catalog-page">
-      <StorefrontHeader
-        search={search}
+      <SiteHeader
+        phase={3}
+        reducedMotion={reducedMotion}
+        mode="catalog"
+        searchValue={search}
         onSearchChange={setSearch}
         cartCount={cartCount}
-        onCartClick={() => { closeLayers(); setCartOpen(true); }}
-        onAccountClick={() => { closeLayers(); setAccountOpen(true); }}
+        onCartOpen={() => { closeLayers(); setCartOpen(true); }}
+        onAccountOpen={() => { closeLayers(); setAccountOpen(true); }}
       />
 
-      <main className="petrolero-catalog-main">
+      <main className="petrolero-catalog-main" id="petrolero-catalog-products">
         <nav className="petrolero-catalog-breadcrumbs" aria-label="Навигационная цепочка">
           <Link href="/">Главная</Link><span aria-hidden="true">/</span>
           <span>Каталог</span><span aria-hidden="true">/</span>
@@ -368,7 +437,6 @@ export default function CatalogPage() {
             <button aria-pressed={department === "oils"} onClick={() => changeDepartment("oils")} type="button">Моторные масла</button>
             <button aria-pressed={department === "additives"} onClick={() => changeDepartment("additives")} type="button">Присадки</button>
           </div>
-          <span className="petrolero-catalog-demo-note">Демонстрационное наполнение · цены тестовые</span>
         </div>
 
         <h1>{heading}</h1>
@@ -393,9 +461,7 @@ export default function CatalogPage() {
                   sizes="59px"
                 />
                 <span>{item.title}</span>
-                <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-                  <path d="M4 10h12M11 5l5 5-5 5" />
-                </svg>
+                <ArrowRightIcon />
               </button>
             ))}
           </div>
@@ -409,7 +475,7 @@ export default function CatalogPage() {
                 aria-expanded={openFilter === "price"}
                 onClick={() => setOpenFilter(openFilter === "price" ? null : "price")}
                 className={minPrice || maxPrice ? "is-active" : ""}
-              >Цена <span aria-hidden="true">⌄</span></button>
+              >Цена <ChevronDownIcon /></button>
               {openFilter === "price" && (
                 <div className="petrolero-catalog-dropdown petrolero-catalog-dropdown--price">
                   <p>Стоимость, ₽</p>
@@ -446,7 +512,7 @@ export default function CatalogPage() {
                 >
                   {label}
                   {selectedFilters[key].length > 0 && <span className="petrolero-catalog-filter__count">{selectedFilters[key].length}</span>}
-                  <span aria-hidden="true">⌄</span>
+                  <ChevronDownIcon />
                 </button>
                 {openFilter === key && (
                   <div className="petrolero-catalog-dropdown">
@@ -505,7 +571,16 @@ export default function CatalogPage() {
         {products.length > 0 ? (
           <div className="petrolero-catalog-items" data-view={view}>
             {products.map((product) => (
-              <ProductCard key={product.id} product={product} onPreview={setPreview} onAdd={addToCart} />
+              <ProductCard
+                key={product.id}
+                product={product}
+                onPreview={setPreview}
+                onAdd={addToCart}
+                isFavorite={favoriteIds.includes(product.id)}
+                isCompared={compareIds.includes(product.id)}
+                onFavorite={toggleFavorite}
+                onCompare={toggleCompare}
+              />
             ))}
           </div>
         ) : (
@@ -520,8 +595,9 @@ export default function CatalogPage() {
 
       {feedback && (
         <div className="petrolero-catalog-feedback" role="status">
-          {feedback}
-          <button type="button" onClick={() => { setFeedback(null); setCartOpen(true); }}>Открыть корзину</button>
+          <span>{feedback.message}</span>
+          {feedback.target === "cart" && <button type="button" onClick={() => { setFeedback(null); setCartOpen(true); }}>Корзина</button>}
+          {feedback.target === "compare" && <button type="button" onClick={() => { setFeedback(null); setCompareOpen(true); }}>Сравнить</button>}
           <button type="button" aria-label="Закрыть уведомление" onClick={() => setFeedback(null)}>×</button>
         </div>
       )}
@@ -548,7 +624,7 @@ export default function CatalogPage() {
                 {preview.volumeLiters && <><dt>Объём</dt><dd>{preview.volumeLiters < 1 ? preview.volumeLiters * 1000 + " мл" : preview.volumeLiters + " л"}</dd></>}
               </dl>
               <strong>{priceLabel(preview.priceKopecks)} <small>демо</small></strong>
-              <button type="button" onClick={() => addToCart(preview)}>Добавить в корзину +</button>
+              <button type="button" className="petrolero-catalog-liquid-button" onClick={() => addToCart(preview)}>В корзину</button>
             </div>
           </section>
         </div>
