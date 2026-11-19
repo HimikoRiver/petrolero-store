@@ -1,113 +1,70 @@
-.petrolero-store-header {
+.petrolero-shop-header {
   position: relative;
   z-index: 20;
-  color: #f4eee4;
-  background: #080808;
-  border-bottom: 1px solid rgba(212, 173, 112, .16);
+  background: #0c0c0c;
+  border-bottom: 1px solid #29241c;
+  color: #e6ddd0;
+  font-family: var(--font-geist-sans), sans-serif;
 }
-
-.petrolero-store-header__inner {
-  display: flex;
+.petrolero-shop-header__inner {
+  width: min(calc(100% - clamp(36px, 6vw, 112px)), 1510px);
+  min-height: 89px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 144px auto minmax(200px, 1fr) auto;
   align-items: center;
-  min-height: 88px;
-  max-width: 1560px;
-  margin: 0 auto;
-  padding: 0 clamp(22px, 5.2vw, 86px);
-  gap: clamp(26px, 5vw, 82px);
+  gap: clamp(20px, 2.9vw, 50px);
 }
-
-.petrolero-store-header__brand {
-  display: inline-flex;
-  flex: 0 0 auto;
-  width: clamp(118px, 11.5vw, 176px);
-  align-items: center;
-  text-decoration: none;
+.petrolero-shop-header__logo {display: flex; align-items: center; width: 132px; height: 76px; text-decoration: none}
+.petrolero-shop-header__logo img {
+  display: block; width: 132px; height: auto; max-height: 70px; object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(86%) sepia(22%) saturate(602%) hue-rotate(342deg);
 }
-
-.petrolero-store-header__brand .petrolero-logo {
-  width: 100%;
+.petrolero-shop-header__nav {display: flex; gap: 26px; align-items: center}
+.petrolero-shop-header__nav a {
+  color: #a6a098; text-decoration: none; font-size: 13px; font-weight: 530;
+  white-space: nowrap; transition: color .2s ease;
 }
-
-.petrolero-store-header__brand img {
-  width: 100%;
-  filter: brightness(0) saturate(100%) invert(87%) sepia(15%) saturate(850%) hue-rotate(345deg);
+.petrolero-shop-header__nav a:hover, .petrolero-shop-header__nav a[aria-current="page"] {color: #dab984}
+.petrolero-shop-header__search {
+  height: 45px; max-width: 570px; width: 100%; justify-self: center;
+  display: flex; align-items: center; gap: 14px; padding: 0 15px;
+  color: #d1b084; border: 1px solid #353029; background: #141312;
+  transition: border-color .2s ease;
 }
-
-.petrolero-store-header__navigation {
-  display: flex;
-  align-items: center;
-  gap: clamp(20px, 3vw, 42px);
-  align-self: stretch;
+.petrolero-shop-header__search:focus-within {border-color: #9c7850}
+.petrolero-shop-header__search input {
+  width: 100%; min-width: 0; height: 100%; background: transparent; border: 0; outline: none;
+  color: #f0e5d8; font: inherit; font-size: 13px;
 }
-
-.petrolero-store-header__navigation a {
-  display: inline-flex;
-  align-items: center;
-  position: relative;
-  color: #a9a39a;
-  text-decoration: none;
-  font-size: 12px;
-  font-weight: 560;
-  letter-spacing: .07em;
-  transition: color .2s ease;
+.petrolero-shop-header__search input::placeholder {color: #706c66}
+.petrolero-shop-header__search svg {flex: 0 0 20px}
+.petrolero-shop-header__actions {display: flex; align-items: center; gap: 22px}
+.petrolero-shop-header__actions button {
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; min-width: 52px; background: transparent; border: 0; color: #d7c1a0;
+  cursor: pointer; padding: 5px 2px; font: inherit; font-size: 11px; transition: color .2s ease;
 }
-
-.petrolero-store-header__navigation a:hover,
-.petrolero-store-header__navigation a:focus-visible,
-.petrolero-store-header__navigation .petrolero-store-header__active {
-  color: #e4c494;
+.petrolero-shop-header__actions button:hover {color: #f0d2a3}
+.petrolero-shop-header__actions svg {width: 23px; height: 23px}
+.petrolero-shop-header__cart-icon {position: relative; display: block}
+.petrolero-shop-header__counter {
+  position: absolute; top: -8px; right: -12px; min-width: 17px; height: 17px; padding: 0 4px;
+  display: grid; place-items: center; color: #15100a; background: #dbb77e; border-radius: 20px;
+  font-size: 10px; font-weight: 700;
 }
-
-.petrolero-store-header__navigation .petrolero-store-header__active::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1px;
-  background: #c9a26d;
+.petrolero-shop-header a:focus-visible, .petrolero-shop-header button:focus-visible,
+.petrolero-shop-header input:focus-visible {outline: 2px solid #ddaf76; outline-offset: 4px}
+@media(max-width: 1030px) {
+  .petrolero-shop-header__inner {grid-template-columns: 125px minmax(160px,1fr) auto; gap: 20px}
+  .petrolero-shop-header__nav {display: none}
+  .petrolero-shop-header__logo, .petrolero-shop-header__logo img {width: 120px}
 }
-
-.petrolero-store-header__signature {
-  margin-left: auto;
-  white-space: nowrap;
-  color: #82786b;
-  font-size: 10px;
-  font-weight: 650;
-  letter-spacing: .22em;
-}
-
-.petrolero-store-header__signature span {
-  color: #caa36e;
-  padding-inline: 6px;
-}
-
-.petrolero-store-header a:focus-visible {
-  outline: 2px solid #caa36e;
-  outline-offset: 5px;
-}
-
-@media (max-width: 600px) {
-  .petrolero-store-header__inner {
-    min-height: 72px;
-    gap: 22px;
-  }
-
-  .petrolero-store-header__brand {
-    width: 108px;
-  }
-
-  .petrolero-store-header__navigation {
-    margin-left: auto;
-    gap: 17px;
-  }
-
-  .petrolero-store-header__navigation a {
-    font-size: 11px;
-    letter-spacing: 0;
-  }
-
-  .petrolero-store-header__signature {
-    display: none;
-  }
+@media(max-width: 600px) {
+  .petrolero-shop-header__inner {grid-template-columns: 1fr auto; gap: 7px 14px; padding: 12px 0}
+  .petrolero-shop-header__logo {height: 48px}
+  .petrolero-shop-header__logo, .petrolero-shop-header__logo img {width: 110px}
+  .petrolero-shop-header__actions {gap: 10px}
+  .petrolero-shop-header__actions button {min-width: 44px; font-size: 10px}
+  .petrolero-shop-header__search {grid-row: 2; grid-column: 1 / -1; max-width: none; height: 42px}
 }
