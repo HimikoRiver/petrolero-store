@@ -218,7 +218,7 @@ export default function SiteHeader({
                   <rect className="petrolero-nav-search-head" x="1.2" y="1.2" width="337.6" height="41.6" pathLength={100} />
                 </svg>
                 <span className="petrolero-nav-search-status" role="status">
-                  {mode === "home" && searchSubmitted ? "Поиск подключим вместе с каталогом." : ""}
+                  {mode === "home" && searchSubmitted ? "Поиск доступен в разделе «Каталог»." : ""}
                 </span>
               </form>
               <button
@@ -308,8 +308,8 @@ export default function SiteHeader({
             </div>
             <p>
               {panel === "account"
-                ? "Авторизацию подключим на этапе личных кабинетов."
-                : "Корзина пуста. Добавление товаров появится вместе с каталогом."}
+                ? "Вход временно недоступен."
+                : "Перейдите в каталог, чтобы выбрать товары."}
             </p>
           </section>
         </div>
