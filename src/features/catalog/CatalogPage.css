@@ -60,9 +60,9 @@
 .petrolero-catalog-subcategory > span:nth-child(2) {flex: 1; font-size: 14px; font-weight: 530}
 .petrolero-catalog-subcategory > svg {flex: 0 0 16px; color: #b99465; opacity: .7}
 .petrolero-catalog-subcategory__image {
-  flex: 0 0 59px;
+  flex: 0 0 74px;
   display: block;
-  width: 59px;
+  width: 74px;
   height: 66px;
   object-fit: contain;
 }
@@ -605,7 +605,7 @@
   .petrolero-catalog-main h1 {margin: 22px 0 25px; font-size: clamp(23px, 6vw, 30px)}
   .petrolero-catalog-subcategories {grid-template-columns: 1fr; gap: 8px}
   .petrolero-catalog-subcategory {min-height: 70px}
-  .petrolero-catalog-subcategory__image {width: 47px; height: 49px; flex-basis: 47px; min-width: 47px}
+  .petrolero-catalog-subcategory__image {width: 56px; height: 49px; flex-basis: 56px; min-width: 56px}
   .petrolero-catalog-filter-buttons {gap: 7px}
   .petrolero-catalog-filter > button {padding: 9px 11px; font-size: 11px; min-height: 38px}
   .petrolero-catalog-toolbar__bottom {align-items: start; flex-wrap: wrap}
