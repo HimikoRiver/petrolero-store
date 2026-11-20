@@ -6,7 +6,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import SiteFooter from "@/features/home/footer/SiteFooter";
 import SiteHeader from "@/features/home/header/SiteHeader";
 import useReducedMotion from "@/features/home/hooks/useReducedMotion";
-import { HeartIcon, CompareIcon, ChevronDownIcon, ArrowRightIcon } from "./CatalogIcons";
+import { HeartIcon, CompareIcon, ChevronDownIcon } from "./CatalogIcons";
+import CatalogOilCategories from "./CatalogOilCategories";
 import ProductGallery from "./ProductGallery";
 import {
   CATALOG_CATEGORIES,
@@ -433,29 +434,10 @@ export default function CatalogPage() {
         <h1>{heading}</h1>
 
         {department === "oils" && (
-          <div className="petrolero-catalog-subcategories" aria-label="Категории моторных масел">
-            {CATALOG_CATEGORIES.map((item) => (
-              <button
-                className="petrolero-catalog-subcategory"
-                data-active={category === item.id}
-                type="button"
-                onClick={() => changeCategory(category === item.id ? "all" : item.id)}
-                aria-pressed={category === item.id}
-                key={item.id}
-              >
-                <Image
-                  className="petrolero-catalog-subcategory__image"
-                  src="/catalog/products/oils/petrolero-drum.avif"
-                  alt=""
-                  width={59}
-                  height={66}
-                  sizes="59px"
-                />
-                <span>{item.title}</span>
-                <ArrowRightIcon />
-              </button>
-            ))}
-          </div>
+          <CatalogOilCategories
+            selectedCategory={category}
+            onCategoryChange={changeCategory}
+          />
         )}
 
         <div className="petrolero-catalog-toolbar" ref={filtersRef} id="petrolero-catalog-products">
