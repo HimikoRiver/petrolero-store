@@ -20,10 +20,10 @@ export default function ProductGallery({
   mode = "card",
 }: ProductGalleryProps) {
   const frames = useMemo<GalleryFrame[]>(() => {
-    if (!image) return [];
-
-    const main: GalleryFrame = { kind: "image", src: image, label: "Основной вид" };
-    return [main, ...(gallery ?? [])];
+    // A supplied gallery is the complete ordered sequence, including its
+    // first view. This keeps four-angle atlases aligned from frame one.
+    if (gallery?.length) return [...gallery];
+    return image ? [{ kind: "image", src: image, label: "Основной вид" }] : [];
   }, [image, gallery]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
@@ -109,7 +109,8 @@ export default function ProductGallery({
               className="petrolero-product-gallery__sprite"
               style={{
                 backgroundImage: "url(\"" + frame.src + "\")",
-                backgroundPosition: (frame.index / (frame.columns - 1)) * 100 + "% 50%",
+                backgroundSize: frame.columns * 100 + "% 100%",
+                backgroundPosition: (frame.index / Math.max(1, frame.columns - 1)) * 100 + "% 50%",
               }}
             />
           </div>
