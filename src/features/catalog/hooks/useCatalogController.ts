@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CATALOG_CATEGORIES, CATALOG_PRODUCTS, type CatalogProduct } from "../data/catalogData";
-import { FILTERS, EMPTY_FILTERS, SORT_OPTIONS } from "../data/catalogConfig";
+import { FILTERS, EMPTY_FILTERS } from "../data/catalogConfig";
 import { filterValues } from "../lib/catalogUtils";
 import type { Department, OilCategory, SortOrder, FilterKey, FilterSelections, CartLine, CatalogFeedback } from "../types";
 
