@@ -26,6 +26,8 @@ jobs:
       # Use npm install to repair the ephemeral runner lockfile before validating.
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+      - name: Generate Next.js route types
+        run: npx next typegen
       - name: TypeScript
         run: npx tsc --noEmit
       - name: Production build
