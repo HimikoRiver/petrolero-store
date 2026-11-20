@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { CompareIcon } from "../CatalogIcons";
+import { CompareIcon } from "./CatalogIcons";
 import { CATALOG_CATEGORIES, type CatalogProduct } from "../data/catalogData";
 import { priceLabel } from "../lib/catalogUtils";
 

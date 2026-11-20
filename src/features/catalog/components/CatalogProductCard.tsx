@@ -1,7 +1,7 @@
 "use client";
 
-import { HeartIcon, CompareIcon } from "../CatalogIcons";
-import ProductGallery from "../ProductGallery";
+import { HeartIcon, CompareIcon } from "./CatalogIcons";
+import ProductGallery from "./ProductGallery";
 import { priceLabel } from "../lib/catalogUtils";
 import type { CatalogProduct } from "../data/catalogData";
 

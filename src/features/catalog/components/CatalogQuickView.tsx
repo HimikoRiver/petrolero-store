@@ -1,6 +1,6 @@
 "use client";
 
-import ProductGallery from "../ProductGallery";
+import ProductGallery from "./ProductGallery";
 import { priceLabel } from "../lib/catalogUtils";
 import type { CatalogProduct } from "../data/catalogData";
 

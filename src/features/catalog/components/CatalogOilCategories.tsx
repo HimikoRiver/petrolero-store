@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { ArrowRightIcon } from "./CatalogIcons";
-import { CATALOG_CATEGORIES, type ProductCategory } from "./data/catalogData";
+import { CATALOG_CATEGORIES, type ProductCategory } from "../data/catalogData";
 
 type OilCategory = "all" | Exclude<ProductCategory, "additives">;
 
