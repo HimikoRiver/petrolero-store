@@ -6,6 +6,11 @@ export type ProductCategory = "passenger" | "motorcycle" | "commercial" | "addit
 export type CatalogSelection = ProductCategory | "all";
 export type ProductPackaging = "drum" | "canister" | "bottle";
 
+/** Extra angles are kept separate from the product's cover image. */
+export type CatalogGalleryFrame =
+  | { kind: "image"; src: string; label: string }
+  | { kind: "sprite"; src: string; label: string; index: number; columns: number };
+
 export interface CatalogProduct {
   id: string;
   slug: string;
@@ -14,6 +19,7 @@ export interface CatalogProduct {
   category: ProductCategory;
   description: string;
   image: string | null;
+  gallery?: readonly CatalogGalleryFrame[];
   packaging: ProductPackaging;
   priceKopecks: number | null;
   stockQuantity: number;
@@ -149,7 +155,13 @@ export const DEMO_PRODUCTS: readonly CatalogProduct[] = [
   createDemoProduct({
     id: "demo-extra-life", slug: "demo-extra-life-2", title: "PETROLERO EXTRA LIFE 2",
     sku: "DEMO-AD-EL2", category: "additives", packaging: "bottle",
-    image: DEMO_ADDITIVE_IMAGES.extraLife, priceKopecks: 149000,
+    image: DEMO_ADDITIVE_IMAGES.extraLife,
+    gallery: [
+      { kind: "sprite", src: "/catalog/products/additives/extra-life-2-angles.avif", label: "Вид сбоку", index: 0, columns: 3 },
+      { kind: "sprite", src: "/catalog/products/additives/extra-life-2-angles.avif", label: "Обратная этикетка", index: 1, columns: 3 },
+      { kind: "sprite", src: "/catalog/products/additives/extra-life-2-angles.avif", label: "Вид с тиснением", index: 2, columns: 3 },
+    ],
+    priceKopecks: 149000,
     volumeLiters: .25, acea: [], api: [], approvals: [], ilsac: [],
   }),
   createDemoProduct({
