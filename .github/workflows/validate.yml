@@ -22,8 +22,10 @@ jobs:
         with:
           node-version: "22"
           cache: npm
+      # The existing package-lock predates optional Next/SWC dependency entries.
+      # Use npm install to repair the ephemeral runner lockfile before validating.
       - name: Install dependencies
-        run: npm ci
+        run: npm install --no-audit --no-fund
       - name: ESLint
         run: npm run lint
       - name: TypeScript
