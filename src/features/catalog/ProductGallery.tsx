@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState, type PointerEvent, type TouchEvent, type KeyboardEvent } from "react";
+import { useMemo, useState, type MouseEvent, type TouchEvent, type KeyboardEvent } from "react";
 import type { CatalogGalleryFrame } from "./catalogData";
 
 type ProductGalleryProps = {
@@ -31,8 +31,8 @@ export default function ProductGallery({
   const index = Math.min(activeIndex, Math.max(frames.length - 1, 0));
   const frame = frames[index];
 
-  const handleMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (!hasAngles || event.pointerType !== "mouse") return;
+  const handleMove = (event: MouseEvent<HTMLDivElement>) => {
+    if (!hasAngles) return;
     if ((event.target as Element).closest("button")) return;
 
     const bounds = event.currentTarget.getBoundingClientRect();
@@ -79,8 +79,7 @@ export default function ProductGallery({
       className="petrolero-product-gallery"
       data-mode={mode}
       data-multiple={hasAngles}
-      onPointerMove={handleMove}
-      onPointerLeave={() => { if (mode === "card") setActiveIndex(0); }}
+      onMouseMove={handleMove}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onKeyDown={handleKeyDown}
