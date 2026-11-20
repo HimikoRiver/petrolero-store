@@ -178,12 +178,7 @@ export const DEMO_PRODUCTS: readonly CatalogProduct[] = [
     id: "demo-extra-life", slug: "demo-extra-life-2", title: "PETROLERO EXTRA LIFE 2",
     sku: "DEMO-AD-EL2", category: "additives", packaging: "bottle",
     image: DEMO_ADDITIVE_IMAGES.extraLife,
-    gallery: [
-      { kind: "image", src: DEMO_ADDITIVE_IMAGES.extraLife, label: "Вид спереди" },
-      { kind: "sprite", src: "/catalog/products/additives/extra-life-2-angles.avif", label: "Вид сбоку", index: 0, columns: 3 },
-      { kind: "sprite", src: "/catalog/products/additives/extra-life-2-angles.avif", label: "Обратная этикетка", index: 1, columns: 3 },
-      { kind: "sprite", src: "/catalog/products/additives/extra-life-2-angles.avif", label: "Вид с тиснением", index: 2, columns: 3 },
-    ],
+    gallery: additiveAngleGallery("extra-life-2"),
     priceKopecks: 149000,
     volumeLiters: .25, acea: [], api: [], approvals: [], ilsac: [],
   }),

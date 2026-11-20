@@ -80,6 +80,7 @@ export default function ProductGallery({
       data-mode={mode}
       data-multiple={hasAngles}
       onMouseMove={handleMove}
+      onMouseLeave={() => setActiveIndex(0)}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onKeyDown={handleKeyDown}
