@@ -56,7 +56,7 @@ const DEMO_OIL_IMAGE = "/catalog/products/oils/petrolero-drum.avif";
 
 const DEMO_ADDITIVE_IMAGES = {
   caremaker: "/catalog/products/additives/caremaker-5.avif",
-  extraLife: "/catalog/products/additives/extra-life-2.avif",
+  extraLife: "/catalog/products/additives/extra-life-2-front.webp",
   fullThrottle: "/catalog/products/additives/full-throttle-6.avif",
   performance: "/catalog/products/additives/performance-1.avif",
   turboBoost: "/catalog/products/additives/turbo-boost.avif",
