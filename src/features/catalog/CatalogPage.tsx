@@ -10,7 +10,7 @@ import type { SortOrder } from "./types";
 import CatalogOilCategories from "./components/CatalogOilCategories";
 import CatalogProductCard from "./components/CatalogProductCard";
 import CatalogQuickView from "./components/CatalogQuickView";
-import CatalogCartDrawer from "./components/CatalogCartDrawer";
+import CatalogCartDrawer from "@/features/cart/components/CatalogCartDrawer";
 import CatalogCompareDialog from "./components/CatalogCompareDialog";
 import CatalogAccountDialog from "./components/CatalogAccountDialog";
 import useCatalogController from "./hooks/useCatalogController";

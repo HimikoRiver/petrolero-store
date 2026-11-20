@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import useDemoCart from "@/features/cart/hooks/useDemoCart";
+import useCatalogCollections from "./useCatalogCollections";
 import { CATALOG_CATEGORIES, CATALOG_PRODUCTS, type CatalogProduct } from "../data/catalogData";
 import { FILTERS, EMPTY_FILTERS } from "../data/catalogConfig";
 import { filterValues } from "../lib/catalogUtils";
-import type { Department, OilCategory, SortOrder, FilterKey, FilterSelections, CartLine, CatalogFeedback } from "../types";
+import type { Department, OilCategory, SortOrder, FilterKey, FilterSelections, CatalogFeedback } from "../types";
 
 export default function useCatalogController() {
   const [department, setDepartment] = useState<Department>("oils");
@@ -19,78 +21,12 @@ export default function useCatalogController() {
   const [preview, setPreview] = useState<CatalogProduct | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
-  const [cartLines, setCartLines] = useState<CartLine[]>([]);
-  const [cartHydrated, setCartHydrated] = useState(false);
-  const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
-  const [compareIds, setCompareIds] = useState<string[]>([]);
-  const [collectionsReady, setCollectionsReady] = useState(false);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [compareOpen, setCompareOpen] = useState(false);
   const [feedback, setFeedback] = useState<CatalogFeedback | null>(null);
   const filtersRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem("petrolero-demo-cart") || "[]") as unknown;
-      if (Array.isArray(saved)) {
-        const valid = saved.filter((item): item is CartLine =>
-          Boolean(item) &&
-          typeof item === "object" &&
-          "id" in item &&
-          "quantity" in item &&
-          typeof item.id === "string" &&
-          typeof item.quantity === "number" &&
-          Number.isInteger(item.quantity) &&
-          item.quantity > 0 &&
-          CATALOG_PRODUCTS.some((product) => product.id === item.id),
-        );
-        setCartLines(valid);
-      }
-    } catch {
-      // Invalid or unavailable localStorage; use an empty demo cart.
-    }
-    setCartHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (!cartHydrated) return;
-    try {
-      localStorage.setItem("petrolero-demo-cart", JSON.stringify(cartLines));
-    } catch {
-      // This demo remains usable when storage is restricted.
-    }
-  }, [cartLines, cartHydrated]);
-
-  // Favorites and comparison selections are a local demo until accounts are available.
-  useEffect(() => {
-    try {
-      for (const [key, update] of [
-        ["petrolero-demo-favorites", setFavoriteIds],
-        ["petrolero-demo-comparison", setCompareIds],
-      ] as const) {
-        const saved: unknown = JSON.parse(localStorage.getItem(key) || "[]");
-        if (Array.isArray(saved)) {
-          const uniqueIds = [...new Set(saved.filter(
-            (id): id is string => typeof id === "string" && CATALOG_PRODUCTS.some((item) => item.id === id),
-          ))];
-          update(key === "petrolero-demo-comparison" ? uniqueIds.slice(0, 3) : uniqueIds);
-        }
-      }
-    } catch {
-      // Storage may be disabled or contain invalid data.
-    }
-    setCollectionsReady(true);
-  }, []);
-
-  useEffect(() => {
-    if (!collectionsReady) return;
-    try {
-      localStorage.setItem("petrolero-demo-favorites", JSON.stringify(favoriteIds));
-      localStorage.setItem("petrolero-demo-comparison", JSON.stringify(compareIds));
-    } catch {
-      // Keep the demo interactive even with restricted storage.
-    }
-  }, [collectionsReady, favoriteIds, compareIds]);
+  const { cartLines, cartCount, cartTotal, updateQuantity } = useDemoCart(CATALOG_PRODUCTS);
+  const { favoriteIds, setFavoriteIds, compareIds, setCompareIds } = useCatalogCollections(CATALOG_PRODUCTS);
 
   useEffect(() => {
     if (!openFilter) return;
@@ -184,13 +120,7 @@ export default function useCatalogController() {
 
   const filterCount = Object.values(selectedFilters).reduce((total, selected) => total + selected.length, 0)
     + Number(Boolean(minPrice || maxPrice));
-  const cartCount = cartLines.reduce((sum, line) => sum + line.quantity, 0);
   const comparedProducts = useMemo(() => compareIds.map((id) => CATALOG_PRODUCTS.find((item) => item.id === id)).filter((item): item is CatalogProduct => Boolean(item)), [compareIds]);
-  const cartTotal = cartLines.reduce((sum, line) => {
-    const product = CATALOG_PRODUCTS.find((item) => item.id === line.id);
-    return sum + (product?.priceKopecks || 0) * line.quantity;
-  }, 0);
-
   const resetFilters = () => {
     setSelectedFilters(EMPTY_FILTERS);
     setMinPrice("");
@@ -216,16 +146,6 @@ export default function useCatalogController() {
         ? current[key].filter((selected) => selected !== value)
         : [...current[key], value],
     }));
-  };
-
-  const updateQuantity = (id: string, delta: number) => {
-    setCartLines((current) => {
-      const existing = current.find((line) => line.id === id);
-      if (!existing) return delta > 0 ? [...current, { id, quantity: delta }] : current;
-      return current
-        .map((line) => line.id === id ? { ...line, quantity: Math.max(0, line.quantity + delta) } : line)
-        .filter((line) => line.quantity > 0);
-    });
   };
 
   const addToCart = (product: CatalogProduct) => {

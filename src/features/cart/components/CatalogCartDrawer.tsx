@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { CATALOG_PRODUCTS } from "../data/catalogData";
-import { priceLabel } from "../lib/catalogUtils";
+import { CATALOG_PRODUCTS } from "@/features/catalog/data/catalogData";
+import { priceLabel } from "@/features/catalog/lib/catalogUtils";
 import type { CartLine } from "../types";
 
 type Props = {
