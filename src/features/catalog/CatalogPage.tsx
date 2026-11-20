@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import SiteFooter from "@/features/home/footer/SiteFooter";
-import SiteHeader from "@/features/home/header/SiteHeader";
-import useReducedMotion from "@/features/home/hooks/useReducedMotion";
+import SiteFooter from "@/components/layout/footer/SiteFooter";
+import SiteHeader from "@/components/layout/header/SiteHeader";
+import useReducedMotion from "@/hooks/useReducedMotion";
 import { HeartIcon, CompareIcon, ChevronDownIcon } from "./CatalogIcons";
 import { FILTERS, SORT_OPTIONS } from "./data/catalogConfig";
 import CatalogOilCategories from "./CatalogOilCategories";

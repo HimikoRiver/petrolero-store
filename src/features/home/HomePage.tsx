@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import SiteHeader from "./header/SiteHeader";
+import SiteHeader from "@/components/layout/header/SiteHeader";
 import HeroSection from "./hero/HeroSection";
 import BrandStory from "./story/BrandStory";
 import SteelSection from "./steel/SteelSection";
@@ -10,9 +10,9 @@ import MolecularSection from "../molecules/MolecularSection";
 import TechnologySection from "./technology/TechnologySection";
 import ContactsSection from "./contacts/ContactsSection";
 import OilDropletDivider from "./transition/OilDropletDivider";
-import SiteFooter from "./footer/SiteFooter";
+import SiteFooter from "@/components/layout/footer/SiteFooter";
 import PageScrollControls from "./navigation/PageScrollControls";
-import useReducedMotion from "./hooks/useReducedMotion";
+import useReducedMotion from "@/hooks/useReducedMotion";
 
 export default function HomePage() {
   const steelRef = useRef<HTMLDivElement>(null);

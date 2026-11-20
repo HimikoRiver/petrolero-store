@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import Link from "next/link";
 import BrandLogo from "./BrandLogo";
-import MenuShowcase from "../../menu/MenuShowcase";
+import MenuShowcase from "@/features/menu/MenuShowcase";
 import { SearchIcon, AccountIcon, CartIcon } from "./HeaderIcons";
 import "./SiteHeader.css";
 
