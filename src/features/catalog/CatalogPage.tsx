@@ -7,6 +7,7 @@ import SiteFooter from "@/features/home/footer/SiteFooter";
 import SiteHeader from "@/features/home/header/SiteHeader";
 import useReducedMotion from "@/features/home/hooks/useReducedMotion";
 import { HeartIcon, CompareIcon, ChevronDownIcon, ArrowRightIcon } from "./CatalogIcons";
+import ProductGallery from "./ProductGallery";
 import {
   CATALOG_CATEGORIES,
   CATALOG_PRODUCTS,
@@ -77,21 +78,11 @@ function ProductCard({
     <article className="petrolero-catalog-item">
       <div className="petrolero-catalog-item__media">
         <span className="petrolero-catalog-item__demo">ДЕМО</span>
-        <div className="petrolero-catalog-item__picture">
-          {product.image ? (
-            <Image
-              src={product.image}
-              alt={product.title}
-              fill
-              sizes="(max-width: 570px) 88vw, (max-width: 1050px) 44vw, (max-width: 1280px) 28vw, 22vw"
-              style={{ objectFit: "contain", objectPosition: "center" }}
-            />
-          ) : (
-            <span className="petrolero-catalog-no-image" role="img" aria-label="Фото пока отсутствует">
-              Фото готовится
-            </span>
-          )}
-        </div>
+        <ProductGallery
+          image={product.image}
+          gallery={product.gallery}
+          title={product.title}
+        />
         <button
           className="petrolero-catalog-item__quick"
           type="button"
@@ -620,9 +611,13 @@ export default function CatalogPage() {
           <section className="petrolero-catalog-quickview" role="dialog" aria-modal="true" aria-label={"Быстрый просмотр " + preview.title}>
             <button type="button" className="petrolero-catalog-close" aria-label="Закрыть" onClick={() => setPreview(null)}>×</button>
             <div className="petrolero-catalog-quickview__media">
-              {preview.image
-                ? <Image src={preview.image} alt={preview.title} width={420} height={460}/>
-                : <span className="petrolero-catalog-no-image" role="img" aria-label="Фото пока отсутствует">Фото готовится</span>}
+              <ProductGallery
+                key={preview.id}
+                image={preview.image}
+                gallery={preview.gallery}
+                title={preview.title}
+                mode="preview"
+              />
             </div>
             <div className="petrolero-catalog-quickview__content">
               <p className="petrolero-catalog-item__sku">АРТ. {preview.sku}</p>
