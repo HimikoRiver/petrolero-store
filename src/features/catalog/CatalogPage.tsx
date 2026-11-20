@@ -13,7 +13,11 @@ import CatalogCartDrawer from "./components/CatalogCartDrawer";
 import CatalogCompareDialog from "./components/CatalogCompareDialog";
 import CatalogAccountDialog from "./components/CatalogAccountDialog";
 import useCatalogController from "./hooks/useCatalogController";
-import "./CatalogPage.css";
+import "./styles/base.css";
+import "./styles/dialogs.css";
+import "./styles/polish.css";
+import "./styles/responsive.css";
+import "./styles/gallery.css";
 
 export default function CatalogPage() {
   const reducedMotion = useReducedMotion();
