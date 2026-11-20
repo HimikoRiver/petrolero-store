@@ -62,6 +62,25 @@ const DEMO_ADDITIVE_IMAGES = {
   turboBoost: "/catalog/products/additives/turbo-boost.avif",
 } as const;
 
+const ADDITIVE_ANGLE_LABELS = [
+  "Вид спереди",
+  "Вид сбоку",
+  "Задняя этикетка",
+  "Сторона с тиснением",
+] as const;
+
+/**
+ * All frames share one transparent 4-column atlas. Their identical canvas
+ * coordinates prevent bottle movement while scrubbing across the product.
+ */
+const additiveAngleGallery = (slug: string): readonly CatalogGalleryFrame[] => {
+  const src = `/catalog/products/additives/${slug}-angles.webp`;
+  return ADDITIVE_ANGLE_LABELS.map((label, index) => ({
+    kind: "sprite" as const,
+    src, label, index, columns: 4,
+  }));
+};
+
 const createDemoProduct = (product: DemoInput): CatalogProduct => ({
   ...product,
   description: product.description ?? (product.category === "additives" ? "Присадка Petrolero. Характеристики представлены ниже." : "Моторное масло Petrolero. Характеристики представлены ниже."),
@@ -137,19 +156,22 @@ export const DEMO_PRODUCTS: readonly CatalogProduct[] = [
   createDemoProduct({
     id: "demo-caremaker", slug: "demo-caremaker-5", title: "PETROLERO CAREMAKER 5",
     sku: "DEMO-AD-CM5", category: "additives", packaging: "bottle",
-    image: DEMO_ADDITIVE_IMAGES.caremaker, priceKopecks: 139000,
+    image: DEMO_ADDITIVE_IMAGES.caremaker,
+    gallery: additiveAngleGallery("caremaker-5"), priceKopecks: 139000,
     volumeLiters: .25, acea: [], api: [], approvals: [], ilsac: [],
   }),
   createDemoProduct({
     id: "demo-full-throttle", slug: "demo-full-throttle-6", title: "PETROLERO FULL THROTTLE 6",
     sku: "DEMO-AD-FT6", category: "additives", packaging: "bottle",
-    image: DEMO_ADDITIVE_IMAGES.fullThrottle, priceKopecks: 159000,
+    image: DEMO_ADDITIVE_IMAGES.fullThrottle,
+    gallery: additiveAngleGallery("full-throttle-6"), priceKopecks: 159000,
     volumeLiters: .25, acea: [], api: [], approvals: [], ilsac: [],
   }),
   createDemoProduct({
     id: "demo-performance", slug: "demo-performance-1", title: "PETROLERO PERFORMANCE 1",
     sku: "DEMO-AD-P1", category: "additives", packaging: "bottle",
-    image: DEMO_ADDITIVE_IMAGES.performance, priceKopecks: 139000,
+    image: DEMO_ADDITIVE_IMAGES.performance,
+    gallery: additiveAngleGallery("performance-1"), priceKopecks: 139000,
     volumeLiters: .25, acea: [], api: [], approvals: [], ilsac: [],
   }),
   createDemoProduct({
@@ -157,6 +179,7 @@ export const DEMO_PRODUCTS: readonly CatalogProduct[] = [
     sku: "DEMO-AD-EL2", category: "additives", packaging: "bottle",
     image: DEMO_ADDITIVE_IMAGES.extraLife,
     gallery: [
+      { kind: "image", src: DEMO_ADDITIVE_IMAGES.extraLife, label: "Вид спереди" },
       { kind: "sprite", src: "/catalog/products/additives/extra-life-2-angles.avif", label: "Вид сбоку", index: 0, columns: 3 },
       { kind: "sprite", src: "/catalog/products/additives/extra-life-2-angles.avif", label: "Обратная этикетка", index: 1, columns: 3 },
       { kind: "sprite", src: "/catalog/products/additives/extra-life-2-angles.avif", label: "Вид с тиснением", index: 2, columns: 3 },
@@ -167,7 +190,8 @@ export const DEMO_PRODUCTS: readonly CatalogProduct[] = [
   createDemoProduct({
     id: "demo-turbo", slug: "demo-turbo-boost", title: "PETROLERO TURBO BOOST",
     sku: "DEMO-AD-TB3", category: "additives", packaging: "bottle",
-    image: DEMO_ADDITIVE_IMAGES.turboBoost, priceKopecks: 159000,
+    image: DEMO_ADDITIVE_IMAGES.turboBoost,
+    gallery: additiveAngleGallery("turbo-boost"), priceKopecks: 159000,
     volumeLiters: .25, acea: [], api: [], approvals: [], ilsac: [],
   }),
 ];
