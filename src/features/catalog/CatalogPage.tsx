@@ -6,6 +6,7 @@ import SiteHeader from "@/components/layout/header/SiteHeader";
 import useReducedMotion from "@/hooks/useReducedMotion";
 import { HeartIcon, CompareIcon, ChevronDownIcon } from "./components/CatalogIcons";
 import { FILTERS, SORT_OPTIONS } from "./data/catalogConfig";
+import type { SortOrder } from "./types";
 import CatalogOilCategories from "./components/CatalogOilCategories";
 import CatalogProductCard from "./components/CatalogProductCard";
 import CatalogQuickView from "./components/CatalogQuickView";
