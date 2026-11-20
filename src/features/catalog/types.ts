@@ -1,4 +1,4 @@
-import type { ProductCategory } from "./catalogData";
+import type { ProductCategory } from "./data/catalogData";
 
 export type Department = "oils" | "additives";
 export type OilCategory = "all" | Exclude<ProductCategory, "additives">;

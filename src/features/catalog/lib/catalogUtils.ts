@@ -1,4 +1,4 @@
-import type { CatalogProduct } from "../catalogData";
+import type { CatalogProduct } from "../data/catalogData";
 import type { FilterKey } from "../types";
 
 const currency = new Intl.NumberFormat("ru-RU", {

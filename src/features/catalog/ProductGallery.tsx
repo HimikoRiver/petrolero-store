@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useMemo, useState, type MouseEvent, type TouchEvent, type KeyboardEvent } from "react";
-import type { CatalogGalleryFrame } from "./catalogData";
+import type { CatalogGalleryFrame } from "./data/catalogData";
 
 type ProductGalleryProps = {
   image: string | null;

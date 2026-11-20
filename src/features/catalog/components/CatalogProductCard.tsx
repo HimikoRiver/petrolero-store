@@ -3,7 +3,7 @@
 import { HeartIcon, CompareIcon } from "../CatalogIcons";
 import ProductGallery from "../ProductGallery";
 import { priceLabel } from "../lib/catalogUtils";
-import type { CatalogProduct } from "../catalogData";
+import type { CatalogProduct } from "../data/catalogData";
 
 export default function CatalogProductCard({
   product,

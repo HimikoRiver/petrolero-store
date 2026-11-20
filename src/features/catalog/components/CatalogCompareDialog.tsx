@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { CompareIcon } from "../CatalogIcons";
-import { CATALOG_CATEGORIES, type CatalogProduct } from "../catalogData";
+import { CATALOG_CATEGORIES, type CatalogProduct } from "../data/catalogData";
 import { priceLabel } from "../lib/catalogUtils";
 
 type Props = {
