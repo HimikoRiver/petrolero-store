@@ -4,8 +4,9 @@ on:
   push:
     branches:
       - main
-      - feature/storefront-catalog
   pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -22,16 +23,8 @@ jobs:
         with:
           node-version: "22"
           cache: npm
-      # The existing package-lock predates optional Next/SWC dependency entries.
-      # Use npm install to repair the ephemeral runner lockfile before validating.
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
-      # Temporary export used to synchronize the committed lockfile.
-      - name: Export regenerated package-lock
-        run: |
-          echo "PETROLERO_LOCK_BEGIN"
-          base64 -w 512 package-lock.json
-          echo "PETROLERO_LOCK_END"
+        run: npm ci --no-audit --no-fund
       - name: Generate Next.js route types
         run: npx next typegen
       - name: TypeScript
