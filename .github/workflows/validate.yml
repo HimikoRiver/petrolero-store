@@ -26,6 +26,12 @@ jobs:
       # Use npm install to repair the ephemeral runner lockfile before validating.
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+      # Temporary export used to synchronize the committed lockfile.
+      - name: Export regenerated package-lock
+        run: |
+          echo "PETROLERO_LOCK_BEGIN"
+          base64 -w 512 package-lock.json
+          echo "PETROLERO_LOCK_END"
       - name: Generate Next.js route types
         run: npx next typegen
       - name: TypeScript
