@@ -181,7 +181,7 @@ function AccountScreen({
           <div className="pa-surface__heading">
             <div><span className="pa-kicker">ВАШ ВЫБОР</span><h3>Сохранённые товары</h3></div>
           </div>
-          <AccountFavorites />
+          <AccountFavorites preview={preview} />
         </section>
       );
     case "addresses":

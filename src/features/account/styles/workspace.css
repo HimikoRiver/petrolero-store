@@ -409,3 +409,20 @@
   .pa-workspace .pa-navlink__number,
   .pa-workspace .pa-welcome__mark {animation:none;}
 }
+
+
+/* Per-account favorites status, without changing the existing product layout. */
+.pa-workspace .pa-favorites-sync-note {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+  padding-top: 22px; color: #a99b86; font-size: 12px; line-height: 1.6;
+}
+.pa-workspace .pa-favorites-sync-note svg { flex: none; color: #d4aa74; }
+.pa-workspace .pa-favorites-error {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 12px;
+  margin-top: 14px; color: #efbaa8; font-size: 12px;
+}
+.pa-workspace .pa-favorites-error button {
+  border: 0; background: none; color: #e7c28f; cursor: pointer;
+  border-bottom: 1px solid currentColor; padding: 4px 0;
+}
+.pa-workspace .pa-favorite button:disabled { opacity: .55; cursor: wait; }
