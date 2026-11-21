@@ -12,6 +12,7 @@ import CatalogQuickView from "./components/CatalogQuickView";
 import CatalogCartDrawer from "@/features/cart/components/CatalogCartDrawer";
 import CatalogCompareDialog from "./components/CatalogCompareDialog";
 import useCatalogController from "./hooks/useCatalogController";
+import type { CatalogProduct } from "./data/catalogData";
 import "./styles/base.css";
 import "./styles/dialogs.css";
 import "./styles/polish.css";
@@ -19,8 +20,8 @@ import "./styles/responsive.css";
 import "./styles/gallery.css";
 import "./styles/additives.css";
 
-export default function CatalogPage() {
-  const controller = useCatalogController();
+export default function CatalogPage({ catalogProducts }: { catalogProducts: readonly CatalogProduct[] }) {
+  const controller = useCatalogController(catalogProducts);
   const { department, category, search, setSearch, sortOrder, setSortOrder, selectedFilters, minPrice, setMinPrice, maxPrice, setMaxPrice, openFilter, setOpenFilter, view, setView, preview, setPreview, cartOpen, setCartOpen, cartLines, favoriteIds, favoritesReady, favoritesSaving, favoritesError, retryFavorites, compareIds, setCompareIds, favoritesOnly, setFavoritesOnly, compareOpen, setCompareOpen, feedback, setFeedback, filtersRef, filterOptions, products, filterCount, cartCount, comparedProducts, cartTotal, resetFilters, changeDepartment, changeCategory, toggleValue, updateQuantity, addToCart, toggleFavorite, toggleCompare, heading, closeLayers } = controller;
 
   // Supply catalog state and actions to the single header in RootLayout.
@@ -110,7 +111,7 @@ export default function CatalogPage() {
         ) : (
           <div id="petrolero-catalog-products" className="petrolero-catalog-no-results" role="status">
             <h2>Товары не найдены</h2>
-            <p>Измени параметры фильтрации или поисковый запрос.</p>
+            <p>{catalogProducts.length ? "Измените фильтры или поисковый запрос." : "В каталоге пока нет опубликованных товаров."}</p>
             <button type="button" onClick={() => { resetFilters(); setSearch(""); }}>Сбросить фильтры</button>
           </div>
         )}
@@ -128,7 +129,7 @@ export default function CatalogPage() {
 
       {preview && <CatalogQuickView product={preview} onClose={() => setPreview(null)} onAdd={addToCart} />}
 
-      {cartOpen && <CatalogCartDrawer cartLines={cartLines} cartCount={cartCount} cartTotal={cartTotal} onClose={() => setCartOpen(false)} updateQuantity={updateQuantity} />}
+      {cartOpen && <CatalogCartDrawer products={catalogProducts} cartLines={cartLines} cartCount={cartCount} cartTotal={cartTotal} onClose={() => setCartOpen(false)} updateQuantity={updateQuantity} />}
 
       {compareOpen && <CatalogCompareDialog comparedProducts={comparedProducts} onClose={() => setCompareOpen(false)} onClear={() => setCompareIds([])} toggleCompare={toggleCompare} />}
 

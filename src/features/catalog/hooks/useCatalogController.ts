@@ -3,12 +3,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import useDemoCart from "@/features/cart/hooks/useDemoCart";
 import useCatalogCollections from "./useCatalogCollections";
-import { CATALOG_CATEGORIES, CATALOG_PRODUCTS, type CatalogProduct } from "../data/catalogData";
+import { CATALOG_CATEGORIES, type CatalogProduct } from "../data/catalogData";
 import { FILTERS, EMPTY_FILTERS } from "../data/catalogConfig";
 import { filterValues } from "../lib/catalogUtils";
 import type { Department, OilCategory, SortOrder, FilterKey, FilterSelections, CatalogFeedback } from "../types";
 
-export default function useCatalogController() {
+export default function useCatalogController(catalogProducts: readonly CatalogProduct[]) {
   const [department, setDepartment] = useState<Department>("oils");
   const [category, setCategory] = useState<OilCategory>("all");
   const [search, setSearch] = useState("");
@@ -24,8 +24,8 @@ export default function useCatalogController() {
   const [compareOpen, setCompareOpen] = useState(false);
   const [feedback, setFeedback] = useState<CatalogFeedback | null>(null);
   const filtersRef = useRef<HTMLDivElement>(null);
-  const { cartLines, cartCount, cartTotal, updateQuantity } = useDemoCart(CATALOG_PRODUCTS);
-  const { favoriteIds, favoritesReady, favoritesSaving, favoritesError, toggleFavoriteId, retryFavorites, compareIds, setCompareIds } = useCatalogCollections(CATALOG_PRODUCTS);
+  const { cartLines, cartCount, cartTotal, updateQuantity } = useDemoCart(catalogProducts);
+  const { favoriteIds, favoritesReady, favoritesSaving, favoritesError, toggleFavoriteId, retryFavorites, compareIds, setCompareIds } = useCatalogCollections(catalogProducts);
 
   useEffect(() => {
     if (!openFilter) return;
@@ -64,13 +64,13 @@ export default function useCatalogController() {
   }, [preview, cartOpen, compareOpen]);
 
   const scopedProducts = useMemo(
-    () => CATALOG_PRODUCTS.filter((product) =>
+    () => catalogProducts.filter((product) =>
       product.published &&
       (department === "additives"
         ? product.category === "additives"
         : product.category !== "additives" && (category === "all" || product.category === category)),
     ),
-    [department, category],
+    [catalogProducts, department, category],
   );
 
   const filterOptions = useMemo(() => {
@@ -118,7 +118,7 @@ export default function useCatalogController() {
 
   const filterCount = Object.values(selectedFilters).reduce((total, selected) => total + selected.length, 0)
     + Number(Boolean(minPrice || maxPrice));
-  const comparedProducts = useMemo(() => compareIds.map((id) => CATALOG_PRODUCTS.find((item) => item.id === id)).filter((item): item is CatalogProduct => Boolean(item)), [compareIds]);
+  const comparedProducts = useMemo(() => compareIds.map((id) => catalogProducts.find((item) => item.id === id)).filter((item): item is CatalogProduct => Boolean(item)), [catalogProducts, compareIds]);
   const resetFilters = () => {
     setSelectedFilters(EMPTY_FILTERS);
     setMinPrice("");
