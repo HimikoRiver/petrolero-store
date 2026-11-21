@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Marck_Script } from "next/font/google";
 import "./globals.css";
 import GlobalScrollControls from "@/components/layout/GlobalScrollControls";
+import GlobalSiteHeader from "@/components/layout/header/GlobalSiteHeader";
+import { HeaderStateProvider } from "@/components/layout/header/HeaderStateProvider";
 import { Suspense } from "react";
 
 const geistSans = Geist({
@@ -32,7 +34,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="ru"
       className={`${geistSans.variable} ${geistMono.variable} ${marckScript.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}<Suspense fallback={null}><GlobalScrollControls /></Suspense></body>
+      <body className="min-h-full flex flex-col">
+        <HeaderStateProvider>
+          <Suspense fallback={null}><GlobalSiteHeader /></Suspense>
+          {children}
+          <Suspense fallback={null}><GlobalScrollControls /></Suspense>
+        </HeaderStateProvider>
+      </body>
     </html>
   );
 }

@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import SiteFooter from "@/components/layout/footer/SiteFooter";
-import SiteHeader from "@/components/layout/header/SiteHeader";
-import useReducedMotion from "@/hooks/useReducedMotion";
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
+import { useHeaderState } from "@/components/layout/header/HeaderStateProvider";
 import CatalogOilCategories from "./components/CatalogOilCategories";
 import CatalogAdditivesFeature from "./components/CatalogAdditivesFeature";
 import CatalogToolbar from "./components/CatalogToolbar";
@@ -21,9 +20,32 @@ import "./styles/gallery.css";
 import "./styles/additives.css";
 
 export default function CatalogPage() {
-  const reducedMotion = useReducedMotion();
   const controller = useCatalogController();
   const { department, category, search, setSearch, sortOrder, setSortOrder, selectedFilters, minPrice, setMinPrice, maxPrice, setMaxPrice, openFilter, setOpenFilter, view, setView, preview, setPreview, cartOpen, setCartOpen, cartLines, favoriteIds, compareIds, setCompareIds, favoritesOnly, setFavoritesOnly, compareOpen, setCompareOpen, feedback, setFeedback, filtersRef, filterOptions, products, filterCount, cartCount, comparedProducts, cartTotal, resetFilters, changeDepartment, changeCategory, toggleValue, updateQuantity, addToCart, toggleFavorite, toggleCompare, heading, closeLayers } = controller;
+
+  // Supply catalog state and actions to the single header in RootLayout.
+  const { setCatalogSearch, setCartCount, registerCatalogActions } = useHeaderState();
+  const closeLayersRef = useRef(closeLayers);
+  closeLayersRef.current = closeLayers;
+
+  const openCartFromHeader = useCallback(() => {
+    closeLayersRef.current();
+    setCartOpen(true);
+  }, [setCartOpen]);
+
+  useEffect(() => {
+    registerCatalogActions({ setSearch, openCart: openCartFromHeader });
+    return () => registerCatalogActions(null);
+  }, [registerCatalogActions, setSearch, openCartFromHeader]);
+
+  useEffect(() => {
+    setCatalogSearch(search);
+  }, [search, setCatalogSearch]);
+
+  useEffect(() => {
+    setCartCount(cartCount);
+  }, [cartCount, setCartCount]);
+
 
   useEffect(() => {
     const query = new URLSearchParams(window.location.search).get("search");
@@ -32,16 +54,6 @@ export default function CatalogPage() {
 
   return (
     <div className="petrolero-catalog-page">
-      <SiteHeader
-        phase={3}
-        reducedMotion={reducedMotion}
-        mode="catalog"
-        searchValue={search}
-        onSearchChange={setSearch}
-        cartCount={cartCount}
-        onCartOpen={() => { closeLayers(); setCartOpen(true); }}
-      />
-
       <main className="petrolero-catalog-main" data-department={department}>
         <nav className="petrolero-catalog-breadcrumbs" aria-label="Навигационная цепочка">
           <Link href="/">Главная</Link><span aria-hidden="true">/</span>

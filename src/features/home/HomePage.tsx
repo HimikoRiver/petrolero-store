@@ -1,8 +1,8 @@
 
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import SiteHeader from "@/components/layout/header/SiteHeader";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useHeaderState } from "@/components/layout/header/HeaderStateProvider";
 import HeroSection from "./hero/HeroSection";
 import BrandStory from "./story/BrandStory";
 import SteelSection from "./steel/SteelSection";
@@ -17,6 +17,11 @@ export default function HomePage() {
   const steelRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
   const [phase, setPhase] = useState<0 | 1 | 2 | 3>(0);
+  const { setHomePhase } = useHeaderState();
+
+  useLayoutEffect(() => {
+    setHomePhase(phase);
+  }, [phase, setHomePhase]);
 
   useEffect(() => {
     if (
@@ -47,11 +52,6 @@ export default function HomePage() {
   return (
     <>
       <main className="petrolero-home">
-      <SiteHeader
-        phase={phase}
-        reducedMotion={reducedMotion}
-      />
-
       <HeroSection
         phase={phase}
         reducedMotion={reducedMotion}
