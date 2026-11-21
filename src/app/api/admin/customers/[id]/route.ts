@@ -7,7 +7,7 @@ type Context = { params: Promise<{ id: string }> };
 const select = {
   id: true, name: true, email: true, phone: true,
   emailVerified: true, createdAt: true, adminNote: true,
-  addresses: { orderBy: [{ isDefault: "desc" as const }, { createdAt: "asc" as const }],
+  addresses: { orderBy: { isDefault: "desc" as const },
     select: {
       id: true, label: true, recipient: true, phone: true,
       city: true, street: true, apartment: true, postalCode: true, isDefault: true,
