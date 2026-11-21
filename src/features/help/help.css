@@ -108,3 +108,102 @@
 @media(prefers-reduced-motion:reduce){
   .ph-aside__link,.ph-faq-item__plus{transition:none;}
 }
+
+
+/* Shared Petrolero catalog surfaces, controls and header spacing. */
+.ph-page {
+  background: radial-gradient(ellipse at 46% 8%,rgba(131,82,30,.1),transparent 40%),#090909;
+  --ph-line:rgba(182,140,89,.22);
+  --ph-gold:#d2ad7c;
+}
+.ph-page .ph-intro {
+  border-color:var(--ph-line);
+  background:radial-gradient(ellipse at 46% 8%,rgba(131,82,30,.1),transparent 40%),#090909;
+}
+.ph-page .ph-intro__inner {padding-top:124px;}
+.ph-page .ph-intro h1 {
+  font-size:clamp(28px,3vw,44px);
+  letter-spacing:-.047em;
+  font-weight:620;
+  color:#f1e9dd;
+}
+.ph-page .ph-aside__link {
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  padding:12px;
+  border:1px solid transparent;
+  border-bottom-color:var(--ph-line);
+  background:linear-gradient(150deg,#171411,#100f0e 70%);
+}
+.ph-page .ph-aside__link--active,
+.ph-page .ph-aside__link:hover {border-color:rgba(228,179,107,.5);}
+.ph-page .ph-aside__link::before,
+.ph-page .ph-steps > div::before,
+.ph-page .ph-faq-item summary::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:linear-gradient(to top,rgba(202,143,73,.22),rgba(202,143,73,.07) 65%,transparent);
+  opacity:0;
+  transform:translateY(28%);
+  transition:opacity 420ms ease,transform 470ms cubic-bezier(.22,.73,.24,1);
+}
+.ph-page .ph-aside__link:hover::before,
+.ph-page .ph-steps > div:hover::before,
+.ph-page .ph-faq-item summary:hover::before {opacity:1;transform:translateY(0);}
+.ph-page .ph-aside__link > *,
+.ph-page .ph-steps > div > *,
+.ph-page .ph-faq-item summary > * {position:relative;z-index:1;}
+.ph-page .ph-steps > div {
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  border-color:rgba(182,140,89,.22);
+  background:linear-gradient(150deg,#171411,#100f0e 70%);
+  transition:border-color .25s;
+}
+.ph-page .ph-steps > div:hover {border-color:rgba(228,179,107,.54);}
+.ph-page .ph-faq-item summary {position:relative;isolation:isolate;overflow:hidden;}
+.ph-page .ph-faq-item[open] {border-color:rgba(200,163,110,.45);}
+.ph-page .ph-faq-item[open] summary {color:#e9d5b6;}
+.ph-page .ph-highlight {background:linear-gradient(150deg,#171411,#100f0e 70%);border-color:#b39367;}
+.ph-page .ph-section-number {font-weight:560;letter-spacing:.15em;}
+.ph-page .ph-intro__watermark {
+  color:#bd9055;
+  background:linear-gradient(105deg,#47331b 0%,#ceae75 22%,#f5daa7 38%,#8c5d2b 61%,#ebc58b 83%,#4d361c 100%);
+  background-size:225% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  opacity:.33;
+  animation:ph-metal-shimmer 8s linear infinite;
+}
+@keyframes ph-metal-shimmer {
+  from{background-position:180% 50%;}
+  to{background-position:-45% 50%;}
+}
+.ph-page .ph-action-link.petrolero-store-button {
+  display:inline-flex;
+  padding:11px 18px;
+  margin-top:24px;
+  border:1px solid rgba(211,172,111,.52);
+  border-radius:7px;
+  background:linear-gradient(180deg,rgba(45,34,23,.82),rgba(26,22,18,.9));
+  color:#f3d4a3;
+  font-size:12px;
+  font-weight:560;
+}
+.ph-page .ph-action-link.petrolero-store-button:hover {border-color:#e5bc81;color:#ffe1b4;}
+@media(max-width:720px) {
+  .ph-page .ph-intro__inner {padding-top:103px;}
+  .ph-page .ph-intro h1 {font-size:clamp(27px,7vw,38px);}
+}
+@media(prefers-reduced-motion:reduce) {
+  .ph-page .ph-intro__watermark {animation:none;}
+  .ph-page .ph-aside__link::before,
+  .ph-page .ph-steps > div::before,
+  .ph-page .ph-faq-item summary::before {transition:none;}
+}

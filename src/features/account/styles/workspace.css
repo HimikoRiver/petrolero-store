@@ -239,3 +239,193 @@
   .pa-tile,.pa-navlink,.pa-link-panel{transition:none;}
   .pa-tile:hover{transform:none;}
 }
+
+
+/* Visual parity with the catalog product cards. */
+.pa-workspace {
+  --pa-panel: #11100f;
+  --pa-panel-2: #171411;
+  --pa-line: rgba(182, 140, 89, .22);
+  --pa-gold: #cfab79;
+  background: radial-gradient(ellipse at 46% 8%, rgba(131, 82, 30, .1), transparent 40%), #090909;
+}
+.pa-workspace .pa-body {
+  padding-top: 86px;
+  min-height: 100svh;
+}
+.pa-workspace .pa-sidebar {
+  background: linear-gradient(150deg, #171411, #100f0e 75%);
+  border-color: var(--pa-line);
+}
+.pa-workspace .pa-main {
+  background: radial-gradient(ellipse at 46% 8%, rgba(131, 82, 30, .1), transparent 40%), #090909;
+}
+.pa-workspace .pa-welcome,
+.pa-workspace .pa-surface,
+.pa-workspace .pa-tile,
+.pa-workspace .pa-link-panel,
+.pa-workspace .pa-field,
+.pa-workspace .pa-favorite,
+.pa-workspace .pa-favorite__visual {
+  border: 1px solid rgba(182, 140, 89, .22);
+  background: linear-gradient(150deg, #171411, #100f0e 70%);
+}
+.pa-workspace .pa-tile:hover,
+.pa-workspace .pa-link-panel:hover,
+.pa-workspace .pa-favorite:hover {
+  border-color: rgba(228, 179, 107, .54);
+  box-shadow: 0 15px 35px rgba(0,0,0,.28), 0 0 0 1px rgba(217,159,74,.04);
+}
+.pa-workspace .pa-page-heading h1 {
+  font-size: clamp(26px, 2.4vw, 36px);
+  font-weight: 620;
+  letter-spacing: -.047em;
+}
+.pa-workspace .pa-welcome {
+  background: radial-gradient(ellipse at 80% 35%,rgba(113,75,34,.18),transparent 64%),linear-gradient(150deg,#171411,#100f0e 80%);
+}
+.pa-workspace .pa-navlink {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-color: transparent;
+}
+.pa-workspace .pa-navlink--active {
+  border-color: rgba(204,165,105,.42);
+  background: linear-gradient(105deg,#312417,#1c1812 70%);
+}
+.pa-workspace .pa-navlink:hover {border-color:rgba(182,140,89,.3);}
+.pa-workspace .pa-navlink::before,
+.pa-workspace .pa-tile::before,
+.pa-workspace .pa-link-panel::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background: linear-gradient(to top, rgba(202,143,73,.22),rgba(202,143,73,.07) 65%,transparent);
+  transform: translateY(28%);
+  opacity: 0;
+  transition: opacity 420ms ease,transform 470ms cubic-bezier(.22,.73,.24,1);
+  pointer-events: none;
+}
+.pa-workspace .pa-tile,
+.pa-workspace .pa-link-panel {position:relative;isolation:isolate;overflow:hidden;}
+.pa-workspace .pa-navlink:hover::before,
+.pa-workspace .pa-tile:hover::before,
+.pa-workspace .pa-link-panel:hover::before {
+  opacity: 1;
+  transform:translateY(0);
+}
+.pa-workspace .pa-navlink > *,
+.pa-workspace .pa-tile > *,
+.pa-workspace .pa-link-panel > * {position:relative;z-index:1;}
+.pa-workspace .pa-button.petrolero-store-button,
+.pa-workspace .pa-sidebar__bottom .petrolero-store-button {
+  min-height:42px;
+  padding:9px 16px;
+  border:1px solid rgba(211,172,111,.52);
+  border-radius:7px;
+  background:linear-gradient(180deg,rgba(45,34,23,.82),rgba(26,22,18,.9));
+  color:#f3d4a3;
+  font-size:12px;
+  margin-top:24px;
+}
+.pa-workspace .pa-button.petrolero-store-button:hover,
+.pa-workspace .pa-sidebar__bottom .petrolero-store-button:hover {
+  border-color:#e5bc81;
+  color:#ffe1b4;
+}
+.pa-workspace .pa-sidebar__bottom .petrolero-store-button {margin-top:0;}
+.pa-workspace .pa-settings-row {grid-template-columns:44px minmax(0,1fr);}
+.pa-workspace .pa-page-heading__number,
+.pa-workspace .pa-navlink__number {
+  color: #d1a86d;
+  background: linear-gradient(105deg,#5b421f 0%,#c8a16a 19%,#f7dda6 39%,#9c6a32 57%,#ebc684 77%,#5b421f 100%);
+  background-size: 230% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: pa-metal-shimmer 7s linear infinite;
+}
+.pa-workspace .pa-page-heading__number {
+  opacity:.65;
+  filter:drop-shadow(0 0 14px rgba(189,136,62,.12));
+}
+.pa-workspace .pa-navlink__number {opacity:.75;animation-duration:5s;}
+.pa-workspace .pa-welcome__mark {
+  color: #c4a06e;
+  background:linear-gradient(105deg,#46331f,#c49d66,#51391e,#e4c28b,#46331f);
+  background-size:230% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:pa-metal-shimmer 9s linear infinite;
+  opacity:.34;
+}
+@keyframes pa-metal-shimmer {
+  from {background-position:180% 50%;}
+  to {background-position:-45% 50%;}
+}
+/* A product photograph always fits the frame. Oils and additive bottles
+   share one treatment without cropping or stretching. */
+.pa-workspace .pa-favorite {
+  grid-template-columns: 146px minmax(0,1fr) auto;
+  gap:25px;
+  align-items:center;
+  min-height:182px;
+  padding:16px;
+}
+.pa-workspace .pa-favorite__visual {
+  position:relative;
+  width:146px;
+  height:150px;
+  min-height:0;
+  flex:none;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  background:radial-gradient(ellipse at 50% 45%,#32281d 0%,#1d1a15 38%,#11100f 82%);
+}
+.pa-workspace .pa-favorite__visual .pa-favorite__image {
+  display:block;
+  width:100% !important;
+  height:100% !important;
+  max-width:100%;
+  max-height:100%;
+  min-width:0;
+  min-height:0;
+  object-fit:contain !important;
+  object-position:center center !important;
+  padding:9px !important;
+  transform:none !important;
+}
+.pa-workspace .pa-favorite__info h3 {font-size:clamp(14px,1.15vw,18px);font-weight:550;}
+@media(max-width:850px) {
+  .pa-workspace .pa-body {padding-top:86px;}
+}
+@media(max-width:620px) {
+  .pa-workspace .pa-body {padding-top:70px;}
+  .pa-workspace .pa-favorite {
+    grid-template-columns:110px minmax(0,1fr);
+    gap:13px;
+    min-height:0;
+    padding:12px;
+  }
+  .pa-workspace .pa-favorite__visual {width:110px;height:125px;}
+  .pa-workspace .pa-favorite__visual .pa-favorite__image {padding:7px !important;}
+  .pa-workspace .pa-favorite .pa-button {grid-column:1/-1;width:100%;margin-top:0;}
+  .pa-workspace .pa-welcome__mark {display:none;}
+  .pa-workspace .pa-page-heading h1 {font-size:clamp(25px,6vw,33px);}
+}
+@media(max-width:380px) {
+  .pa-workspace .pa-favorite {grid-template-columns:88px minmax(0,1fr);}
+  .pa-workspace .pa-favorite__visual {width:88px;height:110px;}
+}
+@media(prefers-reduced-motion:reduce) {
+  .pa-workspace .pa-navlink::before,
+  .pa-workspace .pa-tile::before,
+  .pa-workspace .pa-link-panel::before {transition:none;}
+  .pa-workspace .pa-page-heading__number,
+  .pa-workspace .pa-navlink__number,
+  .pa-workspace .pa-welcome__mark {animation:none;}
+}

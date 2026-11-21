@@ -162,7 +162,7 @@ export default function SiteHeader({
         data-phase={phase}
         data-hidden={navHidden && phase === 3}
       >
-        <div className="petrolero-fixed-brand" data-catalog={mode === "catalog"}>
+        <div className="petrolero-fixed-brand" data-catalog={mode !== "home"}>
           {mode === "catalog" ? (
             <Link href="/" aria-label="На главную Petrolero" className="petrolero-fixed-brand__link">
               <BrandLogo animated={false} variant="gold" />

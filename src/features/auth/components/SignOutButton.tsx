@@ -29,7 +29,7 @@ export default function SignOutButton() {
 
   return (
     <div>
-      <button type="button" onClick={signOut} disabled={pending}>
+      <button type="button" className="petrolero-store-button" onClick={signOut} disabled={pending}>
         {pending ? "Выход…" : "Выйти из аккаунта"}
       </button>
       {error && <p role="alert">Не удалось завершить сеанс. Повторите попытку.</p>}

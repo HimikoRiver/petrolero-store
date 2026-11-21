@@ -3,6 +3,7 @@ import SignOutButton from "@/features/auth/components/SignOutButton";
 import { ACCOUNT_NAVIGATION, accountSectionPath, type AccountSection } from "../data/accountNavigation";
 import AccountIcon from "./AccountIcon";
 import AccountFavorites from "./AccountFavorites";
+import StorefrontChrome from "@/components/layout/StorefrontChrome";
 import "../styles/workspace.css";
 
 type AccountWorkspaceProps = {
@@ -41,7 +42,7 @@ function EmptyState({
       <h3>{title}</h3>
       <p>{description}</p>
       {href && action && (
-        <Link className="pa-button pa-button--gold" href={href}>
+        <Link className="pa-button pa-button--gold petrolero-store-button" href={href}>
           {action} <AccountIcon name="arrow" size={17} />
         </Link>
       )}
@@ -128,7 +129,7 @@ function AccountScreen({
               </div>
               <div className="pa-compact-empty">
                 <AccountIcon name="bag" size={30} />
-                <p>Заказы появятся здесь после подключения оформления покупок.</p>
+                <p>У вас пока нет заказов.</p>
               </div>
             </section>
             <section className="pa-surface pa-surface--guide">
@@ -153,7 +154,7 @@ function AccountScreen({
           </div>
           <EmptyState
             icon="orders" title="Заказов пока нет"
-            description="После подключения оформления покупок здесь появятся ваши заказы, чеки и информация о доставке."
+            description="Ваши заказы будут отображаться здесь."
             href="/catalog" action="Посмотреть каталог"
           />
         </section>
@@ -162,8 +163,8 @@ function AccountScreen({
       return (
         <section className="pa-surface">
           <EmptyState
-            icon="orders" title="Данные заказа пока недоступны"
-            description="Детали заказа будут загружаться исключительно из защищённой базы данных. Демонстрационные заказы не подставляются."
+            icon="orders" title="Заказ не найден"
+            description="Проверьте номер заказа или вернитесь к истории покупок."
             href={accountSectionPath("orders", preview)} action="К списку заказов"
           />
         </section>
@@ -174,7 +175,6 @@ function AccountScreen({
           <div className="pa-surface__heading">
             <div><span className="pa-kicker">ВАШ ВЫБОР</span><h3>Сохранённые товары</h3></div>
           </div>
-          <p className="pa-inline-notice">Пока используется избранное из каталога, сохранённое в этом браузере. Синхронизация между устройствами появится после подключения базы.</p>
           <AccountFavorites />
         </section>
       );
@@ -187,7 +187,7 @@ function AccountScreen({
           </div>
           <EmptyState
             icon="pin" title="Адреса ещё не добавлены"
-            description="Здесь можно будет сохранить домашний адрес, получателей и выбранные пункты выдачи. Запись в базу подключим на следующем этапе."
+            description="Здесь будут отображаться ваши адреса и получатели."
             href="/help/delivery-payment" action="Условия доставки"
           />
         </section>
@@ -198,14 +198,12 @@ function AccountScreen({
           <section className="pa-surface">
             <div className="pa-surface__heading">
               <div><span className="pa-kicker">ПРОФИЛЬ</span><h3>Контактная информация</h3></div>
-              <span className="pa-tag">{preview ? "Предпросмотр" : "Из аккаунта"}</span>
             </div>
             <div className="pa-fields">
               <Field title="Имя" value={preview ? null : name} />
               <Field title="E-mail" value={preview ? null : email} />
               <Field title="Телефон" />
             </div>
-            <p className="pa-inline-notice">Редактирование личных данных откроется после подключения базы данных. Сейчас ничего не сохраняется и не отправляется.</p>
           </section>
           <section className="pa-surface pa-surface--short">
             <span className="pa-kicker">ЗАЩИТА ДАННЫХ</span>
@@ -223,15 +221,12 @@ function AccountScreen({
           </div>
           <div className="pa-settings-row">
             <span className="pa-link-panel__icon"><AccountIcon name="orders" size={23}/></span>
-            <div><h4>Уведомления о заказах</h4><p>Подтверждение покупки, оплата, отправка и доставка. Сервисные письма не являются рекламной рассылкой.</p></div>
-            <span className="pa-tag">После подключения</span>
+            <div><h4>Уведомления о заказах</h4><p>Подтверждение покупки, оплата, отправка и доставка. Эти письма относятся к вашим покупкам.</p></div>
           </div>
           <div className="pa-settings-row">
             <span className="pa-link-panel__icon"><AccountIcon name="mail" size={23}/></span>
-            <div><h4>Новости и предложения</h4><p>Отдельная добровольная подписка. Включение и отписка появятся с подключением почтового сервиса.</p></div>
-            <span className="pa-tag">Не подключено</span>
+            <div><h4>Новости и предложения</h4><p>Новости ассортимента и специальные предложения Petrolero.</p></div>
           </div>
-          <p className="pa-inline-notice">Мы не будем показывать переключатели, которые выглядят работающими, но не сохраняют согласие пользователя.</p>
         </section>
       );
     case "security":
@@ -239,22 +234,22 @@ function AccountScreen({
         <>
           <section className="pa-surface">
             <div className="pa-surface__heading">
-              <div><span className="pa-kicker">ПОДКЛЮЧЕНИЕ</span><h3>Безопасность аккаунта</h3></div>
+              <div><span className="pa-kicker">ЗАЩИТА ПРОФИЛЯ</span><h3>Безопасность аккаунта</h3></div>
               <AccountIcon name="shield" size={26} />
             </div>
             <div className="pa-fields">
               <Field title="Адрес для входа" value={preview ? null : email} />
               <Field
                 title="Подтверждение e-mail"
-                value={preview ? "Демонстрация" : emailVerified ? "Подтверждён" : "Ожидает подтверждения"}
+                value={preview ? null : emailVerified ? "Подтверждён" : "Не подтверждён"}
               />
-              <Field title="Пароль" value={preview ? "Доступен после подключения" : "Защищён"} />
+              <Field title="Пароль" value={preview ? null : "Защищён"} />
             </div>
           </section>
           <section className="pa-surface pa-surface--short">
             <span className="pa-kicker">ВОССТАНОВЛЕНИЕ</span>
             <h3>Забыли пароль?</h3>
-            <p>Восстановление доступно по подтверждённому адресу электронной почты после подключения SMTP.</p>
+            <p>Для восстановления доступа воспользуйтесь формой на странице входа.</p>
             <Link href="/account/login" className="pa-text-link">Страница входа <AccountIcon name="arrow" size={16}/></Link>
           </section>
         </>
@@ -270,7 +265,6 @@ function AccountScreen({
             <LinkPanel icon="return" href="/help/warranty-returns" title="Гарантия и возврат" description="Порядок обращения по товарам" />
             <LinkPanel icon="help" href="/help/faq" title="Частые вопросы" description="Ответы на вопросы покупателей" />
           </div>
-          <p className="pa-inline-notice">История личных обращений появится после подключения поддержки и заказов.</p>
         </section>
       );
     case "returns":
@@ -282,7 +276,7 @@ function AccountScreen({
           </div>
           <EmptyState
             icon="return" title="Заявок пока нет"
-            description="После появления реальных заказов здесь можно будет отправить обращение и отслеживать его обработку."
+            description="Здесь будут отображаться ваши обращения по обмену и возврату."
             href="/help/warranty-returns" action="Порядок возврата"
           />
         </section>
@@ -297,22 +291,16 @@ export default function AccountWorkspace({
   const currentNav = section === "order-detail" ? "orders" : section;
 
   return (
-    <main className="pa-workspace">
-      <header className="pa-header">
-        <Link href="/" className="pa-brand" aria-label="Petrolero — на главную">PETROLERO<span>.</span></Link>
-        <div className="pa-header__right">
-          <span className="pa-header__caption">ЛИЧНЫЙ КАБИНЕТ</span>
-          <Link href="/catalog" className="pa-header__catalog">В каталог <AccountIcon name="arrow" size={16}/></Link>
-        </div>
-      </header>
+    <StorefrontChrome>
+      <main className="pa-workspace">
       <div className="pa-body">
         <aside className="pa-sidebar">
           <div className="pa-sidebar__identity">
             <div className="pa-avatar" aria-hidden="true">{!preview && name ? name.trim().charAt(0).toLocaleUpperCase("ru") : "P"}</div>
             <div>
-              <span className="pa-kicker">{preview ? "ДЕМОНСТРАЦИЯ" : "ВАШ АККАУНТ"}</span>
-              <strong>{preview ? "Просмотр страниц" : name || "Покупатель Petrolero"}</strong>
-              <small>{preview ? "Без персональных данных" : email}</small>
+              <span className="pa-kicker">ЛИЧНЫЙ КАБИНЕТ</span>
+              <strong>{preview ? "Покупатель Petrolero" : name || "Покупатель Petrolero"}</strong>
+              {!preview && email && <small>{email}</small>}
             </div>
           </div>
           <div className="pa-sidebar__title">РАЗДЕЛЫ КАБИНЕТА</div>
@@ -340,12 +328,6 @@ export default function AccountWorkspace({
         </aside>
         <div className="pa-main">
           <div className="pa-main__inner">
-            {preview && (
-              <div className="pa-preview-alert" role="note">
-                <span className="pa-preview-alert__dot" aria-hidden="true" />
-                Предпросмотр страниц. Персональные данные, заказы и сохранение настроек здесь не используются.
-              </div>
-            )}
             <div className="pa-breadcrumb">
               <Link href={accountSectionPath("overview", preview)}>Личный кабинет</Link>
               <AccountIcon name="chevron" size={14} />
@@ -362,13 +344,10 @@ export default function AccountWorkspace({
             <div className="pa-screen">
               <AccountScreen section={section} preview={preview} name={name} email={email} emailVerified={emailVerified}/>
             </div>
-            <footer className="pa-footer">
-              <span>© PETROLERO</span>
-              <div><Link href="/privacy">Конфиденциальность</Link><Link href="/terms">Условия использования</Link></div>
-            </footer>
           </div>
         </div>
       </div>
-    </main>
+      </main>
+    </StorefrontChrome>
   );
 }

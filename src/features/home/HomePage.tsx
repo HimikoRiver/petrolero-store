@@ -11,7 +11,6 @@ import TechnologySection from "./technology/TechnologySection";
 import ContactsSection from "./contacts/ContactsSection";
 import OilDropletDivider from "./transition/OilDropletDivider";
 import SiteFooter from "@/components/layout/footer/SiteFooter";
-import PageScrollControls from "./navigation/PageScrollControls";
 import useReducedMotion from "@/hooks/useReducedMotion";
 
 export default function HomePage() {
@@ -74,7 +73,6 @@ export default function HomePage() {
       <ContactsSection />
       </main>
       <SiteFooter />
-      <PageScrollControls reducedMotion={reducedMotion} />
     </>
   );
 }

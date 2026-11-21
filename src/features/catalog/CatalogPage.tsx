@@ -4,6 +4,7 @@ import Link from "next/link";
 import SiteFooter from "@/components/layout/footer/SiteFooter";
 import SiteHeader from "@/components/layout/header/SiteHeader";
 import useReducedMotion from "@/hooks/useReducedMotion";
+import { useEffect } from "react";
 import CatalogOilCategories from "./components/CatalogOilCategories";
 import CatalogAdditivesFeature from "./components/CatalogAdditivesFeature";
 import CatalogToolbar from "./components/CatalogToolbar";
@@ -23,6 +24,11 @@ export default function CatalogPage() {
   const reducedMotion = useReducedMotion();
   const controller = useCatalogController();
   const { department, category, search, setSearch, sortOrder, setSortOrder, selectedFilters, minPrice, setMinPrice, maxPrice, setMaxPrice, openFilter, setOpenFilter, view, setView, preview, setPreview, cartOpen, setCartOpen, cartLines, favoriteIds, compareIds, setCompareIds, favoritesOnly, setFavoritesOnly, compareOpen, setCompareOpen, feedback, setFeedback, filtersRef, filterOptions, products, filterCount, cartCount, comparedProducts, cartTotal, resetFilters, changeDepartment, changeCategory, toggleValue, updateQuantity, addToCart, toggleFavorite, toggleCompare, heading, closeLayers } = controller;
+
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search).get("search");
+    if (query) setSearch(query);
+  }, [setSearch]);
 
   return (
     <div className="petrolero-catalog-page">

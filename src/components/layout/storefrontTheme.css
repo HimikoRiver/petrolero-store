@@ -1,0 +1,69 @@
+/* One interaction system for account and help actions, matching catalog polish:
+   gentle rising gold overlay + bottom edge light, no aggressive diagonal sweep. */
+.petrolero-store-button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 42px;
+  padding: 9px 16px;
+  border: 1px solid rgba(211, 172, 111, .52);
+  border-radius: 7px;
+  background: linear-gradient(180deg, rgba(45, 34, 23, .82), rgba(26, 22, 18, .9));
+  color: #f3d4a3;
+  font-size: 12px;
+  font-weight: 560;
+  letter-spacing: .015em;
+  line-height: 1.35;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+  transition: border-color .3s ease, color .3s ease;
+}
+.petrolero-store-button:hover,
+.petrolero-store-button:focus-visible {
+  color: #ffe1b4;
+  border-color: #e5bc81;
+}
+.petrolero-store-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(to top, rgba(202, 143, 73, .22), rgba(202, 143, 73, .07) 65%, transparent);
+  opacity: 0;
+  transform: translateY(28%);
+  pointer-events: none;
+  transition: opacity 420ms ease, transform 470ms cubic-bezier(.22,.73,.24,1);
+}
+.petrolero-store-button:hover::before,
+.petrolero-store-button:focus-visible::before {
+  opacity: 1;
+  transform: translateY(0);
+}
+.petrolero-store-button::after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #d9ad74, transparent);
+  transform: scaleX(0);
+  pointer-events: none;
+  transition: transform 420ms cubic-bezier(.24,.72,.25,1);
+}
+.petrolero-store-button:hover::after,
+.petrolero-store-button:focus-visible::after {
+  transform: scaleX(1);
+}
+.petrolero-store-button > * { position: relative; z-index: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .petrolero-store-button,
+  .petrolero-store-button::before,
+  .petrolero-store-button::after { transition: none; }
+}

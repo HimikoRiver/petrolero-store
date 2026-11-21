@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { CATALOG_PRODUCTS } from "@/features/catalog/data/catalogData";
 import AccountIcon from "./AccountIcon";
 
@@ -20,9 +21,7 @@ export default function AccountFavorites() {
   const [favoriteIds, setFavoriteIds] = useState<string[] | null>(null);
 
   useEffect(() => {
-    // The current catalog persists demo favorites locally; do not call them
-    // server-synchronized user data until an account repository is implemented.
-    setFavoriteIds(readFavorites());
+      setFavoriteIds(readFavorites());
   }, []);
 
   const favorites = CATALOG_PRODUCTS.filter((product) =>
@@ -49,7 +48,7 @@ export default function AccountFavorites() {
         <div className="pa-empty__icon"><AccountIcon name="heart" size={34} /></div>
         <h3>Здесь пока нет товаров</h3>
         <p>Отмечайте понравившиеся масла и присадки сердцем в каталоге. Они появятся в этом списке.</p>
-        <Link href="/catalog" className="pa-button pa-button--gold">
+        <Link href="/catalog" className="pa-button pa-button--gold petrolero-store-button">
           Перейти в каталог <AccountIcon name="arrow" size={17} />
         </Link>
       </div>
@@ -62,18 +61,22 @@ export default function AccountFavorites() {
         <article className="pa-favorite" key={product.id}>
           <div className="pa-favorite__visual">
             {product.image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={product.image} alt="" loading="lazy" />
+              <Image
+                src={product.image}
+                alt={product.title}
+                fill
+                sizes="(max-width: 550px) 112px, 160px"
+                className="pa-favorite__image"
+              />
             ) : <AccountIcon name="bag" size={30} />}
           </div>
           <div className="pa-favorite__info">
-            <span className="pa-kicker">ДЕМОНСТРАЦИОННЫЙ КАТАЛОГ · {product.sku}</span>
+            <span className="pa-kicker">АРТ. {product.sku}</span>
             <h3>{product.title}</h3>
-            <span className="pa-muted">Товары сохранены только в этом браузере.</span>
           </div>
           <button
             type="button"
-            className="pa-button pa-button--outline"
+            className="pa-button pa-button--outline petrolero-store-button"
             onClick={() => remove(product.id)}
             aria-label={"Убрать из избранного: " + product.title}
           >
