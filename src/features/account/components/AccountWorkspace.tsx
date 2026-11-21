@@ -310,7 +310,7 @@ export default function AccountWorkspace({
 
   return (
     <StorefrontChrome>
-      <main className={"pa-workspace" + (section === "overview" ? " pa-workspace--gears" : "")}>
+      <main className="pa-workspace pa-workspace--gears">
       <div className="pa-body">
         <aside className="pa-sidebar">
           <div className="pa-sidebar__identity">
@@ -351,13 +351,13 @@ export default function AccountWorkspace({
               <AccountIcon name="chevron" size={14} />
               <span>{page.title}</span>
             </div>
-            <div className={"pa-page-heading" + (section === "overview" ? " pa-page-heading--gears" : "")}>
+            <div className="pa-page-heading pa-page-heading--gears">
               <div className="pa-page-heading__copy">
                 <span className="pa-kicker">PETROLERO / АККАУНТ / {page.number}</span>
                 <h1>{page.title}</h1>
                 <p>{page.subtitle}</p>
               </div>
-              {section === "overview" && <AccountGoldGears />}
+              <AccountGoldGears />
               <span className="pa-page-heading__number" aria-hidden="true">{page.number}</span>
             </div>
             <div className="pa-screen">

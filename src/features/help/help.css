@@ -206,3 +206,86 @@
   .ph-page .ph-steps > div::before,
   .ph-page .ph-faq-item summary::before {transition:none;}
 }
+
+
+/* Same transparent animated SVG as the buyer workspace. The numbered help
+   headings are kept intact, with the gears occupying the space beside them. */
+.ph-page .ph-intro {
+  background: #090909;
+}
+.ph-page .ph-intro__heading {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2vw, 34px);
+  min-height: 230px;
+  padding-right: clamp(125px, 13vw, 220px);
+  position: relative;
+  z-index: 1;
+}
+.ph-page .ph-intro__copy {
+  flex: 1 1 440px;
+  min-width: 0;
+  position: relative;
+  z-index: 2;
+}
+.ph-page .ph-intro__heading .pa-page-heading__gears {
+  flex: 0 1 315px;
+  width: min(28vw, 315px);
+  min-width: 0;
+  margin-left: auto;
+  pointer-events: none;
+  user-select: none;
+  line-height: 0;
+}
+.ph-page .ph-intro__heading .pa-page-heading__gears img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 215px;
+  object-fit: contain;
+}
+.ph-page .ph-intro__watermark {
+  z-index: 2;
+}
+@media (max-width: 1100px) {
+  .ph-page .ph-intro__heading {
+    padding-right: clamp(90px, 12vw, 140px);
+    min-height: 210px;
+  }
+  .ph-page .ph-intro__copy { flex-basis: 320px; }
+  .ph-page .ph-intro__heading .pa-page-heading__gears {
+    flex-basis: 225px;
+    width: min(25vw, 225px);
+  }
+}
+@media (max-width: 720px) {
+  .ph-page .ph-intro__heading {
+    min-height: 175px;
+    padding-right: 65px;
+  }
+  .ph-page .ph-intro__copy {
+    flex: 1 1 auto;
+  }
+  .ph-page .ph-intro__heading .pa-page-heading__gears {
+    position: absolute;
+    right: -18px;
+    top: 8px;
+    width: clamp(145px, 41vw, 230px);
+    margin: 0;
+    opacity: .45;
+    z-index: 1;
+  }
+  .ph-page .ph-intro__watermark {
+    right: 15px;
+    bottom: 12px;
+    font-size: clamp(68px, 14vw, 105px);
+    opacity: .85;
+  }
+}
+@media (max-width: 390px) {
+  .ph-page .ph-intro__heading .pa-page-heading__gears {
+    right: -25px;
+    width: 155px;
+    opacity: .32;
+  }
+}

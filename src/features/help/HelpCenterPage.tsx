@@ -1,5 +1,6 @@
 import Link from "next/link";
 import StorefrontChrome from "@/components/layout/StorefrontChrome";
+import AccountGoldGears from "@/features/account/components/AccountGoldGears";
 import "./help.css";
 
 type HelpTopic = "delivery-payment" | "warranty-returns" | "faq";
@@ -189,9 +190,14 @@ export default function HelpCenterPage({ topic }: { topic: HelpTopic }) {
       <section className="ph-intro">
         <div className="ph-intro__inner">
           <div className="ph-crumbs"><Link href="/">Главная</Link><span>/</span><span>Информация</span><span>/</span>{page.title}</div>
-          <span className="ph-kicker">PETROLERO / ИНФОРМАЦИЯ / {page.number}</span>
-          <h1>{page.title}</h1>
-          <p>{page.subtitle}</p>
+          <div className="ph-intro__heading">
+            <div className="ph-intro__copy">
+              <span className="ph-kicker">PETROLERO / ИНФОРМАЦИЯ / {page.number}</span>
+              <h1>{page.title}</h1>
+              <p>{page.subtitle}</p>
+            </div>
+            <AccountGoldGears />
+          </div>
           <span className="ph-intro__watermark" aria-hidden="true">{page.number}</span>
         </div>
       </section>

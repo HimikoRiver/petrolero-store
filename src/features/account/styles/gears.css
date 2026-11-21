@@ -1,5 +1,5 @@
-/* Only the overview page receives the gold mechanism. Other sections keep
-   their existing layout and backgrounds. */
+/* A single SVG mechanism is reused beside the numeric heading on every
+   account section. Other page elements and the sidebar are unchanged. */
 .pa-workspace--gears,
 .pa-workspace--gears .pa-main {
   background: #090909;
