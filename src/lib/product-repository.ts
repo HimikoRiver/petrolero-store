@@ -3,12 +3,17 @@ import { getPrisma } from "@/lib/prisma";
 import { CATALOG_PRODUCTS, type CatalogProduct } from "@/features/catalog/data/catalogData";
 
 /**
- * Without a configured DB, keep the existing isolated demo for presentation.
- * Once PostgreSQL is connected, ONLY products published in the admin panel
- * become visible to buyers; no demo products are seeded into a live store.
+ * The public storefront remains in presentation mode until an explicit switch.
+ * Connecting PostgreSQL to work on the admin panel must not clear the demo
+ * shown to clients. Real products are never merged with demo fixtures.
+ *
+ * Set CATALOG_SOURCE=database when the real catalog is ready to launch.
  */
 export async function getCatalogProducts(): Promise<CatalogProduct[]> {
-  if (!process.env.DATABASE_URL) return [...CATALOG_PRODUCTS];
+  if (process.env.CATALOG_SOURCE !== "database") return [...CATALOG_PRODUCTS];
+  if (!process.env.DATABASE_URL) {
+    throw new Error("CATALOG_SOURCE=database requires DATABASE_URL");
+  }
   const rows = await getPrisma().product.findMany({
     where: { published: true, archivedAt: null },
     orderBy: { createdAt: "desc" },

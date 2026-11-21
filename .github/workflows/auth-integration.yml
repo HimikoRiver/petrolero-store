@@ -42,6 +42,7 @@ jobs:
           - 8025:8025
 
     env:
+      CATALOG_SOURCE: database
       DATABASE_URL: postgresql://petrolero_test:test_only_password@127.0.0.1:5432/petrolero_auth_test
       BETTER_AUTH_URL: http://127.0.0.1:3000
       BETTER_AUTH_SECRET: "petrolero-test-secret-only-do-not-use-in-production-2026"
