@@ -17,6 +17,7 @@ model User {
   updatedAt     DateTime
   phone         String?
   addresses     DeliveryAddress[]
+  favorites     Favorite[]
   sessions      Session[]
   accounts      Account[]
 
@@ -87,4 +88,15 @@ model DeliveryAddress {
 
   @@index([userId, createdAt])
   @@map("delivery_address")
+}
+
+model Favorite {
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, productId])
+  @@index([userId, createdAt])
+  @@map("favorite")
 }
