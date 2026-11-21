@@ -31,7 +31,9 @@ export default function GoldenThreadsOrb() {
     const canvas = canvasRef.current;
     if (!root || !canvas) return;
 
-    const context = canvas.getContext("2d", { alpha: true });
+    const rootElement: HTMLDivElement = root;
+    const canvasElement: HTMLCanvasElement = canvas;
+    const context = canvasElement.getContext("2d", { alpha: true });
     if (!context) return;
 
     const ctx: CanvasRenderingContext2D = context;
@@ -173,7 +175,7 @@ export default function GoldenThreadsOrb() {
     }
 
     function resize() {
-      const rect = root.getBoundingClientRect();
+      const rect = rootElement.getBoundingClientRect();
       const nextWidth = Math.round(rect.width);
       const nextHeight = Math.round(rect.height);
       if (width === nextWidth && height === nextHeight) return;
@@ -184,8 +186,8 @@ export default function GoldenThreadsOrb() {
       if (!width || !height) return;
 
       const ratio = Math.min(window.devicePixelRatio || 1, MAX_DPR);
-      canvas.width = Math.round(width * ratio);
-      canvas.height = Math.round(height * ratio);
+      canvasElement.width = Math.round(width * ratio);
+      canvasElement.height = Math.round(height * ratio);
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
       createParticles();
       start();
@@ -197,7 +199,7 @@ export default function GoldenThreadsOrb() {
         return;
       }
 
-      const rect = root!.getBoundingClientRect();
+      const rect = rootElement.getBoundingClientRect();
       // Listen on window, not on the visual, so the artwork never intercepts
       // clicks, input focus, or hover on the authentication form.
       const x = event.clientX - rect.left;
@@ -224,13 +226,13 @@ export default function GoldenThreadsOrb() {
     }
 
     const observer = new ResizeObserver(resize);
-    observer.observe(root);
+    observer.observe(rootElement);
     const visibilityObserver = new IntersectionObserver(([entry]) => {
       isIntersecting = entry.isIntersecting;
       if (isIntersecting) start();
       else stop();
     });
-    visibilityObserver.observe(root);
+    visibilityObserver.observe(rootElement);
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("blur", clearPointer);
