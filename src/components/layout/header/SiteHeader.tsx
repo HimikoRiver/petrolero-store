@@ -36,7 +36,6 @@ export default function SiteHeader({
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [searchSubmitted, setSearchSubmitted] = useState(false);
   const [panel, setPanel] = useState<Panel>(null);
   const [navHidden, setNavHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -117,7 +116,6 @@ export default function SiteHeader({
   const toggleSearch = () => {
     setNavHidden(false);
     setPanel(null);
-    setSearchSubmitted(false);
     setSearchOpen((current) => !current);
   };
 
@@ -138,20 +136,32 @@ export default function SiteHeader({
     setNavHidden((current) => !current);
   };
 
+  const submitSearch = () => {
+    setSearchOpen(false);
+
+    if (mode === "catalog") {
+      document.getElementById("petrolero-catalog-products")?.scrollIntoView({
+        behavior: reducedMotion ? "instant" : "smooth",
+      });
+      return;
+    }
+
+    const query = search.trim();
+    router.push(query ? `/catalog?search=${encodeURIComponent(query)}` : "/catalog");
+  };
+
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (mode === "inner") {
-      const query = search.trim();
-      router.push(query ? `/catalog?search=${encodeURIComponent(query)}` : "/catalog");
-      setSearchOpen(false);
-      return;
+    submitSearch();
+  };
+
+  const handleSearchTrigger = () => {
+    const query = mode === "catalog" ? (searchValue ?? "") : search;
+    if (searchOpen && query.trim()) {
+      submitSearch();
+    } else {
+      toggleSearch();
     }
-    if (mode === "catalog") {
-      setSearchOpen(false);
-      document.getElementById("petrolero-catalog-products")?.scrollIntoView({ behavior: reducedMotion ? "instant" : "smooth" });
-      return;
-    }
-    if (search.trim()) setSearchSubmitted(true);
   };
 
   const handleCartClick = () => {
@@ -209,7 +219,6 @@ export default function SiteHeader({
                   onChange={(event) => {
                     if (mode === "catalog") onSearchChange?.(event.target.value);
                     else setSearch(event.target.value);
-                    setSearchSubmitted(false);
                   }}
                   tabIndex={searchOpen ? 0 : -1}
                   placeholder="Название масла или вязкость"
@@ -219,17 +228,14 @@ export default function SiteHeader({
                   <rect className="petrolero-nav-search-line" x="1.2" y="1.2" width="337.6" height="41.6" pathLength={100} />
                   <rect className="petrolero-nav-search-head" x="1.2" y="1.2" width="337.6" height="41.6" pathLength={100} />
                 </svg>
-                <span className="petrolero-nav-search-status" role="status">
-                  {mode === "home" && searchSubmitted ? "Поиск доступен в разделе «Каталог»." : ""}
-                </span>
               </form>
               <button
                 type="button"
                 className="petrolero-nav-button petrolero-nav-search-trigger"
-                aria-label={searchOpen ? "Закрыть поиск" : "Открыть поиск"}
+                aria-label={searchOpen && (mode === "catalog" ? (searchValue ?? "") : search).trim() ? "Найти в каталоге" : searchOpen ? "Закрыть поиск" : "Открыть поиск"}
                 aria-controls="petrolero-inline-search"
                 aria-expanded={searchOpen}
-                onClick={toggleSearch}
+                onClick={handleSearchTrigger}
               >
                 <SearchIcon />
               </button>

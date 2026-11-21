@@ -306,17 +306,6 @@
   animation: petrolero-nav-head 1050ms 300ms ease both;
 }
 
-.petrolero-nav-search-status {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  width: 100%;
-  color: #e2bb81;
-  font-size: 11px;
-  text-align: center;
-  pointer-events: none;
-}
-
 @keyframes petrolero-nav-trace {
   from { stroke-dashoffset: 100; }
   to { stroke-dashoffset: 0; }
