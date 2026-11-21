@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getAuth, isAuthConfigured } from "@/lib/auth";
+import { getPrisma } from "@/lib/prisma";
 import { accountSectionPath, type AccountSection } from "../data/accountNavigation";
 import AccountWorkspace from "./AccountWorkspace";
 import "../styles/workspaceStates.css";
@@ -15,12 +16,25 @@ async function AuthorizedWorkspace({ section }: { section: AccountSection }) {
     redirect("/account/login?next=" + encodeURIComponent(requested));
   }
 
+  const profile = section === "profile"
+    ? await getPrisma().user.findUnique({ where: { id: session.user.id }, select: { phone: true } })
+    : null;
+  const addresses = section === "addresses"
+    ? await getPrisma().deliveryAddress.findMany({
+        where: { userId: session.user.id },
+        select: { id: true, label: true, recipient: true, phone: true, city: true, street: true, apartment: true, postalCode: true, isDefault: true },
+        orderBy: [{ isDefault: "desc" }, { createdAt: "asc" }],
+      })
+    : [];
+
   return (
     <AccountWorkspace
       section={section}
       name={session.user.name}
       email={session.user.email}
       emailVerified={session.user.emailVerified}
+      phone={profile?.phone ?? null}
+      addresses={addresses}
     />
   );
 }
