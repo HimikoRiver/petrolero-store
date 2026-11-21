@@ -295,6 +295,90 @@ const firstListAfterSecond = await authRequest("/api/account/favorites", { cooki
 assertOkay(firstListAfterSecond, "first account must be unchanged");
 assert.deepEqual([...firstListAfterSecond.data.ids].sort(), ["demo-ninja", "demo-performance"].sort());
 
+console.log("4e. Check demo checkout validation and ownership");
+const publicOrderList = await authRequest("/api/account/demo-orders");
+assert.equal(publicOrderList.response.status, 401, "Orders list must be private");
+const publicSubmit = await authRequest("/api/account/demo-orders", {
+  body: { lines: [{ id: "demo-fusion", quantity: 1 }] },
+});
+assert.equal(publicSubmit.response.status, 401, "Anonymous order submission must be forbidden");
+
+const orderInput = {
+  recipient: "Petrolero Customer",
+  phone: "+7 900 111 22 33",
+  city: "Москва",
+  street: "Тестовая улица, 1",
+  apartment: "кв. 2",
+  postalCode: "101000",
+  note: "Только тест, без доставки",
+  lines: [
+    { id: "demo-fusion", quantity: 2, priceKopecks: 1 },
+    { id: "demo-ninja", quantity: 1, priceKopecks: 1 },
+  ],
+};
+for (const lines of [
+  [{ id: "invalid-sku", quantity: 1 }],
+  [{ id: "demo-fusion", quantity: 0 }],
+  [{ id: "demo-fusion", quantity: 1 }, { id: "demo-fusion", quantity: 2 }],
+]) {
+  const invalidOrder = await authRequest("/api/account/demo-orders", {
+    cookie, body: { ...orderInput, lines },
+  });
+  assert.equal(invalidOrder.response.status, 400, "Invalid cart line should be rejected");
+}
+const checkoutPage = await fetch(origin + "/checkout");
+assert.ok(checkoutPage.ok, "Checkout preview page must render without authentication");
+assert.ok((await checkoutPage.text()).includes("Оформление заказа"));
+
+const createOrder = await authRequest("/api/account/demo-orders", {
+  cookie, body: orderInput,
+});
+assert.equal(createOrder.response.status, 201, "Demo checkout must create a test record");
+const orderId = createOrder.data.order?.id;
+assert.ok(orderId && createOrder.data.order.reference.startsWith("DEMO-"));
+
+const listOrders = await authRequest("/api/account/demo-orders", { cookie });
+assertOkay(listOrders, "Own demo order history");
+assert.equal(listOrders.data.orders.length, 1);
+const ownOrder = listOrders.data.orders[0];
+assert.equal(ownOrder.id, orderId);
+assert.equal(ownOrder.items.length, 2);
+assert.equal(ownOrder.subtotalKopecks, 2 * 750000 + 259000,
+  "Subtotal must be calculated with server catalog prices, not browser amounts");
+assert.ok(ownOrder.items.some(item =>
+  item.productId === "demo-fusion" && item.unitPriceKopecks === 750000 && item.quantity === 2));
+
+const detailOrder = await authRequest(
+  "/api/account/demo-orders/" + encodeURIComponent(orderId), { cookie },
+);
+assertOkay(detailOrder, "Read owned demo order");
+assert.equal(detailOrder.data.order.id, orderId);
+
+const foreignOrders = await authRequest("/api/account/demo-orders", { cookie: secondCookie });
+assertOkay(foreignOrders, "Read second user's orders");
+assert.deepEqual(foreignOrders.data.orders, [], "Another buyer must not see the first user's orders");
+const foreignOrderDetail = await authRequest(
+  "/api/account/demo-orders/" + encodeURIComponent(orderId), { cookie: secondCookie },
+);
+assert.equal(foreignOrderDetail.response.status, 404,
+  "Foreign order must not be accessible by guessed ID");
+const unauthOrderDetail = await authRequest(
+  "/api/account/demo-orders/" + encodeURIComponent(orderId),
+);
+assert.equal(unauthOrderDetail.response.status, 401);
+
+const ownOrderPage = await authRequest("/account/orders/" + encodeURIComponent(orderId), { cookie });
+assertOkay(ownOrderPage, "SSR owned order page");
+assert.ok(String(ownOrderPage.data).includes("Тестовый"),
+  "Owned order page should show its demonstration status");
+
+const foreignOrderPage = await authRequest(
+  "/account/orders/" + encodeURIComponent(orderId), { cookie: secondCookie },
+);
+assertOkay(foreignOrderPage, "SSR page for non-owned order");
+assert.ok(String(foreignOrderPage.data).includes("Заказ не найден"),
+  "Foreign order should not be rendered in the account workspace");
+
 console.log("5. Request password reset and collect the second email");
 const resetRequest = await authRequest("/api/auth/request-password-reset", {
   body: { email, redirectTo: origin + "/account/reset-password" },
@@ -333,4 +417,4 @@ const afterSignOut = await authRequest("/api/auth/get-session", { cookie: newCoo
 assertOkay(afterSignOut, "get session after sign-out");
 assert.equal(afterSignOut.data?.session, undefined, "Session survived sign-out");
 
-console.log("PASS: DB migration + SMTP + signup + verification + profile + addresses CRUD + isolated favorites + reset + logout");
+console.log("PASS: DB migration + SMTP + signup + verification + profile + addresses + favorites + private demo checkout + reset + logout");
