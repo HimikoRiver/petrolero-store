@@ -1,5 +1,9 @@
-import "dotenv/config";
+import { config as loadEnv } from "dotenv";
 import { defineConfig } from "prisma/config";
+
+// Prisma CLI does not automatically read Next.js .env.local files.
+// Explicit process environment variables still take precedence in CI/hosting.
+loadEnv({ path: [".env.local", ".env"] });
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
