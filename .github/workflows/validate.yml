@@ -24,7 +24,14 @@ jobs:
           node-version: "22"
           cache: npm
       - name: Install dependencies
-        run: npm ci --no-audit --no-fund
+        run: npm install --no-audit --no-fund
+      - name: Export regenerated lockfile
+        run: |
+          echo PETROLERO_LOCK_BEGIN
+          base64 -w 512 package-lock.json
+          echo PETROLERO_LOCK_END
+      - name: Prisma schema validation
+        run: npx prisma validate
       - name: Generate Next.js route types
         run: npx next typegen
       - name: TypeScript

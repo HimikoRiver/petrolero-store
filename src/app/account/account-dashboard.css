@@ -1,0 +1,35 @@
+.petrolero-account-private {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: clamp(24px, 5vw, 80px);
+  background: radial-gradient(circle at 75% 20%, #24190e, transparent 48%), #090909;
+  color: #e9e1d5;
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+}
+.petrolero-account-private__card {
+  width: min(100%, 560px);
+  border: 1px solid #5b432a;
+  background: #16120f;
+  padding: clamp(25px, 5vw, 58px);
+}
+.petrolero-account-private__eyebrow {
+  color: #d7ad78;
+  font-size: 11px;
+  letter-spacing: .13em;
+}
+.petrolero-account-private h1 {font-weight:500; font-size:clamp(27px,4vw,42px); margin:19px 0;}
+.petrolero-account-private p {font-size:14px; line-height:1.65; color:#c4b5a4;}
+.petrolero-account-private__email {overflow-wrap:anywhere; color:#d7ad78!important;}
+.petrolero-account-private__actions {display:flex; align-items:center; flex-wrap:wrap; gap:18px; margin-top:30px;}
+.petrolero-account-private__actions a,
+.petrolero-account-private__actions button,
+.petrolero-account-private__card > a {
+  display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:10px 18px;
+  border:1px solid #ac7e4a; background:#2d2116; color:#f5d4a3;
+  text-decoration:none; font-size:13px; cursor:pointer;
+}
+.petrolero-account-private__actions a:hover,
+.petrolero-account-private__actions button:hover,
+.petrolero-account-private__card > a:hover {background:#40301f;}
+.petrolero-account-private :focus-visible {outline:2px solid #f5d4a3;outline-offset:3px;}
