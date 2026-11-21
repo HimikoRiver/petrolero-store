@@ -168,6 +168,12 @@
   transition: border-color .25s;
 }
 .petrolero-catalog-item:hover {border-color: #806447}
+.petrolero-catalog-item__media-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: #11100f;
+}
 .petrolero-catalog-item__media {
   position: relative; display: grid; place-items: center;
   aspect-ratio: 1.12; background: radial-gradient(ellipse at 50% 45%, #32281d 0%, #1d1a15 38%, #11100f 82%);
@@ -191,15 +197,28 @@
   background: #14120e; font-size: 9px; font-weight: 650; letter-spacing: .15em;
 }
 .petrolero-catalog-item__quick {
-  position: absolute; z-index: 3; bottom: 17px; left: 50%;
-  transform: translate(-50%, 10px); opacity: 0;
-  width: max-content; max-width: calc(100% - 30px);
-  padding: 12px 19px; border: 1px solid #b49a78; background: rgba(18,16,13,.93);
-  color: #e7c79c; font-size: 12px; transition: opacity .22s,transform .22s;
+  position: relative;
+  z-index: 3;
+  align-self: center;
+  flex: 0 0 auto;
+  width: max-content;
+  max-width: calc(100% - 16px);
+  min-height: 28px;
+  margin: 4px auto 9px;
+  padding: 6px 13px;
+  border: 1px solid #5a4630;
+  background: #19150f;
+  color: #dbba8a;
+  font-size: 10px;
+  line-height: 1.2;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .22s, transform .22s;
 }
-.petrolero-catalog-item__media:hover .petrolero-catalog-item__quick,
+.petrolero-catalog-item:hover .petrolero-catalog-item__quick,
 .petrolero-catalog-item__quick:focus-visible {
-  opacity: 1; transform: translate(-50%, 0);
+  opacity: 1;
+  transform: translateY(0);
 }
 .petrolero-catalog-item__body {flex: 1; display: flex; flex-direction: column; padding: 18px 17px 19px}
 .petrolero-catalog-item__sku {margin: 0; font-size: 10px; letter-spacing: .09em; color: #a48b6c}

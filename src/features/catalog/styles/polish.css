@@ -50,6 +50,12 @@
   border-color: #e5bc81;
   color: #ffe1b4;
 }
+/* List view: keep action button compact beside its secondary actions. */
+.petrolero-catalog-items[data-view="list"] .petrolero-catalog-add {
+  flex: 0 0 auto;
+  width: clamp(150px, 15vw, 210px);
+}
+
 .petrolero-catalog-item__action-icon {
   display: grid; place-items: center; flex: 0 0 34px; height: 42px;
   padding: 0; border: 1px solid transparent; border-radius: 6px;
@@ -91,10 +97,22 @@
 .petrolero-catalog-filter > button[aria-expanded="true"] > svg { transform: rotate(180deg); }
 .petrolero-catalog-sort { position: relative; display: flex; align-items: center; }
 .petrolero-catalog-sort select {
-  max-width: none; padding-right: 36px;
-  background: linear-gradient(90deg, #15110d, #19150f);
+  max-width: none;
+  padding-right: 36px;
+  background: #19150f !important;
   background-image: none !important;
-  border-color: rgba(212,169,105,.3);
+  border-color: rgba(212, 169, 105, .3);
+  opacity: 1;
+}
+.petrolero-catalog-sort select option {
+  background: #19150f;
+  color: #e9d3b6;
+}
+.petrolero-catalog-page .petrolero-catalog-sort select:focus,
+.petrolero-catalog-page .petrolero-catalog-sort select:focus-visible {
+  outline: none;
+  box-shadow: none;
+  border-color: rgba(212, 169, 105, .3);
 }
 .petrolero-catalog-sort > svg {
   position: absolute; right: 12px; pointer-events: none;

@@ -23,14 +23,16 @@ export default function CatalogProductCard({
   onCompare: (product: CatalogProduct) => void;
 }) {
   return (
-    <article className="petrolero-catalog-item">
-      <div className="petrolero-catalog-item__media">
-        <span className="petrolero-catalog-item__demo">ДЕМО</span>
-        <ProductGallery
-          image={product.image}
-          gallery={product.gallery}
-          title={product.title}
-        />
+    <article className="petrolero-catalog-item" data-category={product.category}>
+      <div className="petrolero-catalog-item__media-column">
+        <div className="petrolero-catalog-item__media">
+          <span className="petrolero-catalog-item__demo">ДЕМО</span>
+          <ProductGallery
+            image={product.image}
+            gallery={product.gallery}
+            title={product.title}
+          />
+        </div>
         <button
           className="petrolero-catalog-item__quick"
           type="button"

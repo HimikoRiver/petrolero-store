@@ -1,7 +1,7 @@
 export default function CatalogAdditivesFeature() {
   return (
     <aside className="petrolero-catalog-additives-feature" aria-label="Преимущества присадок Petrolero">
-      <h2>ПРИСАДКИ <span>PETROLERO</span></h2>
+      <h2>PETROLERO</h2>
       <p>
         Для защиты узлов трения, очистки внутренних систем
         и стабильной работы двигателя.

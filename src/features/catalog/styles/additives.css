@@ -1,25 +1,24 @@
-/* Additives-only editorial backdrop.
-   User asset: public/catalog/fon.webp (the public directory is omitted from URLs). */
+/* Shared catalog backdrop: public/catalog/fon.webp. The editorial text appears on additives only. */
 .petrolero-catalog-main {
   position: relative;
   isolation: isolate;
 }
 
-.petrolero-catalog-main[data-department="additives"]::before {
+.petrolero-catalog-main::before {
   content: "";
   position: absolute;
   z-index: -1;
   top: 75px;
   right: -2.5%;
   width: 106%;
-  height: 385px;
+  height: 430px;
   pointer-events: none;
   background-image:
-    linear-gradient(90deg, #090909 0%, rgba(9, 9, 9, .92) 16%, rgba(9, 9, 9, .22) 56%, rgba(9, 9, 9, .06) 100%),
-    linear-gradient(180deg, rgba(9, 9, 9, .55) 0%, transparent 22%, transparent 65%, #090909 100%),
+    linear-gradient(90deg, #090909 0%, rgba(9, 9, 9, .91) 16%, rgba(9, 9, 9, .29) 57%, rgba(9, 9, 9, .06) 100%),
+    linear-gradient(180deg, rgba(9, 9, 9, .55) 0%, transparent 22%, transparent 64%, #090909 100%),
     url("/catalog/fon.webp");
-  background-size: 100% 100%, 100% 100%, cover;
-  background-position: center, center, right 57%;
+  background-size: 100% 100%, 100% 100%, 85% auto;
+  background-position: center, center, right 52%;
   background-repeat: no-repeat;
   -webkit-mask-image: linear-gradient(to bottom, transparent, #000 13%, #000 78%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent, #000 13%, #000 78%, transparent 100%);
@@ -44,7 +43,7 @@
   text-shadow: 0 2px 22px rgba(0, 0, 0, .8);
 }
 
-.petrolero-catalog-additives-feature h2 span { color: #d6a465; }
+.petrolero-catalog-additives-feature h2 { color: #d6a465; }
 
 .petrolero-catalog-additives-feature > p {
   width: min(440px, 100%);
@@ -92,12 +91,12 @@
 }
 
 @media (max-width: 1050px) {
-  .petrolero-catalog-main[data-department="additives"]::before {
+  .petrolero-catalog-main::before {
     top: 68px;
     right: -3%;
     width: 95%;
-    height: 345px;
-    background-position: center, center, 72% center;
+    height: 370px;
+    background-position: center, center, right center;
     opacity: .68;
   }
   .petrolero-catalog-additives-feature {
@@ -106,12 +105,13 @@
 }
 
 @media (max-width: 700px) {
-  .petrolero-catalog-main[data-department="additives"]::before {
+  .petrolero-catalog-main::before {
     top: 68px;
     right: -19px;
     width: min(95vw, 500px);
     height: 315px;
-    background-position: center, center, 67% center;
+    background-size: 100% 100%, 100% 100%, auto 100%;
+    background-position: center, center, 68% center;
     opacity: .30;
   }
 }

@@ -76,8 +76,12 @@
 .petrolero-product-gallery__indicator:hover span {
   background: #f5d29c;
 }
-.petrolero-catalog-item__media:has(.petrolero-product-gallery__indicators) .petrolero-catalog-item__quick {
-  bottom: 39px;
+/* Reserve a bottom strip for angle controls, below the additive bottle artwork. */
+.petrolero-catalog-item[data-category="additives"] .petrolero-product-gallery__picture {
+  bottom: 29px;
+}
+.petrolero-catalog-item[data-category="additives"] .petrolero-product-gallery__indicators {
+  bottom: 4px;
 }
 .petrolero-catalog-quickview__media {
   position: relative;
@@ -98,8 +102,8 @@
   .petrolero-product-gallery__sprite-window {
     height: 80%;
   }
-  .petrolero-catalog-item__media:has(.petrolero-product-gallery__indicators) .petrolero-catalog-item__quick {
-    bottom: 35px;
+  .petrolero-catalog-item[data-category="additives"] .petrolero-product-gallery__picture {
+    bottom: 25px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
