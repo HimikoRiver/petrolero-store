@@ -91,7 +91,7 @@ export default function useFavoriteProducts(products: readonly Pick<CatalogProdu
     }
 
     const load = async () => {
-      const localGuestIds = readGuest();
+      const localGuestIds = readGuest(validIds);
       try {
         const ids = localGuestIds.length
           ? await requestFavorites("POST", validIds, { ids: localGuestIds, ownerId })
@@ -122,11 +122,11 @@ export default function useFavoriteProducts(products: readonly Pick<CatalogProdu
     let disposed = false;
     const refresh = async () => {
       if (!ownerId) {
-        setState((current) => ({ ...current, ids: readGuest() }));
+        setState((current) => ({ ...current, ids: readGuest(validIds) }));
         return;
       }
       try {
-        const ids = await requestFavorites("GET");
+        const ids = await requestFavorites("GET", validIds);
         if (!disposed && ownerRef.current === ownerId && !savingRef.current) {
           setState((current) => ({ ...current, ids, error: null }));
         }
@@ -185,7 +185,7 @@ export default function useFavoriteProducts(products: readonly Pick<CatalogProdu
       // A request can succeed on the server even when its response is lost:
       // restore from the authoritative list rather than blindly reverting.
       let ids = state.ids;
-      try { ids = await requestFavorites("GET"); } catch { /* keep previous list */ }
+      try { ids = await requestFavorites("GET", validIds); } catch { /* keep previous list */ }
       if (ownerRef.current === ownerId) {
         setState({
           ids, ready: true, saving: false,
