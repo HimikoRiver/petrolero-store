@@ -1,0 +1,35 @@
+/* Small fallback screens while the account backend is not configured. */
+.pa-loading {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 25px;
+  background: #090a0b;
+  color: #bdab8e;
+  font: 13px var(--font-geist-sans), Arial, sans-serif;
+}
+.pa-unavailable {
+  display: grid;
+  place-items: center;
+  padding: 30px;
+}
+.pa-unavailable__panel {
+  width: min(100%, 570px);
+  padding: clamp(26px, 5vw, 55px);
+  border: 1px solid rgba(196, 156, 97, .3);
+  background: #151617;
+}
+.pa-unavailable__panel h1 {
+  font-size: clamp(29px, 4vw, 42px);
+  font-weight: 400;
+  margin: 16px 0 19px;
+  line-height: 1.15;
+}
+.pa-unavailable__panel p {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #9c9e9a;
+}
+.pa-unavailable__panel .pa-button { margin-top: 28px; }
+.pa-unavailable__home { display: block; margin-top: 24px; width: fit-content; font-size: 12px; color: #ae9c85; }
+.pa-unavailable__home:hover { color: #f5d4a5; }
