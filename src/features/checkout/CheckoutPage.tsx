@@ -244,7 +244,7 @@ export default function CheckoutPage({ catalogProducts }: { catalogProducts: rea
                           disabled={pending} aria-label={"Уменьшить количество " + product.title}>−</button>
                         <span>{quantity}</span>
                         <button type="button" onClick={() => updateQuantity(id, 1)}
-                          disabled={pending || quantity >= 20} aria-label={"Увеличить количество " + product.title}>+</button>
+                          disabled={pending || quantity >= 20 || (!product.isDemo && quantity >= product.stockQuantity)} aria-label={"Увеличить количество " + product.title}>+</button>
                       </div>
                     </div>
                     <strong className="pt-checkout__item-price">{priceLabel((product.priceKopecks ?? 0) * quantity)}</strong>

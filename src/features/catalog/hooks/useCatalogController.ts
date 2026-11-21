@@ -147,6 +147,10 @@ export default function useCatalogController(catalogProducts: readonly CatalogPr
   };
 
   const addToCart = (product: CatalogProduct) => {
+    if (!product.isDemo && product.stockQuantity <= 0) {
+      setFeedback({ message: "Товара нет в наличии" });
+      return;
+    }
     updateQuantity(product.id, 1);
     setFeedback({ message: "Товар добавлен в корзину", target: "cart" });
   };

@@ -64,6 +64,9 @@ export async function POST(request: Request) {
         product.priceKopecks < 0) {
       return jsonError("Один из товаров недоступен.", 400);
     }
+    if (!product.isDemo && (quantity as number) > product.stockQuantity) {
+      return jsonError("Недостаточно товара для тестовой заявки.", 400);
+    }
     unique.add(id);
     unitCount += quantity as number;
     const lineTotalKopecks = product.priceKopecks * (quantity as number);

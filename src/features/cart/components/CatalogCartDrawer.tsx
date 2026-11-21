@@ -44,7 +44,7 @@ export default function CatalogCartDrawer({ products, cartLines, cartCount, cart
                           <div className="petrolero-catalog-quantity">
                             <button type="button" aria-label={"Уменьшить количество " + product.title} onClick={() => updateQuantity(product.id, -1)}>−</button>
                             <span>{line.quantity}</span>
-                            <button type="button" aria-label={"Увеличить количество " + product.title} onClick={() => updateQuantity(product.id, 1)}>+</button>
+                            <button type="button" aria-label={"Увеличить количество " + product.title} disabled={!product.isDemo && line.quantity >= product.stockQuantity || line.quantity >= 20} onClick={() => updateQuantity(product.id, 1)}>+</button>
                           </div>
                         </div>
                       </div>

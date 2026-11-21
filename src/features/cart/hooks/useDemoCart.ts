@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import type { CartLine } from "../types";
 
-export type CartProduct = { id: string; priceKopecks: number | null };
+export type CartProduct = { id: string; priceKopecks: number | null; stockQuantity?: number; isDemo?: boolean };
 const STORAGE_KEY = "petrolero-demo-cart";
 const MAX_QUANTITY = 20;
+const limitFor = (product: CartProduct) => product.isDemo
+  ? MAX_QUANTITY : Math.min(MAX_QUANTITY, Math.max(0, product.stockQuantity ?? 0));
 
 export default function useDemoCart(products: readonly CartProduct[]) {
   const [cartLines, setCartLines] = useState<CartLine[]>([]);
@@ -21,8 +23,10 @@ export default function useDemoCart(products: readonly CartProduct[]) {
           if (!item || typeof item !== "object" || !("id" in item) || !("quantity" in item)) continue;
           if (typeof item.id !== "string" || !Number.isInteger(item.quantity) ||
               (item.quantity as number) <= 0 || !products.some(p => p.id === item.id)) continue;
-          counts.set(item.id, Math.min(MAX_QUANTITY,
-            (counts.get(item.id) ?? 0) + (item.quantity as number)));
+          const product = products.find(p => p.id === item.id);
+          if (!product) continue;
+          const quantity = Math.min(limitFor(product), (counts.get(item.id) ?? 0) + (item.quantity as number));
+          if (quantity > 0) counts.set(item.id, quantity);
         }
         return [...counts].map(([id, quantity]) => ({ id, quantity }));
       } catch {
@@ -48,15 +52,17 @@ export default function useDemoCart(products: readonly CartProduct[]) {
   }, [cartLines, cartHydrated]);
 
   const updateQuantity = (id: string, delta: number) => {
-    if (!products.some(product => product.id === id) || !Number.isInteger(delta)) return;
+    const product = products.find(product => product.id === id);
+    if (!product || !Number.isInteger(delta)) return;
+    const limit = limitFor(product);
     setCartLines((current) => {
       const existing = current.find((line) => line.id === id);
       if (!existing) {
-        return delta > 0 ? [...current, { id, quantity: Math.min(MAX_QUANTITY, delta) }] : current;
+        return delta > 0 && limit > 0 ? [...current, { id, quantity: Math.min(limit, delta) }] : current;
       }
       return current
         .map((line) => line.id === id
-          ? { ...line, quantity: Math.min(MAX_QUANTITY, Math.max(0, line.quantity + delta)) }
+          ? { ...line, quantity: Math.min(limit, Math.max(0, line.quantity + delta)) }
           : line)
         .filter((line) => line.quantity > 0);
     });
