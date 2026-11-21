@@ -261,14 +261,20 @@
   box-shadow: none;
 }
 
-/* Preserve autofill readability without inserting a colored browser rectangle. */
+/* Keep fields completely transparent, including browser-autofilled values. */
 .petrolero-account-field input:-webkit-autofill,
 .petrolero-account-field input:-webkit-autofill:hover,
-.petrolero-account-field input:-webkit-autofill:focus {
-  -webkit-text-fill-color: #fbf4e9;
+.petrolero-account-field input:-webkit-autofill:focus,
+.petrolero-account-field input:-webkit-autofill:active {
+  background: transparent !important;
+  background-color: transparent !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: #fbf4e9 !important;
   caret-color: #f7cc8e;
-  -webkit-box-shadow: 0 0 0 100px #0e0c0b inset;
-  transition: background-color 9999s ease-out 0s;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  transition: background-color 9999s ease-out 0s, border-color .25s ease;
 }
 
 .petrolero-account-password-wrap {
