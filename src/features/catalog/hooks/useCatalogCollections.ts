@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import useFavoriteProducts from "@/features/favorites/useFavoriteProducts";
 
-type ProductIdentity = { id: string };
+type ProductIdentity = { id: string; published: boolean };
 
 export default function useCatalogCollections(products: readonly ProductIdentity[]) {
-  const favorites = useFavoriteProducts(products as readonly { id: string; published: boolean }[]);
+  const favorites = useFavoriteProducts(products);
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [comparisonReady, setComparisonReady] = useState(false);
 
