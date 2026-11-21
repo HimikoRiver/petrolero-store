@@ -81,7 +81,15 @@
 .pa-sidebar__exit:hover,.pa-sidebar__bottom button:hover{color:#e4c28b;}
 .pa-sidebar__bottom p[role="alert"] { font-size:11px;color:#e3a093;margin-top:12px; }
 .pa-main { min-width:0; background: radial-gradient(ellipse 750px 500px at 88% -180px,rgba(91,67,40,.16),transparent 70%),#090a0b; }
-.pa-main__inner { width:min(100%,1360px);min-height:100%;padding:39px clamp(22px,4.5vw,84px) 25px;margin:0 auto;display:flex;flex-direction:column; }
+.pa-main__inner {
+  width:100%;
+  max-width:none;
+  min-height:100%;
+  padding:25px clamp(20px,3vw,48px) 25px clamp(18px,1.65vw,30px);
+  margin:0;
+  display:flex;
+  flex-direction:column;
+}
 .pa-preview-alert {
   display:flex;align-items:center;gap:12px;line-height:1.5;
   font-size:11px;letter-spacing:.02em;color:#c6b89f;
@@ -93,12 +101,22 @@
 .pa-breadcrumb a{color:#979794;}
 .pa-breadcrumb a:hover{color:#d6b987;}
 .pa-page-heading {
-  display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
-  padding:34px 0 30px;margin-bottom:28px;border-bottom:1px solid var(--pa-line);
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding:24px 0 22px;margin-bottom:22px;border-bottom:1px solid var(--pa-line);
 }
 .pa-page-heading h1 { font-weight:400;letter-spacing:-.035em;font-size:clamp(32px,3.7vw,52px);line-height:1.12;margin:8px 0 14px;color:#f2ede6; }
 .pa-page-heading p {color:#9c9b98;font-size:13px;line-height:1.7;max-width:560px;}
-.pa-page-heading__number { color:rgba(173,139,92,.15);font-size:clamp(58px,8vw,108px);line-height:.85;font-weight:300;letter-spacing:-.065em; }
+.pa-page-heading__number {
+  flex:0 0 auto;
+  display:inline-block;
+  padding:7px 10px 11px 4px;
+  color:#e9bb7b;
+  font-size:clamp(65px,7vw,103px);
+  line-height:1.13;
+  font-weight:350;
+  letter-spacing:-.045em;
+  white-space:nowrap;
+}
 .pa-screen { display:grid;gap:22px; }
 .pa-welcome {
   position:relative;isolation:isolate;display:flex;align-items:center;justify-content:space-between;
@@ -183,7 +201,7 @@
 .pa-footer a:hover{color:#d5b483;}
 @media (max-width:1199px){
   .pa-body{grid-template-columns:minmax(216px,246px) minmax(0,1fr);}
-  .pa-main__inner{padding-inline:clamp(22px,3vw,42px);}
+  .pa-main__inner{padding-right:clamp(20px,3vw,40px);padding-left:clamp(16px,2vw,25px);}
   .pa-tiles{grid-template-columns:repeat(2,minmax(0,1fr));}
   .pa-tile{min-height:142px;}
 }
@@ -202,7 +220,7 @@
   .pa-navlink{flex:none;min-height:41px;border-color:var(--pa-line);padding:0 12px;}
   .pa-navlink__number{display:none;}
   .pa-navlink__icon svg{width:16px;height:16px;}
-  .pa-main__inner{padding:24px 22px 22px;}
+  .pa-main__inner{padding:23px 22px 22px;}
   .pa-page-heading{padding-top:28px;margin-bottom:20px;}
   .pa-content-split{grid-template-columns:1fr;}
   .pa-footer{padding-top:45px;}
@@ -337,34 +355,28 @@
 }
 .pa-workspace .pa-sidebar__bottom .petrolero-store-button {margin-top:0;}
 .pa-workspace .pa-settings-row {grid-template-columns:44px minmax(0,1fr);}
+/* Continuous, bright metallic gold with a visibly moving highlight. */
 .pa-workspace .pa-page-heading__number,
-.pa-workspace .pa-navlink__number {
-  color: #d1a86d;
-  background: linear-gradient(105deg,#5b421f 0%,#c8a16a 19%,#f7dda6 39%,#9c6a32 57%,#ebc684 77%,#5b421f 100%);
-  background-size: 230% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: pa-metal-shimmer 7s linear infinite;
-}
-.pa-workspace .pa-page-heading__number {
-  opacity:.65;
-  filter:drop-shadow(0 0 14px rgba(189,136,62,.12));
-}
-.pa-workspace .pa-navlink__number {opacity:.75;animation-duration:5s;}
+.pa-workspace .pa-navlink__number,
 .pa-workspace .pa-welcome__mark {
-  color: #c4a06e;
-  background:linear-gradient(105deg,#46331f,#c49d66,#51391e,#e4c28b,#46331f);
-  background-size:230% 100%;
+  color:#e8ba79;
+  background:linear-gradient(105deg, #c48b46 0%, #f0c789 15%, #fff2c4 27%, #d29b5c 43%, #ffdfa0 56%, #b67d3a 72%, #f9d69c 87%, #c48b46 100%);
+  background-size:210% 100%;
+  background-position:100% 50%;
   -webkit-background-clip:text;
   background-clip:text;
   -webkit-text-fill-color:transparent;
-  animation:pa-metal-shimmer 9s linear infinite;
-  opacity:.34;
+  animation:pa-metal-shimmer 5.8s linear infinite;
 }
+.pa-workspace .pa-page-heading__number {
+  opacity:1;
+  filter:drop-shadow(0 0 12px rgba(215,165,91,.25));
+}
+.pa-workspace .pa-navlink__number {opacity:1;animation-duration:5.8s;}
+.pa-workspace .pa-welcome__mark {opacity:.48;animation-duration:8s;}
 @keyframes pa-metal-shimmer {
-  from {background-position:180% 50%;}
-  to {background-position:-45% 50%;}
+  0% {background-position:100% 50%;}
+  100% {background-position:-110% 50%;}
 }
 /* A product photograph always fits the frame. Oils and additive bottles
    share one treatment without cropping or stretching. */
