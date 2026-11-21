@@ -38,6 +38,9 @@ export async function POST(request: Request) {
     return jsonError("Некорректный запрос.", 400);
   }
   const data = body as Record<string, unknown>;
+  if (data.ownerId !== undefined && data.ownerId !== auth.userId) {
+    return jsonError("Аккаунт изменился. Обновите страницу.", 403);
+  }
   // A batch operation merges a guest list into the account without replacing
   // favorites saved from other devices.
   const submitted = Array.isArray(data.ids) ? data.ids : [data.id];
@@ -63,6 +66,10 @@ export async function DELETE(request: Request) {
   try { body = await request.json(); } catch { return jsonError("Некорректный запрос.", 400); }
   const id = body && typeof body === "object" && !Array.isArray(body)
     ? (body as Record<string, unknown>).id : null;
+  if (body && typeof body === "object" && !Array.isArray(body) &&
+    "ownerId" in body && (body as { ownerId: unknown }).ownerId !== auth.userId) {
+    return jsonError("Аккаунт изменился. Обновите страницу.", 403);
+  }
   if (typeof id !== "string" || id.length < 1 || id.length > 128) {
     return jsonError("Некорректный идентификатор товара.", 400);
   }

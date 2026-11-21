@@ -49,14 +49,14 @@ function assertOkay(result, label) {
   );
 }
 
-async function getEmail(subjectFragment) {
+async function getEmail(subjectFragment, recipient = email) {
   return until(async () => {
     const listResponse = await fetch(mailpit + "/api/v1/messages");
     if (!listResponse.ok) return null;
     const { messages = [] } = await listResponse.json();
     const match = messages.find((message) =>
       String(message.Subject || "").toLowerCase().includes(subjectFragment) &&
-      (message.To || []).some((to) => String(to.Address).toLowerCase() === email.toLowerCase())
+      (message.To || []).some((to) => String(to.Address).toLowerCase() === recipient.toLowerCase())
     );
     if (!match) return null;
     const detailResponse = await fetch(mailpit + "/api/v1/message/" + encodeURIComponent(match.ID));
@@ -211,6 +211,90 @@ for (const section of ["profile", "addresses"]) {
     "Account preview missing section content: " + section);
 }
 
+console.log("4c. Verify favorites merge, deduplication, validation and delete");
+const publicFavorites = await authRequest("/api/account/favorites");
+assert.equal(publicFavorites.response.status, 401, "Favorites must require a session");
+const publicWrite = await authRequest("/api/account/favorites", {
+  body: { id: "demo-fusion" },
+});
+assert.equal(publicWrite.response.status, 401, "Guests must not write account favorites");
+
+const guestMerge = await authRequest("/api/account/favorites", {
+  cookie, body: { ids: ["demo-fusion", "demo-performance", "demo-fusion"] },
+});
+assertOkay(guestMerge, "merge guest favorites");
+assert.deepEqual([...guestMerge.data.ids].sort(), ["demo-fusion", "demo-performance"].sort());
+
+const mergeAgain = await authRequest("/api/account/favorites", {
+  cookie, body: { ids: ["demo-fusion"] },
+});
+assertOkay(mergeAgain, "idempotent guest merge");
+assert.equal(mergeAgain.data.ids.length, 2);
+
+const unknownFavorite = await authRequest("/api/account/favorites", {
+  cookie, body: { id: "non-existent-product" },
+});
+assert.equal(unknownFavorite.response.status, 400, "Unknown product must be rejected");
+const wrongOwner = await authRequest("/api/account/favorites", {
+  cookie, body: { id: "demo-elite", ownerId: "some-other-account" },
+});
+assert.equal(wrongOwner.response.status, 403, "Favorite request must match the authenticated owner");
+
+const addedFavorite = await authRequest("/api/account/favorites", {
+  cookie, body: { id: "demo-ninja" },
+});
+assertOkay(addedFavorite, "save favorite from catalog");
+assert.equal(addedFavorite.data.ids.length, 3);
+
+const removedFavorite = await authRequest("/api/account/favorites", {
+  cookie, method: "DELETE", body: { id: "demo-fusion" },
+});
+assertOkay(removedFavorite, "remove favorite from account");
+assert.deepEqual([...removedFavorite.data.ids].sort(), ["demo-ninja", "demo-performance"].sort());
+
+const storedFavorites = await authRequest("/api/account/favorites", { cookie });
+assertOkay(storedFavorites, "load favorites on another device");
+assert.deepEqual([...storedFavorites.data.ids].sort(), ["demo-ninja", "demo-performance"].sort());
+
+console.log("4d. Confirm separate account does not inherit the first user's favorites");
+const secondEmail = "petrolero-auth-second-" + randomUUID() + "@example.test";
+const secondSignup = await authRequest("/api/auth/sign-up/email", {
+  body: {
+    name: "Second Buyer", email: secondEmail,
+    password: firstPassword, callbackURL: "/account/login?verified=1",
+  },
+});
+assertOkay(secondSignup, "register second account");
+const secondVerification = await getEmail("подтверждение почты", secondEmail);
+const secondVerifyResponse = await fetch(
+  linkIn(secondVerification, "/api/auth/verify-email"),
+  { redirect: "manual" },
+);
+assert.ok(secondVerifyResponse.status >= 200 && secondVerifyResponse.status < 400);
+const secondLogin = await authRequest("/api/auth/sign-in/email", {
+  body: { email: secondEmail, password: firstPassword },
+});
+assertOkay(secondLogin, "second account login");
+const secondCookie = cookieOf(secondLogin.response);
+const separateList = await authRequest("/api/account/favorites", { cookie: secondCookie });
+assertOkay(separateList, "second user's own favorites");
+assert.deepEqual(separateList.data.ids, [], "Other user's favorites leaked into the account");
+
+const secondAdd = await authRequest("/api/account/favorites", {
+  cookie: secondCookie, body: { id: "demo-elite" },
+});
+assertOkay(secondAdd, "second user favorites");
+assert.deepEqual(secondAdd.data.ids, ["demo-elite"]);
+const crossDelete = await authRequest("/api/account/favorites", {
+  cookie: secondCookie, method: "DELETE", body: { id: "demo-ninja" },
+});
+assertOkay(crossDelete, "attempt to remove someone else's favorite");
+assert.deepEqual(crossDelete.data.ids, ["demo-elite"]);
+
+const firstListAfterSecond = await authRequest("/api/account/favorites", { cookie });
+assertOkay(firstListAfterSecond, "first account must be unchanged");
+assert.deepEqual([...firstListAfterSecond.data.ids].sort(), ["demo-ninja", "demo-performance"].sort());
+
 console.log("5. Request password reset and collect the second email");
 const resetRequest = await authRequest("/api/auth/request-password-reset", {
   body: { email, redirectTo: origin + "/account/reset-password" },
@@ -249,4 +333,4 @@ const afterSignOut = await authRequest("/api/auth/get-session", { cookie: newCoo
 assertOkay(afterSignOut, "get session after sign-out");
 assert.equal(afterSignOut.data?.session, undefined, "Session survived sign-out");
 
-console.log("PASS: DB migration + SMTP + signup + verification + profile + addresses CRUD + reset + logout");
+console.log("PASS: DB migration + SMTP + signup + verification + profile + addresses CRUD + isolated favorites + reset + logout");
