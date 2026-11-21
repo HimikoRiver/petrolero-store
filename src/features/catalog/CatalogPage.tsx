@@ -26,7 +26,10 @@ export default function CatalogPage() {
   // Supply catalog state and actions to the single header in RootLayout.
   const { setCatalogSearch, setCartCount, registerCatalogActions } = useHeaderState();
   const closeLayersRef = useRef(closeLayers);
-  closeLayersRef.current = closeLayers;
+
+  useEffect(() => {
+    closeLayersRef.current = closeLayers;
+  }, [closeLayers]);
 
   const openCartFromHeader = useCallback(() => {
     closeLayersRef.current();
