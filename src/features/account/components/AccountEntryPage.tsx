@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import GoldShimmerButton from "@/components/ui/GoldShimmerButton";
 import "../styles/account.css";
 
 type AuthMode = "login" | "register" | "forgot";
@@ -90,9 +91,9 @@ export default function AccountEntryPage() {
                       </button>
                     </div>
 
-                    <button type="submit" className="petrolero-account-submit">
+                    <GoldShimmerButton type="submit" className="petrolero-account-submit">
                       Войти
-                    </button>
+                    </GoldShimmerButton>
                   </form>
 
                   <div className="petrolero-account-bottom-text">
@@ -131,9 +132,9 @@ export default function AccountEntryPage() {
                       <input type="password" placeholder="Создайте пароль" autoComplete="new-password" minLength={8} required />
                     </label>
 
-                    <button type="submit" className="petrolero-account-submit">
+                    <GoldShimmerButton type="submit" className="petrolero-account-submit">
                       Зарегистрироваться
-                    </button>
+                    </GoldShimmerButton>
                   </form>
 
                   <div className="petrolero-account-bottom-text">
@@ -162,9 +163,9 @@ export default function AccountEntryPage() {
                       <input type="email" placeholder="Введите e-mail" autoComplete="email" required />
                     </label>
 
-                    <button type="submit" className="petrolero-account-submit">
+                    <GoldShimmerButton type="submit" className="petrolero-account-submit">
                       Отправить ссылку
-                    </button>
+                    </GoldShimmerButton>
                   </form>
 
                   <div className="petrolero-account-bottom-text">

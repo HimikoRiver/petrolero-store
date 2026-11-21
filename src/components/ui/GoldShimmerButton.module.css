@@ -1,0 +1,82 @@
+.button {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 54px;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 5px;
+  background: linear-gradient(
+    105deg,
+    #b27832 0%,
+    #eabd73 15%,
+    #ffe7b0 29%,
+    #e0a853 43%,
+    #fbd790 56%,
+    #bd853c 72%,
+    #efc278 87%,
+    #b27832 100%
+  );
+  background-size: 230% 100%;
+  color: #191108;
+  box-shadow: 0 8px 33px rgba(194, 121, 29, .19), inset 0 1px 0 rgba(255, 249, 220, .53);
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: .005em;
+  text-shadow: 0 1px 0 rgba(255, 244, 214, .12);
+  cursor: pointer;
+  animation: gold-flow 6.5s linear infinite;
+  transition: box-shadow .3s ease, transform .3s ease;
+}
+
+.button::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -50% auto -50% -48%;
+  width: 32%;
+  transform: skewX(-23deg) translateX(-20%);
+  background: linear-gradient(90deg, transparent, rgba(255, 251, 226, .22), transparent);
+  animation: light-pass 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.label {
+  position: relative;
+  z-index: 1;
+}
+
+.button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 45px rgba(215, 143, 44, .29), inset 0 1px 0 rgba(255, 249, 220, .7);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: .65;
+}
+
+@keyframes gold-flow {
+  0% { background-position: 100% 50%; }
+  100% { background-position: -130% 50%; }
+}
+
+@keyframes light-pass {
+  0%, 18% { left: -48%; }
+  45%, 100% { left: 120%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .button::after {
+    animation: none;
+    transition: none;
+  }
+}
