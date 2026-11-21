@@ -85,7 +85,7 @@ export default function CatalogPage() {
         <CatalogToolbar controller={controller} onCompareOpen={() => { closeLayers(); setCompareOpen(true); }} />
 
         {products.length > 0 ? (
-          <div className="petrolero-catalog-items" data-view={view}>
+          <div id="petrolero-catalog-products" className="petrolero-catalog-items" data-view={view}>
             {products.map((product) => (
               <CatalogProductCard
                 key={product.id}
@@ -100,7 +100,7 @@ export default function CatalogPage() {
             ))}
           </div>
         ) : (
-          <div className="petrolero-catalog-no-results" role="status">
+          <div id="petrolero-catalog-products" className="petrolero-catalog-no-results" role="status">
             <h2>Товары не найдены</h2>
             <p>Измени параметры фильтрации или поисковый запрос.</p>
             <button type="button" onClick={() => { resetFilters(); setSearch(""); }}>Сбросить фильтры</button>
