@@ -3,8 +3,12 @@ import SignOutButton from "@/features/auth/components/SignOutButton";
 import { ACCOUNT_NAVIGATION, accountSectionPath, type AccountSection } from "../data/accountNavigation";
 import AccountIcon from "./AccountIcon";
 import AccountFavorites from "./AccountFavorites";
+import AccountProfile from "./AccountProfile";
+import AccountAddresses from "./AccountAddresses";
+import type { DeliveryAddress } from "../data/accountDetails";
 import StorefrontChrome from "@/components/layout/StorefrontChrome";
 import "../styles/workspace.css";
+import "../styles/accountForms.css";
 
 type AccountWorkspaceProps = {
   section: AccountSection;
@@ -12,6 +16,8 @@ type AccountWorkspaceProps = {
   name?: string | null;
   email?: string | null;
   emailVerified?: boolean;
+  phone?: string | null;
+  addresses?: DeliveryAddress[];
 };
 
 const PAGE_COPY: Record<AccountSection, { title: string; subtitle: string; number: string }> = {
@@ -101,7 +107,7 @@ function LinkPanel({
 }
 
 function AccountScreen({
-  section, preview, name, email, emailVerified,
+  section, preview, name, email, emailVerified, phone, addresses = [],
 }: AccountWorkspaceProps & { preview: boolean }) {
   switch (section) {
     case "overview":
@@ -183,13 +189,9 @@ function AccountScreen({
         <section className="pa-surface">
           <div className="pa-surface__heading">
             <div><span className="pa-kicker">ДОСТАВКА</span><h3>Мои адреса</h3></div>
-            <span className="pa-tag">0 адресов</span>
+            <span className="pa-tag">До 10 адресов</span>
           </div>
-          <EmptyState
-            icon="pin" title="Адреса ещё не добавлены"
-            description="Здесь будут отображаться ваши адреса и получатели."
-            href="/help/delivery-payment" action="Условия доставки"
-          />
+          <AccountAddresses initialAddresses={addresses} preview={preview} />
         </section>
       );
     case "profile":
@@ -199,11 +201,7 @@ function AccountScreen({
             <div className="pa-surface__heading">
               <div><span className="pa-kicker">ПРОФИЛЬ</span><h3>Контактная информация</h3></div>
             </div>
-            <div className="pa-fields">
-              <Field title="Имя" value={preview ? null : name} />
-              <Field title="E-mail" value={preview ? null : email} />
-              <Field title="Телефон" />
-            </div>
+            <AccountProfile preview={preview} name={name ?? null} email={email ?? null} phone={phone ?? null} />
           </section>
           <section className="pa-surface pa-surface--short">
             <span className="pa-kicker">ЗАЩИТА ДАННЫХ</span>
@@ -285,7 +283,7 @@ function AccountScreen({
 }
 
 export default function AccountWorkspace({
-  section, preview = false, name = null, email = null, emailVerified = false,
+  section, preview = false, name = null, email = null, emailVerified = false, phone = null, addresses = [],
 }: AccountWorkspaceProps) {
   const page = PAGE_COPY[section];
   const currentNav = section === "order-detail" ? "orders" : section;
@@ -342,7 +340,7 @@ export default function AccountWorkspace({
               <span className="pa-page-heading__number" aria-hidden="true">{page.number}</span>
             </div>
             <div className="pa-screen">
-              <AccountScreen section={section} preview={preview} name={name} email={email} emailVerified={emailVerified}/>
+              <AccountScreen section={section} preview={preview} name={name} email={email} emailVerified={emailVerified} phone={phone} addresses={addresses}/>
             </div>
           </div>
         </div>

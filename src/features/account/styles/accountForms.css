@@ -1,0 +1,121 @@
+/* Account forms and delivery address cards: scoped styles, shared gold button. */
+.pa-workspace .pa-form-editor,
+.pa-workspace .pa-addresses { padding-top: 24px; }
+.pa-workspace .pa-form-editor__intro {
+  max-width: 630px; margin: 0 0 26px; color: #a6a29d;
+  font-size: 13px; line-height: 1.7;
+}
+.pa-workspace .pa-form { display: grid; gap: 22px; min-width: 0; }
+.pa-workspace .pa-form-grid {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 24px;
+}
+.pa-workspace .pa-edit-field { display: grid; gap: 8px; min-width: 0; }
+.pa-workspace .pa-edit-field--wide { grid-column: 1 / -1; }
+.pa-workspace .pa-edit-field > span {
+  color: #c0a77f; font-size: 11px; font-weight: 500;
+  letter-spacing: .04em;
+}
+.pa-workspace .pa-edit-field em { color: #dfb774; font-style: normal; }
+.pa-workspace .pa-edit-field > input {
+  min-height: 48px; width: 100%; padding: 11px 0 13px;
+  outline: 0; border: 0; border-bottom: 1px solid rgba(199, 160, 102, .4);
+  border-radius: 0; background: transparent; box-shadow: none;
+  color: #f3ebdf; font-size: 14px; font-family: inherit;
+  transition: border-color .2s ease;
+}
+.pa-workspace .pa-edit-field > input::placeholder { color: #79756f; }
+.pa-workspace .pa-edit-field > input:hover { border-bottom-color: rgba(236, 193, 123, .8); }
+.pa-workspace .pa-edit-field > input:focus {
+  border-bottom-color: #f6d49d;
+  box-shadow: 0 1px 0 rgba(246, 212, 157, .25);
+}
+.pa-workspace .pa-edit-field > input:focus-visible { outline: 0; }
+.pa-workspace .pa-edit-field > input.pa-edit-field__locked {
+  color: #99938b; cursor: not-allowed;
+}
+.pa-workspace .pa-edit-field > small {
+  color: #83817d; font-size: 11px; line-height: 1.55;
+}
+.pa-workspace .pa-form-actions {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 13px 18px;
+}
+.pa-workspace .pa-form-actions .petrolero-gold-shimmer-button {
+  min-width: 205px; max-width: 100%;
+}
+.pa-workspace .pa-form-hint { font-size: 11px; color: #b7a385; line-height: 1.5; }
+.pa-workspace .pa-form-message {
+  margin: 0; padding: 11px 14px;
+  border-left: 2px solid #d6b47c;
+  background: rgba(190, 142, 80, .08);
+  color: #e8cba2; font-size: 12px; line-height: 1.65;
+}
+.pa-workspace .pa-form-message[data-error="true"] {
+  border-left-color: #d48979; color: #edb9ad; background: rgba(182, 72, 54, .08);
+}
+.pa-workspace .pa-addresses__toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; margin-bottom: 21px;
+}
+.pa-workspace .pa-addresses__count { display: flex; align-items: baseline; gap: 10px; }
+.pa-workspace .pa-addresses__count strong { color: #e1b777; font-size: 26px; font-weight: 400; }
+.pa-workspace .pa-addresses__count span { color: #96918a; font-size: 12px; }
+.pa-workspace .pa-small-action {
+  padding: 8px 0; border: 0; border-bottom: 1px solid rgba(209, 167, 105, .48);
+  border-radius: 0; background: transparent;
+  color: #e0be8e; cursor: pointer;
+  font: inherit; font-size: 12px; text-align: left;
+}
+.pa-workspace .pa-small-action:hover { color: #ffdcaa; border-bottom-color: #f4d0a1; }
+.pa-workspace .pa-small-action:disabled { cursor: not-allowed; opacity: .5; }
+.pa-workspace .pa-small-action--muted { color: #9e9890; border-bottom-color: rgba(167, 157, 140, .25); }
+.pa-workspace .pa-addresses__notice {
+  padding: 0 0 12px; color: #b49b76; font-size: 12px; line-height: 1.6;
+}
+.pa-workspace .pa-address-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; margin: 16px 0 25px; }
+.pa-workspace .pa-address-card {
+  min-width: 0; padding: clamp(19px, 2vw, 25px);
+  border: 1px solid rgba(184, 147, 99, .23);
+  background: linear-gradient(138deg, rgba(45, 34, 24, .3), #111213 75%);
+}
+.pa-workspace .pa-address-card[data-default="true"] {
+  border-color: rgba(229, 183, 117, .56);
+  background: linear-gradient(145deg, rgba(70, 49, 28, .4), rgba(17,18,19,.95) 72%);
+}
+.pa-workspace .pa-address-card__top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+.pa-workspace .pa-address-card__label { color: #e8d0a8; font-size: 15px; font-weight: 500; }
+.pa-workspace .pa-address-card__default {
+  font-size: 10px; letter-spacing: .08em; color: #e5bd80;
+  border: 1px solid rgba(217, 168, 96, .38); padding: 6px 9px;
+}
+.pa-workspace .pa-address-card__place { color: #f4eee5; font-size: 20px; margin: 0 0 8px; }
+.pa-workspace .pa-address-card__street { color: #b9b3aa; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; margin: 0; }
+.pa-workspace .pa-address-card__person { color: #a99f91; font-size: 12px; line-height: 1.6; margin: 16px 0 0; overflow-wrap: anywhere; }
+.pa-workspace .pa-address-card__postal { color: #827d75; font-size: 11px; margin: 6px 0 0; }
+.pa-workspace .pa-address-card__actions { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 20px; }
+.pa-workspace .pa-address-card__confirm { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 18px; border-top: 1px solid rgba(196, 144, 84, .2); padding-top: 12px; }
+.pa-workspace .pa-address-card__confirm p { width: 100%; color: #edd2b0; font-size: 12px; }
+.pa-workspace .pa-address-card__confirm button { border: 0; background: none; cursor: pointer; font: inherit; font-size: 12px; color: #d7ad7b; padding: 4px 0; }
+.pa-workspace .pa-address-card__confirm button:disabled { opacity: .5; }
+.pa-workspace .pa-address-editor { padding-top: 4px; }
+.pa-workspace .pa-address-editor__heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 24px; }
+.pa-workspace .pa-address-editor__heading h4 { margin: 7px 0 0; color: #f4ebdd; font-size: clamp(19px, 2vw, 25px); font-weight: 450; }
+.pa-workspace .pa-checkbox { display: flex; align-items: center; gap: 11px; color: #b1aca4; font-size: 12px; cursor: pointer; }
+.pa-workspace .pa-checkbox input { appearance: none; flex: none; width: 17px; height: 17px; border: 1px solid #ba9868; background: transparent; border-radius: 2px; display: grid; place-items: center; }
+.pa-workspace .pa-checkbox input:checked { background: #d8b27d; border-color: #e1bd88; }
+.pa-workspace .pa-checkbox input:checked::after { content: ""; width: 5px; height: 9px; border-right: 2px solid #16110c; border-bottom: 2px solid #16110c; transform: translateY(-1px) rotate(45deg); }
+.pa-workspace .pa-addresses__empty { padding: 35px 0 5px; color: #a7a199; font-size: 13px; }
+.pa-workspace .pa-addresses__empty p { margin: 0 0 18px; line-height: 1.7; }
+@media (max-width: 1120px) {
+  .pa-workspace .pa-address-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 650px) {
+  .pa-workspace .pa-form-grid { grid-template-columns: 1fr; gap: 17px; }
+  .pa-workspace .pa-edit-field--wide { grid-column: auto; }
+  .pa-workspace .pa-address-card__top { margin-bottom: 18px; }
+  .pa-workspace .pa-addresses__toolbar { align-items: flex-start; }
+  .pa-workspace .pa-form-actions .petrolero-gold-shimmer-button { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pa-workspace .pa-edit-field > input { transition: none; }
+}
