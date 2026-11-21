@@ -25,7 +25,7 @@ export default function useCatalogController() {
   const [feedback, setFeedback] = useState<CatalogFeedback | null>(null);
   const filtersRef = useRef<HTMLDivElement>(null);
   const { cartLines, cartCount, cartTotal, updateQuantity } = useDemoCart(CATALOG_PRODUCTS);
-  const { favoriteIds, setFavoriteIds, compareIds, setCompareIds } = useCatalogCollections(CATALOG_PRODUCTS);
+  const { favoriteIds, favoritesReady, favoritesSaving, favoritesError, toggleFavoriteId, retryFavorites, compareIds, setCompareIds } = useCatalogCollections(CATALOG_PRODUCTS);
 
   useEffect(() => {
     if (!openFilter) return;
@@ -151,13 +151,13 @@ export default function useCatalogController() {
     setFeedback({ message: "Товар добавлен в корзину", target: "cart" });
   };
 
-  const toggleFavorite = (product: CatalogProduct) => {
-    const wasFavorite = favoriteIds.includes(product.id);
-    setFavoriteIds((current) => current.includes(product.id)
-      ? current.filter((id) => id !== product.id)
-      : [...current, product.id],
-    );
-    setFeedback({ message: wasFavorite ? "Убрано из избранного" : "Добавлено в избранное" });
+  const toggleFavorite = async (product: CatalogProduct) => {
+    const added = await toggleFavoriteId(product.id);
+    if (added === null) {
+      setFeedback({ message: "Не удалось сохранить избранное. Повторите попытку." });
+      return;
+    }
+    setFeedback({ message: added ? "Добавлено в избранное" : "Убрано из избранного" });
   };
 
   const toggleCompare = (product: CatalogProduct) => {
@@ -190,5 +190,5 @@ export default function useCatalogController() {
   };
 
 
-  return { department, category, search, setSearch, sortOrder, setSortOrder, selectedFilters, minPrice, setMinPrice, maxPrice, setMaxPrice, openFilter, setOpenFilter, view, setView, preview, setPreview, cartOpen, setCartOpen, cartLines, favoriteIds, compareIds, setCompareIds, favoritesOnly, setFavoritesOnly, compareOpen, setCompareOpen, feedback, setFeedback, filtersRef, filterOptions, products, filterCount, cartCount, comparedProducts, cartTotal, resetFilters, changeDepartment, changeCategory, toggleValue, updateQuantity, addToCart, toggleFavorite, toggleCompare, heading, closeLayers };
+  return { department, category, search, setSearch, sortOrder, setSortOrder, selectedFilters, minPrice, setMinPrice, maxPrice, setMaxPrice, openFilter, setOpenFilter, view, setView, preview, setPreview, cartOpen, setCartOpen, cartLines, favoriteIds, favoritesReady, favoritesSaving, favoritesError, retryFavorites, compareIds, setCompareIds, favoritesOnly, setFavoritesOnly, compareOpen, setCompareOpen, feedback, setFeedback, filtersRef, filterOptions, products, filterCount, cartCount, comparedProducts, cartTotal, resetFilters, changeDepartment, changeCategory, toggleValue, updateQuantity, addToCart, toggleFavorite, toggleCompare, heading, closeLayers };
 }

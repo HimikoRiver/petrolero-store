@@ -269,3 +269,17 @@
   padding: 12px 20px; border: 1px solid #9e734a;
   background: #2d2116; color: #f1c88d; font-size: 12px;
 }
+
+
+/* Account favorites: keep feedback understated and readable in the catalog. */
+.petrolero-catalog-favorite-alert {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 14px;
+  padding: 12px 0; color: #e5bb87; font-size: 12px; line-height: 1.65;
+}
+.petrolero-catalog-favorite-alert button {
+  padding: 5px 0; color: #f5d2a3; border: 0;
+  border-bottom: 1px solid currentColor; background: none; cursor: pointer;
+}
+.petrolero-catalog-item__action-icon:disabled {
+  opacity: .5; cursor: wait;
+}

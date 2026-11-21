@@ -21,7 +21,7 @@ import "./styles/additives.css";
 
 export default function CatalogPage() {
   const controller = useCatalogController();
-  const { department, category, search, setSearch, sortOrder, setSortOrder, selectedFilters, minPrice, setMinPrice, maxPrice, setMaxPrice, openFilter, setOpenFilter, view, setView, preview, setPreview, cartOpen, setCartOpen, cartLines, favoriteIds, compareIds, setCompareIds, favoritesOnly, setFavoritesOnly, compareOpen, setCompareOpen, feedback, setFeedback, filtersRef, filterOptions, products, filterCount, cartCount, comparedProducts, cartTotal, resetFilters, changeDepartment, changeCategory, toggleValue, updateQuantity, addToCart, toggleFavorite, toggleCompare, heading, closeLayers } = controller;
+  const { department, category, search, setSearch, sortOrder, setSortOrder, selectedFilters, minPrice, setMinPrice, maxPrice, setMaxPrice, openFilter, setOpenFilter, view, setView, preview, setPreview, cartOpen, setCartOpen, cartLines, favoriteIds, favoritesReady, favoritesSaving, favoritesError, retryFavorites, compareIds, setCompareIds, favoritesOnly, setFavoritesOnly, compareOpen, setCompareOpen, feedback, setFeedback, filtersRef, filterOptions, products, filterCount, cartCount, comparedProducts, cartTotal, resetFilters, changeDepartment, changeCategory, toggleValue, updateQuantity, addToCart, toggleFavorite, toggleCompare, heading, closeLayers } = controller;
 
   // Supply catalog state and actions to the single header in RootLayout.
   const { setCatalogSearch, setCartCount, registerCatalogActions } = useHeaderState();
@@ -84,6 +84,13 @@ export default function CatalogPage() {
 
         <CatalogToolbar controller={controller} onCompareOpen={() => { closeLayers(); setCompareOpen(true); }} />
 
+        {favoritesError && (
+          <div className="petrolero-catalog-favorite-alert" role="alert">
+            {favoritesError}
+            <button type="button" onClick={retryFavorites}>Повторить</button>
+          </div>
+        )}
+
         {products.length > 0 ? (
           <div id="petrolero-catalog-products" className="petrolero-catalog-items" data-view={view}>
             {products.map((product) => (
@@ -93,6 +100,7 @@ export default function CatalogPage() {
                 onPreview={setPreview}
                 onAdd={addToCart}
                 isFavorite={favoriteIds.includes(product.id)}
+                favoriteDisabled={!favoritesReady || favoritesSaving}
                 isCompared={compareIds.includes(product.id)}
                 onFavorite={toggleFavorite}
                 onCompare={toggleCompare}

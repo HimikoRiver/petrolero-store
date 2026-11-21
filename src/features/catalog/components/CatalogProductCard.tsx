@@ -10,6 +10,7 @@ export default function CatalogProductCard({
   onPreview,
   onAdd,
   isFavorite,
+  favoriteDisabled,
   isCompared,
   onFavorite,
   onCompare,
@@ -18,6 +19,7 @@ export default function CatalogProductCard({
   onPreview: (product: CatalogProduct) => void;
   onAdd: (product: CatalogProduct) => void;
   isFavorite: boolean;
+  favoriteDisabled: boolean;
   isCompared: boolean;
   onFavorite: (product: CatalogProduct) => void;
   onCompare: (product: CatalogProduct) => void;
@@ -69,6 +71,7 @@ export default function CatalogProductCard({
               aria-label={(isFavorite ? "Убрать из избранного: " : "В избранное: ") + product.title}
               title={isFavorite ? "Убрать из избранного" : "В избранное"}
               aria-pressed={isFavorite}
+              disabled={favoriteDisabled}
               onClick={() => onFavorite(product)}>
               <HeartIcon filled={isFavorite} />
             </button>

@@ -1,45 +1,40 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import useFavoriteProducts from "@/features/favorites/useFavoriteProducts";
 
 type ProductIdentity = { id: string };
 
 export default function useCatalogCollections(products: readonly ProductIdentity[]) {
-  const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
+  const favorites = useFavoriteProducts();
   const [compareIds, setCompareIds] = useState<string[]>([]);
-  const [collectionsReady, setCollectionsReady] = useState(false);
+  const [comparisonReady, setComparisonReady] = useState(false);
 
-  // Favorites and comparison selections are a local demo until accounts are available.
+  // Comparison stays a local, three-product demo. Account favorites use
+  // the independent shared hook and are never written to guest storage.
   useEffect(() => {
     try {
-      for (const [key, update] of [
-        ["petrolero-demo-favorites", setFavoriteIds],
-        ["petrolero-demo-comparison", setCompareIds],
-      ] as const) {
-        const saved: unknown = JSON.parse(localStorage.getItem(key) || "[]");
-        if (Array.isArray(saved)) {
-          const uniqueIds = [...new Set(saved.filter(
-            (id): id is string => typeof id === "string" && products.some((item) => item.id === id),
-          ))];
-          update(key === "petrolero-demo-comparison" ? uniqueIds.slice(0, 3) : uniqueIds);
-        }
+      const saved: unknown = JSON.parse(localStorage.getItem("petrolero-demo-comparison") || "[]");
+      if (Array.isArray(saved)) {
+        const ids = [...new Set(saved.filter(
+          (id): id is string => typeof id === "string" && products.some((item) => item.id === id),
+        ))];
+        setCompareIds(ids.slice(0, 3));
       }
     } catch {
-      // Storage may be disabled or contain invalid data.
+      // Local storage may be unavailable.
     }
-    setCollectionsReady(true);
-  }, []);
+    setComparisonReady(true);
+  }, [products]);
 
   useEffect(() => {
-    if (!collectionsReady) return;
+    if (!comparisonReady) return;
     try {
-      localStorage.setItem("petrolero-demo-favorites", JSON.stringify(favoriteIds));
       localStorage.setItem("petrolero-demo-comparison", JSON.stringify(compareIds));
     } catch {
-      // Keep the demo interactive even with restricted storage.
+      // Continue running in memory if storage is restricted.
     }
-  }, [collectionsReady, favoriteIds, compareIds]);
+  }, [compareIds, comparisonReady]);
 
-
-  return { favoriteIds, setFavoriteIds, compareIds, setCompareIds };
+  return { ...favorites, compareIds, setCompareIds };
 }
