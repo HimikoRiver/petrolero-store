@@ -46,7 +46,6 @@
   .petrolero-catalog-items[data-view="list"] .petrolero-catalog-item__action-icon {flex-basis: 28px}
   .petrolero-catalog-view-buttons {display: none}
   .petrolero-catalog-overlay {padding: 12px}
-  .petrolero-catalog-account {padding: 42px 28px 32px}
   .petrolero-catalog-drawer {inset: 0 0 0 auto}
 }
 @media(prefers-reduced-motion: reduce) {

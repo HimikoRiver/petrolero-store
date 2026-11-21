@@ -20,7 +20,6 @@ export default function useCatalogController() {
   const [view, setView] = useState<"grid" | "list">("grid");
   const [preview, setPreview] = useState<CatalogProduct | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
-  const [accountOpen, setAccountOpen] = useState(false);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [compareOpen, setCompareOpen] = useState(false);
   const [feedback, setFeedback] = useState<CatalogFeedback | null>(null);
@@ -47,14 +46,13 @@ export default function useCatalogController() {
   }, [openFilter]);
 
   useEffect(() => {
-    if (!preview && !cartOpen && !accountOpen && !compareOpen) return;
+    if (!preview && !cartOpen && !compareOpen) return;
     const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setPreview(null);
         setCartOpen(false);
-        setAccountOpen(false);
         setCompareOpen(false);
       }
     };
@@ -63,7 +61,7 @@ export default function useCatalogController() {
       document.body.style.overflow = overflow;
       document.removeEventListener("keydown", handleKey);
     };
-  }, [preview, cartOpen, accountOpen, compareOpen]);
+  }, [preview, cartOpen, compareOpen]);
 
   const scopedProducts = useMemo(
     () => CATALOG_PRODUCTS.filter((product) =>
@@ -188,10 +186,9 @@ export default function useCatalogController() {
   const closeLayers = () => {
     setPreview(null);
     setCartOpen(false);
-    setAccountOpen(false);
     setCompareOpen(false);
   };
 
 
-  return { department, category, search, setSearch, sortOrder, setSortOrder, selectedFilters, minPrice, setMinPrice, maxPrice, setMaxPrice, openFilter, setOpenFilter, view, setView, preview, setPreview, cartOpen, setCartOpen, accountOpen, setAccountOpen, cartLines, favoriteIds, compareIds, setCompareIds, favoritesOnly, setFavoritesOnly, compareOpen, setCompareOpen, feedback, setFeedback, filtersRef, filterOptions, products, filterCount, cartCount, comparedProducts, cartTotal, resetFilters, changeDepartment, changeCategory, toggleValue, updateQuantity, addToCart, toggleFavorite, toggleCompare, heading, closeLayers };
+  return { department, category, search, setSearch, sortOrder, setSortOrder, selectedFilters, minPrice, setMinPrice, maxPrice, setMaxPrice, openFilter, setOpenFilter, view, setView, preview, setPreview, cartOpen, setCartOpen, cartLines, favoriteIds, compareIds, setCompareIds, favoritesOnly, setFavoritesOnly, compareOpen, setCompareOpen, feedback, setFeedback, filtersRef, filterOptions, products, filterCount, cartCount, comparedProducts, cartTotal, resetFilters, changeDepartment, changeCategory, toggleValue, updateQuantity, addToCart, toggleFavorite, toggleCompare, heading, closeLayers };
 }

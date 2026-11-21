@@ -77,14 +77,6 @@
 .petrolero-catalog-drawer__empty {display: grid; place-content: center; text-align: center; flex: 1; padding: 30px}
 .petrolero-catalog-drawer__empty h3 {font-size: 23px; font-weight: 500}
 .petrolero-catalog-drawer__empty p {font-size: 13px; color: #9d8e7c}
-.petrolero-catalog-account {
-  position: relative; width: min(440px,100%); padding: 50px;
-  border: 1px solid #695139; background: #151210;
-}
-.petrolero-catalog-account .petrolero-catalog-close {position: absolute; top: 14px; right: 14px}
-.petrolero-catalog-account > p {font-size: 11px; letter-spacing: .13em; color: #ba996d}
-.petrolero-catalog-account h2 {font-size: 28px; font-weight: 520; margin: 20px 0}
-.petrolero-catalog-account > span {font-size: 13px; line-height: 1.7; color: #b4a495}
 .petrolero-catalog-feedback {
   position: fixed; right: 22px; bottom: 22px; z-index: 180;
   display: flex; align-items: center; gap: 12px; flex-wrap: wrap;

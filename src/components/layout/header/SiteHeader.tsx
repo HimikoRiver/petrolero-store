@@ -8,7 +8,7 @@ import MenuShowcase from "@/features/menu/MenuShowcase";
 import { SearchIcon, AccountIcon, CartIcon } from "./HeaderIcons";
 import "./SiteHeader.css";
 
-type Panel = "account" | "cart" | null;
+type Panel = "cart" | null;
 
 type PetroleroHeaderProps = {
   phase: 0 | 1 | 2 | 3;
@@ -18,7 +18,6 @@ type PetroleroHeaderProps = {
   onSearchChange?: (value: string) => void;
   cartCount?: number;
   onCartOpen?: () => void;
-  onAccountOpen?: () => void;
 };
 
 export default function SiteHeader({
@@ -29,7 +28,6 @@ export default function SiteHeader({
   onSearchChange,
   cartCount = 0,
   onCartOpen,
-  onAccountOpen,
 }: PetroleroHeaderProps) {
   const searchRef = useRef<HTMLInputElement>(null);
   const searchWrapRef = useRef<HTMLDivElement>(null);
@@ -148,15 +146,6 @@ export default function SiteHeader({
     if (search.trim()) setSearchSubmitted(true);
   };
 
-  const handleAccountClick = () => {
-    if (mode === "catalog" && onAccountOpen) {
-      setSearchOpen(false);
-      onAccountOpen();
-      return;
-    }
-    openPanel("account");
-  };
-
   const handleCartClick = () => {
     if (mode === "catalog" && onCartOpen) {
       setSearchOpen(false);
@@ -232,15 +221,9 @@ export default function SiteHeader({
                 <SearchIcon />
               </button>
             </div>
-            <button
-              type="button"
-              className="petrolero-nav-button"
-              aria-label="Личный кабинет"
-              aria-expanded={panel === "account"}
-              onClick={handleAccountClick}
-            >
+            <Link href="/account/login" className="petrolero-nav-button" aria-label="Вход в личный кабинет">
               <AccountIcon />
-            </button>
+            </Link>
             <button
               type="button"
               className="petrolero-nav-button petrolero-nav-cart"
@@ -299,18 +282,14 @@ export default function SiteHeader({
             className="petrolero-nav-dialog"
             role="dialog"
             aria-modal="true"
-            aria-label={panel === "account" ? "Личный кабинет" : "Корзина"}
+            aria-label="Корзина"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="petrolero-nav-dialog-top">
-              <span>{panel === "account" ? "ЛИЧНЫЙ КАБИНЕТ" : "КОРЗИНА"}</span>
+              <span>КОРЗИНА</span>
               <button type="button" onClick={() => setPanel(null)} aria-label="Закрыть">×</button>
             </div>
-            <p>
-              {panel === "account"
-                ? "Вход временно недоступен."
-                : "Перейдите в каталог, чтобы выбрать товары."}
-            </p>
+            <p>Перейдите в каталог, чтобы выбрать товары.</p>
           </section>
         </div>
       )}

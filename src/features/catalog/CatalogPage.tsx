@@ -11,7 +11,6 @@ import CatalogProductCard from "./components/CatalogProductCard";
 import CatalogQuickView from "./components/CatalogQuickView";
 import CatalogCartDrawer from "@/features/cart/components/CatalogCartDrawer";
 import CatalogCompareDialog from "./components/CatalogCompareDialog";
-import CatalogAccountDialog from "./components/CatalogAccountDialog";
 import useCatalogController from "./hooks/useCatalogController";
 import "./styles/base.css";
 import "./styles/dialogs.css";
@@ -23,7 +22,7 @@ import "./styles/additives.css";
 export default function CatalogPage() {
   const reducedMotion = useReducedMotion();
   const controller = useCatalogController();
-  const { department, category, search, setSearch, sortOrder, setSortOrder, selectedFilters, minPrice, setMinPrice, maxPrice, setMaxPrice, openFilter, setOpenFilter, view, setView, preview, setPreview, cartOpen, setCartOpen, accountOpen, setAccountOpen, cartLines, favoriteIds, compareIds, setCompareIds, favoritesOnly, setFavoritesOnly, compareOpen, setCompareOpen, feedback, setFeedback, filtersRef, filterOptions, products, filterCount, cartCount, comparedProducts, cartTotal, resetFilters, changeDepartment, changeCategory, toggleValue, updateQuantity, addToCart, toggleFavorite, toggleCompare, heading, closeLayers } = controller;
+  const { department, category, search, setSearch, sortOrder, setSortOrder, selectedFilters, minPrice, setMinPrice, maxPrice, setMaxPrice, openFilter, setOpenFilter, view, setView, preview, setPreview, cartOpen, setCartOpen, cartLines, favoriteIds, compareIds, setCompareIds, favoritesOnly, setFavoritesOnly, compareOpen, setCompareOpen, feedback, setFeedback, filtersRef, filterOptions, products, filterCount, cartCount, comparedProducts, cartTotal, resetFilters, changeDepartment, changeCategory, toggleValue, updateQuantity, addToCart, toggleFavorite, toggleCompare, heading, closeLayers } = controller;
 
   return (
     <div className="petrolero-catalog-page">
@@ -35,7 +34,6 @@ export default function CatalogPage() {
         onSearchChange={setSearch}
         cartCount={cartCount}
         onCartOpen={() => { closeLayers(); setCartOpen(true); }}
-        onAccountOpen={() => { closeLayers(); setAccountOpen(true); }}
       />
 
       <main className="petrolero-catalog-main" data-department={department}>
@@ -105,7 +103,6 @@ export default function CatalogPage() {
 
       {compareOpen && <CatalogCompareDialog comparedProducts={comparedProducts} onClose={() => setCompareOpen(false)} onClear={() => setCompareIds([])} toggleCompare={toggleCompare} />}
 
-      {accountOpen && <CatalogAccountDialog onClose={() => setAccountOpen(false)} />}
     </div>
   );
 }
