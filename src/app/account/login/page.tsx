@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import AccountEntryPage from "@/features/account/components/AccountEntryPage";
 
 export const metadata: Metadata = {
@@ -11,7 +12,7 @@ type Props = {
   searchParams: Promise<{ next?: string; verified?: string; error?: string }>;
 };
 
-export default async function AccountLoginRoute({ searchParams }: Props) {
+async function AccountLoginContent({ searchParams }: Props) {
   const { next: requestedNext, verified, error } = await searchParams;
 
   // Accept redirects only to private account pages on this website.
@@ -32,5 +33,13 @@ export default async function AccountLoginRoute({ searchParams }: Props) {
       verified={verified === "1"}
       invalidLink={Boolean(error)}
     />
+  );
+}
+
+export default function AccountLoginRoute({ searchParams }: Props) {
+  return (
+    <Suspense fallback={null}>
+      <AccountLoginContent searchParams={searchParams} />
+    </Suspense>
   );
 }
