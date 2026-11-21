@@ -28,7 +28,7 @@ export default function CatalogProductCard({
     <article className="petrolero-catalog-item" data-category={product.category}>
       <div className="petrolero-catalog-item__media-column">
         <div className="petrolero-catalog-item__media">
-          <span className="petrolero-catalog-item__demo">ДЕМО</span>
+          {product.isDemo && <span className="petrolero-catalog-item__demo">ДЕМО</span>}
           <ProductGallery
             image={product.image}
             gallery={product.gallery}
@@ -60,11 +60,11 @@ export default function CatalogProductCard({
         <div className="petrolero-catalog-item__bottom">
           <div className="petrolero-catalog-item__price">
             <strong>{priceLabel(product.priceKopecks)}</strong>
-            <span>Тестовая цена</span>
+            <span>{product.isDemo ? "Тестовая цена" : product.stockQuantity > 0 ? "В наличии" : "Нет в наличии"}</span>
           </div>
           <div className="petrolero-catalog-item__actions">
             <button type="button" className="petrolero-catalog-add petrolero-catalog-liquid-button"
-              onClick={() => onAdd(product)} aria-label={"Добавить в корзину: " + product.title}>
+              onClick={() => onAdd(product)} disabled={!product.isDemo && product.stockQuantity <= 0} aria-label={"Добавить в корзину: " + product.title}>
               <span>В корзину</span>
             </button>
             <button type="button" className="petrolero-catalog-item__action-icon"

@@ -3,11 +3,12 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import GoldShimmerButton from "@/components/ui/GoldShimmerButton";
-import { CATALOG_PRODUCTS } from "@/features/catalog/data/catalogData";
+import type { CatalogProduct } from "@/features/catalog/data/catalogData";
 import { priceLabel } from "@/features/catalog/lib/catalogUtils";
 import type { CartLine } from "../types";
 
 type Props = {
+  products: readonly CatalogProduct[];
   cartLines: CartLine[];
   cartCount: number;
   cartTotal: number;
@@ -15,7 +16,7 @@ type Props = {
   updateQuantity: (id: string, delta: number) => void;
 };
 
-export default function CatalogCartDrawer({ cartLines, cartCount, cartTotal, onClose, updateQuantity }: Props) {
+export default function CatalogCartDrawer({ products, cartLines, cartCount, cartTotal, onClose, updateQuantity }: Props) {
   const router = useRouter();
   return (
 <div className="petrolero-catalog-overlay" onPointerDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
@@ -28,7 +29,7 @@ export default function CatalogCartDrawer({ cartLines, cartCount, cartTotal, onC
               <>
                 <div className="petrolero-catalog-drawer__items">
                   {cartLines.map((line) => {
-                    const product = CATALOG_PRODUCTS.find((item) => item.id === line.id);
+                    const product = products.find((item) => item.id === line.id);
                     if (!product) return null;
                     return (
                       <div className="petrolero-catalog-drawer__item" key={line.id}>
@@ -52,7 +53,7 @@ export default function CatalogCartDrawer({ cartLines, cartCount, cartTotal, onC
                 </div>
                 <div className="petrolero-catalog-drawer__summary">
                   <p><span>Итого (демо)</span><strong>{priceLabel(cartTotal)}</strong></p>
-                  <small>Демонстрационные товары и цены. Оплата и реальная доставка пока не подключены.</small>
+                  <small>Оформление заявки пока тестовое. Оплата и реальная доставка отключены.</small>
                   <GoldShimmerButton type="button" className="petrolero-catalog-drawer__checkout" onClick={() => {
                     onClose();
                     router.push("/checkout");

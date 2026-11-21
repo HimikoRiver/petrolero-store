@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import GoldShimmerButton from "@/components/ui/GoldShimmerButton";
 import useDemoCart from "@/features/cart/hooks/useDemoCart";
-import { CATALOG_PRODUCTS } from "@/features/catalog/data/catalogData";
+import type { CatalogProduct } from "@/features/catalog/data/catalogData";
 import { priceLabel } from "@/features/catalog/lib/catalogUtils";
 import type { DeliveryAddress } from "@/features/account/data/accountDetails";
 import "./checkout.css";
@@ -27,10 +27,10 @@ const blank: Contact = {
   apartment: "", postalCode: "", note: "",
 };
 
-export default function CheckoutPage() {
+export default function CheckoutPage({ catalogProducts }: { catalogProducts: readonly CatalogProduct[] }) {
   const router = useRouter();
   const { data: session, isPending: sessionPending } = authClient.useSession();
-  const { cartLines, cartCount, cartTotal, cartHydrated, updateQuantity, clearCart } = useDemoCart(CATALOG_PRODUCTS);
+  const { cartLines, cartCount, cartTotal, cartHydrated, updateQuantity, clearCart } = useDemoCart(catalogProducts);
   const [form, setForm] = useState<Contact>(blank);
   const [addresses, setAddresses] = useState<DeliveryAddress[]>([]);
   const [selectedAddress, setSelectedAddress] = useState("");
@@ -123,7 +123,7 @@ export default function CheckoutPage() {
   };
 
   const products = cartLines.map(line => ({
-    ...line, product: CATALOG_PRODUCTS.find(product => product.id === line.id),
+    ...line, product: catalogProducts.find(product => product.id === line.id),
   })).filter((line) => Boolean(line.product));
 
   return (
@@ -143,7 +143,7 @@ export default function CheckoutPage() {
         </header>
         <div className="pt-checkout__demo" role="note">
           <span className="pt-checkout__demo-label">ДЕМОНСТРАЦИОННЫЙ РЕЖИМ</span>
-          <p>Каталог содержит тестовые цены. Отправка настоящих заказов, расчёт доставки и онлайн-оплата пока отключены. Сохранение здесь создаёт только тестовую запись в личном кабинете.</p>
+          <p>Оформление работает в тестовом режиме: оплаты, доставки и передачи заказа продавцу пока нет. Сохранение создаёт только запись в личном кабинете.</p>
         </div>
 
         {!cartHydrated ? (
