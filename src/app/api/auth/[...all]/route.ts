@@ -1,8 +1,6 @@
 import { toNextJsHandler } from "better-auth/next-js";
 import { getAuth, isAuthConfigured } from "@/lib/auth";
 
-export const runtime = "nodejs";
-
 function unavailable() {
   return Response.json(
     { error: "Система входа настраивается. Попробуйте позднее." },
