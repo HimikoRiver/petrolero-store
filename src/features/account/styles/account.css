@@ -1,0 +1,515 @@
+/* Petrolero — account entry, registration and password recovery.
+   Shared, completely borderless form on the new oil/graphite background. */
+.petrolero-account-page {
+  --account-gold: #e4b875;
+  --account-gold-light: #ffe0a1;
+  --account-text: #f6f0e8;
+  --account-muted: rgba(229, 217, 202, .68);
+  min-height: 100svh;
+  color: var(--account-text);
+  background: #09090a;
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+}
+
+.petrolero-account-page *,
+.petrolero-account-page *::before,
+.petrolero-account-page *::after {
+  box-sizing: border-box;
+}
+
+.petrolero-account-page button,
+.petrolero-account-page input {
+  font-family: inherit;
+}
+
+.petrolero-account-page button {
+  cursor: pointer;
+}
+
+.petrolero-account-page :is(a, button):focus-visible {
+  outline: 2px solid var(--account-gold-light);
+  outline-offset: 4px;
+}
+
+.petrolero-account-hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  min-height: 100svh;
+  overflow: hidden;
+  background: #09090a;
+}
+
+/* New static artwork, committed at /public/login/images/fon2.webp.
+   The image has dark negative space on the left for the borderless form. */
+.petrolero-account-media {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background: #09090a url("/login/images/fon2.webp") center center / cover no-repeat;
+  pointer-events: none;
+}
+
+/* Subtle protection for form legibility. The illuminated oil stays visible. */
+.petrolero-account-hero::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    linear-gradient(90deg,
+      rgba(6, 6, 8, .80) 0%,
+      rgba(7, 7, 9, .69) 25%,
+      rgba(7, 7, 9, .34) 46%,
+      rgba(7, 7, 9, .08) 68%,
+      transparent 86%),
+    linear-gradient(0deg,
+      rgba(5, 5, 6, .24),
+      transparent 23%,
+      transparent 78%,
+      rgba(5, 5, 6, .17));
+  pointer-events: none;
+}
+
+.petrolero-account-logo-link {
+  position: absolute;
+  z-index: 3;
+  top: clamp(22px, 4vh, 39px);
+  left: clamp(25px, 7.8vw, 145px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.petrolero-account-logo {
+  display: block;
+  width: clamp(120px, 10vw, 147px);
+  height: auto;
+  object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(83%) sepia(16%) saturate(828%) hue-rotate(343deg) brightness(99%) contrast(89%);
+}
+
+.petrolero-account-home-link {
+  position: absolute;
+  z-index: 3;
+  top: clamp(29px, 4.6vh, 48px);
+  right: clamp(24px, 5vw, 83px);
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 0 6px;
+  color: #eed5ae;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(229, 181, 108, .45);
+  transition: color .25s ease, border-color .25s ease;
+}
+
+.petrolero-account-home-link:hover {
+  color: #fff2d5;
+  border-color: #f9cb7e;
+}
+
+.petrolero-account-center {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100svh;
+  width: 100%;
+  padding:
+    clamp(116px, 14vh, 148px)
+    clamp(26px, 8.8vw, 162px)
+    clamp(44px, 10vh, 84px);
+}
+
+.petrolero-account-panel {
+  width: min(100%, 424px);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  animation: petrolero-account-enter 750ms cubic-bezier(.2, .7, .3, 1) both;
+}
+
+.petrolero-account-panel-inner {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.petrolero-account-panel-line {
+  width: 60px;
+  height: 2px;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, #b98035, #ffdb8c 65%, rgba(255, 226, 164, .17));
+  box-shadow: 0 0 15px rgba(232, 174, 92, .28);
+}
+
+.petrolero-account-top-label {
+  position: static;
+  margin-bottom: 18px;
+  color: #d8a968;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.petrolero-account-form-title {
+  margin: 0 0 10px;
+  color: var(--account-text);
+  font-size: clamp(33px, 3.2vw, 46px);
+  font-weight: 460;
+  line-height: 1.13;
+  letter-spacing: -.05em;
+  text-wrap: balance;
+}
+
+.petrolero-account-form-subtitle {
+  max-width: 370px;
+  margin: 0 0 31px;
+  color: var(--account-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.petrolero-account-form {
+  display: grid;
+  gap: 20px;
+}
+
+.petrolero-account-field {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+/* The only frame around an input is a fine gold line below it. */
+.petrolero-account-field::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #b98541 0%, #ffe1a4 48%, #c49047 100%);
+  box-shadow: 0 0 12px rgba(241, 184, 93, .28);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 370ms cubic-bezier(.21, .75, .3, 1);
+  pointer-events: none;
+}
+
+.petrolero-account-field:focus-within::after {
+  transform: scaleX(1);
+}
+
+.petrolero-account-field-label {
+  display: block;
+  color: #c3a17a;
+  font-size: 10px;
+  font-weight: 580;
+  line-height: 1.5;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.petrolero-account-field input {
+  display: block;
+  width: 100%;
+  height: 52px;
+  padding: 2px 0 8px;
+  border: 0;
+  border-bottom: 1px solid rgba(212, 166, 100, .56);
+  border-radius: 0;
+  outline: 0;
+  background: transparent;
+  color: #fbf4e9;
+  caret-color: #f7cc8e;
+  box-shadow: none;
+  font-size: 15px;
+  font-weight: 410;
+  transition: border-color .25s ease, background-color .25s ease;
+}
+
+.petrolero-account-field input::placeholder {
+  color: rgba(207, 192, 175, .47);
+  opacity: 1;
+}
+
+.petrolero-account-field input:hover {
+  border-bottom-color: rgba(243, 191, 122, .8);
+}
+
+.petrolero-account-field input:focus,
+.petrolero-account-field input:focus-visible {
+  border-bottom-color: #f0c887;
+  outline: 0;
+  box-shadow: none;
+}
+
+/* Keep fields completely transparent, including browser-autofilled values. */
+.petrolero-account-field input:-webkit-autofill,
+.petrolero-account-field input:-webkit-autofill:hover,
+.petrolero-account-field input:-webkit-autofill:focus,
+.petrolero-account-field input:-webkit-autofill:active {
+  background: transparent !important;
+  background-color: transparent !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: #fbf4e9 !important;
+  caret-color: #f7cc8e;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  transition: background-color 9999s ease-out 0s, border-color .25s ease;
+}
+
+.petrolero-account-password-wrap {
+  position: relative;
+  min-width: 0;
+}
+
+.petrolero-account-password-wrap input {
+  padding-right: 82px;
+}
+
+.petrolero-account-password-toggle {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 6px 0 8px 10px;
+  border: 0;
+  background: transparent;
+  color: #d9ab70;
+  font-size: 12px;
+  font-weight: 450;
+  transition: color .25s ease;
+}
+
+.petrolero-account-password-toggle:hover {
+  color: #ffe0ab;
+}
+
+.petrolero-account-form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin: 1px 0 0;
+}
+
+.petrolero-account-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--account-muted);
+  font-size: 12px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.petrolero-account-checkbox input {
+  appearance: none;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  border: 1px solid #a17b4b;
+  border-radius: 2px;
+  background: rgba(5, 5, 5, .4);
+  cursor: pointer;
+}
+
+.petrolero-account-checkbox input:checked {
+  border-color: #e3b471;
+  background: #d7a765;
+}
+
+.petrolero-account-checkbox input:checked::after {
+  content: "";
+  width: 5px;
+  height: 8px;
+  border-right: 2px solid #15100a;
+  border-bottom: 2px solid #15100a;
+  transform: rotate(45deg) translateY(-1px);
+}
+
+.petrolero-account-checkbox input:focus-visible {
+  outline: 2px solid var(--account-gold-light);
+  outline-offset: 3px;
+}
+
+.petrolero-account-link-button {
+  display: inline;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: transparent;
+  color: #e6bb7c;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: left;
+  transition: color .25s ease, border-color .25s ease;
+}
+
+.petrolero-account-link-button:hover,
+.petrolero-account-link-button:focus-visible {
+  color: #ffdfab;
+  border-bottom-color: rgba(255, 219, 157, .72);
+}
+
+.petrolero-account-submit {
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* Accessible feedback for real authentication requests. */
+.petrolero-account-feedback {
+  margin: 0 0 20px;
+  max-width: 424px;
+  color: #eed1a2;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.petrolero-account-feedback[data-type="error"] {
+  color: #ffb9a4;
+}
+
+.petrolero-account-feedback[data-type="success"] {
+  color: #f7d59d;
+}
+
+.petrolero-account-resend {
+  display: inline-flex;
+  max-width: 100%;
+  margin: -8px 0 20px;
+  text-align: left;
+}
+
+.petrolero-account-resend:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+
+.petrolero-account-bottom-text {
+  margin-top: 22px;
+  color: var(--account-muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.petrolero-account-back-home {
+  display: inline-block;
+  margin-top: 18px;
+  color: rgba(242, 229, 211, .62);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.petrolero-account-back-home:hover {
+  color: var(--account-gold-light);
+}
+
+@keyframes petrolero-account-enter {
+  from { transform: translateY(14px); }
+  to { transform: translateY(0); }
+}
+
+/* Desktop / tablet: preserve negative space under the form. */
+@media (min-width: 1440px) {
+  .petrolero-account-media { background-position: center 50%; }
+}
+
+@media (max-width: 1050px) {
+  .petrolero-account-center {
+    padding-left: clamp(36px, 6vw, 72px);
+    padding-right: 34px;
+  }
+
+  .petrolero-account-logo-link { left: clamp(29px, 5.2vw, 60px); }
+
+  .petrolero-account-hero::before {
+    background: linear-gradient(90deg, rgba(6, 6, 8, .9) 0%, rgba(6, 6, 8, .7) 44%, rgba(6, 6, 8, .16) 83%, transparent);
+  }
+}
+
+/* Phone: centered form, taller dark veil, no card or border. */
+@media (max-width: 720px) {
+  .petrolero-account-media {
+    background-position: 65% center;
+  }
+
+  .petrolero-account-hero::before {
+    background:
+      linear-gradient(90deg, rgba(6, 6, 8, .88), rgba(6, 6, 8, .57)),
+      linear-gradient(0deg, rgba(6, 6, 8, .58), transparent 20%, transparent 70%, rgba(6, 6, 8, .45));
+  }
+
+  .petrolero-account-logo-link {
+    top: 22px;
+    left: 23px;
+  }
+
+  .petrolero-account-logo {
+    width: 118px;
+  }
+
+  .petrolero-account-home-link {
+    top: 28px;
+    right: 23px;
+    min-height: 25px;
+    font-size: 11px;
+  }
+
+  .petrolero-account-center {
+    justify-content: center;
+    align-items: center;
+    padding: 123px 25px 48px;
+  }
+
+  .petrolero-account-panel {
+    max-width: 414px;
+  }
+
+  .petrolero-account-panel-line { margin-bottom: 15px; }
+  .petrolero-account-top-label { margin-bottom: 15px; font-size: 9px; }
+  .petrolero-account-form-title { font-size: clamp(30px, 8vw, 40px); }
+  .petrolero-account-form-subtitle { margin-bottom: 23px; }
+  .petrolero-account-submit { min-height: 51px; }
+}
+
+@media (max-width: 390px) {
+  .petrolero-account-center { padding-inline: 19px; }
+  .petrolero-account-form { gap: 17px; }
+  .petrolero-account-form-title { font-size: 31px; }
+  .petrolero-account-form-row { gap: 13px; }
+  .petrolero-account-bottom-text { margin-top: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petrolero-account-page *,
+  .petrolero-account-page *::before,
+  .petrolero-account-page *::after {
+    animation: none !important;
+    transition-duration: .01ms !important;
+  }
+}

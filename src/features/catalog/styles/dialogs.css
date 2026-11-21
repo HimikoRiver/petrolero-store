@@ -1,0 +1,98 @@
+/* Dialogs, the preview, and the working demo cart. */
+.petrolero-catalog-overlay {
+  position: fixed; z-index: 150; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px; background: rgba(0,0,0,.82); backdrop-filter: blur(7px);
+}
+.petrolero-catalog-close {
+  display: grid; place-items: center; width: 40px; height: 40px;
+  border: 1px solid #5e4a32; color: #dfbd8f; background: #181512;
+  font-size: 26px !important; line-height: 1; cursor: pointer;
+}
+.petrolero-catalog-close:hover {background: #302215}
+.petrolero-catalog-quickview {
+  position: relative; display: grid; grid-template-columns: 44% 56%;
+  width: min(930px,100%); max-height: min(90vh,800px);
+  background: #11100f; border: 1px solid #655039; overflow: auto;
+}
+.petrolero-catalog-quickview > .petrolero-catalog-close {position: absolute; top: 18px; right: 18px; z-index: 2}
+.petrolero-catalog-quickview__media {
+  display: grid; place-items: center; min-height: 440px;
+  background: radial-gradient(ellipse at center,#352c22,#141312 70%);
+}
+.petrolero-catalog-quickview__media > img {width: 90%; height: 90%; object-fit: contain}
+.petrolero-catalog-quickview__content {padding: 60px 45px 42px; display: flex; flex-direction: column}
+.petrolero-catalog-quickview__content h2 {margin: 12px 0 14px; font-size: clamp(23px,2.5vw,34px); font-weight: 550; line-height: 1.25}
+.petrolero-catalog-quickview__content > p:nth-of-type(2) {font-size: 13px; line-height: 1.7; color: #ae9e8c}
+.petrolero-catalog-quickview__content dl {
+  display: grid; grid-template-columns: minmax(100px, 36%) 1fr;
+  gap: 12px 18px; margin: 25px 0; font-size: 12px; line-height: 1.5;
+}
+.petrolero-catalog-quickview__content dt {color: #978879}
+.petrolero-catalog-quickview__content dd {margin: 0; color: #e9d7c0}
+.petrolero-catalog-quickview__content > strong {color: #e5c390; font-size: 24px; margin-top: auto}
+.petrolero-catalog-quickview__content > strong small {color: #977a58; font-weight: 400; font-size: 12px}
+.petrolero-catalog-quickview__content > button:not(.petrolero-catalog-close) {
+  align-self: start; min-height: 44px; padding: 10px 24px; margin-top: 18px;
+  color: #f0d5ad; background: #392816; border: 1px solid #a17b50;
+  font-size: 12px;
+}
+.petrolero-catalog-drawer {
+  position: absolute; inset: 0 0 0 auto; width: min(460px,100%); display: flex; flex-direction: column;
+  border-left: 1px solid #5c4630; background: #11100e;
+  color: #f1e6d5;
+}
+.petrolero-catalog-drawer > header {
+  display: flex; align-items: start; justify-content: space-between;
+  padding: 33px 30px; border-bottom: 1px solid #352a20;
+}
+.petrolero-catalog-drawer > header p {color: #ba986d; margin: 0 0 8px; font-size: 11px; letter-spacing: .1em}
+.petrolero-catalog-drawer > header h2 {margin: 0; font-size: 30px; font-weight: 500}
+.petrolero-catalog-drawer > header h2 span {color: #ae8e65}
+.petrolero-catalog-drawer__items {flex: 1; overflow-y: auto; padding: 10px 30px}
+.petrolero-catalog-drawer__item {
+  display: grid; grid-template-columns: 90px 1fr; gap: 15px; padding: 17px 0;
+  border-bottom: 1px solid #312820;
+}
+.petrolero-catalog-drawer__item > img {
+  width: 90px;
+  height: 100px;
+  object-fit: contain;
+  background: #1f1c19;
+}
+.petrolero-catalog-drawer__item > .petrolero-catalog-no-image {
+  min-height: 100px;
+  background: #1f1c19;
+}
+.petrolero-catalog-drawer__item > div:last-child {display: flex; flex-direction: column; align-items: start}
+.petrolero-catalog-drawer__item strong {font-size: 13px; font-weight: 540; line-height: 1.45}
+.petrolero-catalog-drawer__item p {color: #b59a77; font-size: 12px; margin: 8px 0 11px}
+.petrolero-catalog-quantity {display: flex; border: 1px solid #5d4732; align-items: center}
+.petrolero-catalog-quantity button {width: 31px; height: 29px; border: 0; background: #1d1914; color: #d9b889; font-size: 18px}
+.petrolero-catalog-quantity span {display: grid; place-items: center; min-width: 30px; font-size: 12px}
+.petrolero-catalog-drawer__summary {margin-top: auto; padding: 30px; border-top: 1px solid #403224}
+.petrolero-catalog-drawer__summary p {display: flex; justify-content: space-between; align-items: center; gap: 15px; font-size: 13px}
+.petrolero-catalog-drawer__summary strong {font-size: 20px; color: #e4c294}
+.petrolero-catalog-drawer__summary small {display: block; margin-top: 15px; line-height: 1.65; color: #8b7d6e}
+.petrolero-catalog-drawer__empty {display: grid; place-content: center; text-align: center; flex: 1; padding: 30px}
+.petrolero-catalog-drawer__empty h3 {font-size: 23px; font-weight: 500}
+.petrolero-catalog-drawer__empty p {font-size: 13px; color: #9d8e7c}
+.petrolero-catalog-feedback {
+  position: fixed; right: 22px; bottom: 22px; z-index: 180;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 15px 17px; border: 1px solid #9e7b51;
+  background: #201910; color: #e7c599; box-shadow: 0 15px 40px #000b; font-size: 12px;
+}
+.petrolero-catalog-feedback button {
+  border: 0; background: none; color: #f0d4ad; text-decoration: underline;
+  font-size: 12px;
+}
+.petrolero-catalog-feedback button:last-child {text-decoration: none; font-size: 20px}
+
+
+
+/* Checkout action in the existing catalog cart drawer. */
+.petrolero-catalog-drawer__checkout {
+  width: 100%;
+  margin-top: 17px;
+}

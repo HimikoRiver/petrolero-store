@@ -70,10 +70,10 @@ export default function MolecularCanvas({
       const count = clamp(
         Math.round(
           (width * height) /
-            (mobileQuery.matches ? 7400 : 5900)
+            (mobileQuery.matches ? 6000 : 4050)
         ),
-        mobileQuery.matches ? 85 : 145,
-        mobileQuery.matches ? 140 : 270
+        mobileQuery.matches ? 110 : 185,
+        mobileQuery.matches ? 175 : 420
       );
 
       if (

@@ -1,0 +1,50 @@
+/* Subtle drifting gold particles. The old atomic-orbit artwork is removed. */
+.golden-threads-orb {
+  position: absolute;
+  z-index: 2;
+  left: 54%;
+  top: 43%;
+  width: clamp(275px, 29vw, 460px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+  opacity: .91;
+  contain: layout style;
+}
+
+.golden-threads-orb__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 1250px) {
+  .golden-threads-orb {
+    left: 69%;
+    top: 40%;
+    width: clamp(210px, 23vw, 310px);
+    opacity: .74;
+  }
+}
+
+@media (max-width: 950px) {
+  .golden-threads-orb {
+    left: 77%;
+    top: 36%;
+    width: clamp(165px, 22vw, 225px);
+    opacity: .5;
+  }
+}
+
+@media (max-width: 720px) {
+  .golden-threads-orb {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .golden-threads-orb {
+    opacity: .7;
+  }
+}

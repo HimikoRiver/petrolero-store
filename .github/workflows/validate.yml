@@ -1,0 +1,40 @@
+name: Validate Petrolero
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Lint, typecheck and build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Prisma schema validation
+        run: npx prisma validate
+      - name: Generate Next.js route types
+        run: npx next typegen
+      - name: TypeScript
+        run: npx tsc --noEmit
+      - name: Production build
+        run: npm run build
+      # Some legacy homepage effects and WebGL uniforms predate React 19 lint rules.
+      # Surface these findings without blocking typechecking/building the refactor.
+      - name: ESLint (legacy findings)
+        continue-on-error: true
+        run: npm run lint

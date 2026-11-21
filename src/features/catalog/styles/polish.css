@@ -1,0 +1,285 @@
+/* Catalog refinements: full product visibility, balanced density, and gold interactions. */
+.petrolero-catalog-main { scroll-margin-top: 90px; }
+.petrolero-catalog-toolbar { scroll-margin-top: 106px; }
+.petrolero-catalog-topline { margin-top: 24px; }
+.petrolero-catalog-departments button {
+  background: linear-gradient(110deg, #15120f, #17140f 64%, #1c1710);
+  border-color: rgba(205, 160, 100, .24);
+}
+.petrolero-catalog-departments button[aria-pressed="true"] {
+  background: linear-gradient(105deg, #3c2c1b, #21170f 70%, #30200f);
+  border-color: rgba(221, 169, 93, .7);
+  box-shadow: inset 0 1px 0 rgba(251, 205, 137, .06);
+}
+.petrolero-catalog-subcategory {
+  border-color: rgba(200, 157, 102, .22);
+  background: linear-gradient(135deg, #1d1813, #11100f 75%);
+}
+.petrolero-catalog-item {
+  border-color: rgba(182, 140, 89, .22);
+  background: linear-gradient(150deg, #171411, #100f0e 70%);
+}
+.petrolero-catalog-item:hover {
+  border-color: rgba(228, 179, 107, .54);
+  box-shadow: 0 15px 35px rgba(0,0,0,.28), 0 0 0 1px rgba(217,159,74,.04);
+}
+.petrolero-catalog-item__name { font-size: clamp(14px, 1.05vw, 17px); }
+.petrolero-catalog-item__media::after { pointer-events: none; }
+.petrolero-catalog-item__picture .petrolero-catalog-no-image {
+  display: grid; place-items: center; padding: 20px;
+}
+.petrolero-catalog-item__bottom > .petrolero-catalog-item__actions {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 9px;
+}
+.petrolero-catalog-item__price { display: grid; gap: 5px; }
+.petrolero-catalog-add {
+  flex: 1; min-width: 0; min-height: 42px;
+  padding: 9px 12px; border: 1px solid rgba(211, 172, 111, .52); border-radius: 7px;
+  background: linear-gradient(180deg, rgba(45, 34, 23, .82), rgba(26, 22, 18, .9));
+  color: #f3d4a3; font-size: 11px; font-weight: 560; letter-spacing: .015em;
+  transition: border-color .3s ease, background-color .3s ease, color .3s ease;
+  white-space: nowrap;
+}
+.petrolero-catalog-add:hover {
+  border-color: #e5bc81;
+  color: #ffe1b4;
+}
+/* List view: keep action button compact beside its secondary actions. */
+.petrolero-catalog-items[data-view="list"] .petrolero-catalog-add {
+  flex: 0 0 auto;
+  width: clamp(150px, 15vw, 210px);
+}
+
+.petrolero-catalog-item__action-icon {
+  display: grid; place-items: center; flex: 0 0 34px; height: 42px;
+  padding: 0; border: 1px solid transparent; border-radius: 6px;
+  background: transparent; color: #bfa683;
+  transition: color .3s ease, border-color .3s ease, background-color .3s ease;
+}
+.petrolero-catalog-item__action-icon svg { width: 19px; height: 19px; }
+.petrolero-catalog-item__action-icon:hover,
+.petrolero-catalog-item__action-icon[aria-pressed="true"] {
+  color: #ffd294; border-color: rgba(237,183,110,.2);
+  background: rgba(180,123,55,.09);
+}
+.petrolero-catalog-item__action-icon[aria-pressed="true"] svg {
+  filter: drop-shadow(0 0 5px rgba(213,151,74,.2));
+}
+.petrolero-catalog-collection-controls {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 14px;
+}
+.petrolero-catalog-collection-button {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 35px;
+  padding: 5px 8px; border: 1px solid transparent;
+  background: transparent; color: #b8a58d; font-size: 11px;
+  transition: color .2s, background .2s, border-color .2s;
+}
+.petrolero-catalog-collection-button svg { width: 17px; height: 17px; }
+.petrolero-catalog-collection-button:hover,
+.petrolero-catalog-collection-button[aria-pressed="true"] {
+  color: #e7bf80; border-color: rgba(219,174,113,.32);
+  background: rgba(186,137,71,.08);
+}
+.petrolero-catalog-filter > button {
+  gap: 9px;
+  border-color: rgba(209,164,103,.27);
+}
+.petrolero-catalog-filter > button > svg {
+  flex: 0 0 14px; width: 14px; height: 14px;
+  color: #d5a669; transition: transform .26s;
+}
+.petrolero-catalog-filter > button[aria-expanded="true"] > svg { transform: rotate(180deg); }
+.petrolero-catalog-sort { position: relative; display: flex; align-items: center; }
+.petrolero-catalog-sort select {
+  max-width: none;
+  padding-right: 36px;
+  background: #19150f !important;
+  background-image: none !important;
+  border-color: rgba(212, 169, 105, .3);
+  opacity: 1;
+}
+.petrolero-catalog-sort select option {
+  background: #19150f;
+  color: #e9d3b6;
+}
+.petrolero-catalog-page .petrolero-catalog-sort select:focus,
+.petrolero-catalog-page .petrolero-catalog-sort select:focus-visible {
+  outline: none;
+  box-shadow: none;
+  border-color: rgba(212, 169, 105, .3);
+}
+.petrolero-catalog-sort > svg {
+  position: absolute; right: 12px; pointer-events: none;
+  color: #e4b77d; width: 15px; height: 15px;
+}
+.petrolero-catalog-view-buttons button[aria-pressed="true"] {
+  color: #eac187; border-color: #9d7647;
+}
+/* Gentle golden rise on hover, replacing the aggressive diagonal sweep. */
+.petrolero-catalog-liquid-button,
+.petrolero-catalog-subcategory,
+.petrolero-catalog-departments button,
+.petrolero-catalog-item__action-icon,
+.petrolero-catalog-filter > button,
+.petrolero-catalog-dropdown__done,
+.petrolero-catalog-collection-button,
+.petrolero-catalog-item__quick {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.petrolero-catalog-liquid-button::before,
+.petrolero-catalog-subcategory::before,
+.petrolero-catalog-departments button::before,
+.petrolero-catalog-item__action-icon::before,
+.petrolero-catalog-filter > button::before,
+.petrolero-catalog-dropdown__done::before,
+.petrolero-catalog-collection-button::before,
+.petrolero-catalog-item__quick::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(to top, rgba(202, 143, 73, .22), rgba(202, 143, 73, .07) 65%, transparent);
+  opacity: 0;
+  transform: translateY(28%);
+  pointer-events: none;
+  transition: opacity 420ms ease, transform 470ms cubic-bezier(.22, .73, .24, 1);
+}
+.petrolero-catalog-liquid-button:hover::before,
+.petrolero-catalog-subcategory:hover::before,
+.petrolero-catalog-departments button:hover::before,
+.petrolero-catalog-item__action-icon:hover::before,
+.petrolero-catalog-filter > button:hover::before,
+.petrolero-catalog-dropdown__done:hover::before,
+.petrolero-catalog-collection-button:hover::before,
+.petrolero-catalog-item__quick:hover::before {
+  opacity: 1;
+  transform: translateY(0);
+}
+.petrolero-catalog-liquid-button::after,
+.petrolero-catalog-subcategory::after,
+.petrolero-catalog-departments button::after,
+.petrolero-catalog-item__action-icon::after,
+.petrolero-catalog-filter > button::after,
+.petrolero-catalog-dropdown__done::after,
+.petrolero-catalog-collection-button::after,
+.petrolero-catalog-item__quick::after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #d9ad74, transparent);
+  transform: scaleX(0);
+  pointer-events: none;
+  transition: transform 420ms cubic-bezier(.24, .72, .25, 1);
+}
+.petrolero-catalog-liquid-button:hover::after,
+.petrolero-catalog-subcategory:hover::after,
+.petrolero-catalog-departments button:hover::after,
+.petrolero-catalog-item__action-icon:hover::after,
+.petrolero-catalog-filter > button:hover::after,
+.petrolero-catalog-dropdown__done:hover::after,
+.petrolero-catalog-collection-button:hover::after,
+.petrolero-catalog-item__quick:hover::after {
+  transform: scaleX(1);
+}
+.petrolero-catalog-subcategory > * { position: relative; z-index: 1; }
+.petrolero-catalog-quickview__content > .petrolero-catalog-liquid-button {
+  color: #f0d5ad; background: linear-gradient(110deg,#392816,#281d12);
+}
+.petrolero-catalog-feedback { max-width: min(460px,calc(100vw - 40px)); }
+
+/* Compare panel: independent scrolling, accessible controls and responsive columns. */
+.petrolero-catalog-compare-dialog {
+  width: min(1050px, 100%); max-height: min(91vh, 850px);
+  display: flex; flex-direction: column;
+  overflow: hidden; border: 1px solid rgba(219,173,108,.45);
+  background: radial-gradient(ellipse at 55% -18%, rgba(167,105,44,.11), transparent 58%), #12100e;
+  box-shadow: 0 30px 90px rgba(0,0,0,.65);
+}
+.petrolero-catalog-compare-dialog__header {
+  flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between;
+  padding: 25px 29px; gap: 20px; border-bottom: 1px solid #423022;
+}
+.petrolero-catalog-compare-dialog__header p {
+  margin: 0 0 8px; color: #bf9662; font-size: 10px; letter-spacing: .2em;
+}
+.petrolero-catalog-compare-dialog__header h2 {
+  margin: 0; color: #f2e4d0; font-size: clamp(23px,2.6vw,31px); font-weight: 500;
+}
+.petrolero-catalog-compare-dialog__header h2 span { color: #c7a272; }
+.petrolero-catalog-compare-scroll { min-height: 0; overflow: auto; overscroll-behavior: contain; }
+.petrolero-catalog-compare-table {
+  width: 100%; min-width: 620px; border-collapse: collapse;
+  table-layout: fixed; color: #e0d1bd; font-size: 12px;
+}
+.petrolero-catalog-compare-table tr { border-bottom: 1px solid #31291f; }
+.petrolero-catalog-compare-table th,
+.petrolero-catalog-compare-table td {
+  padding: 14px 16px; vertical-align: middle; text-align: left; overflow-wrap: anywhere;
+}
+.petrolero-catalog-compare-table th:first-child { width: 160px; color: #ba9b71; font-weight: 550; }
+.petrolero-catalog-compare-table thead th { vertical-align: top; background: #1a1612; }
+.petrolero-catalog-compare-table thead th:not(:first-child) {
+  border-left: 1px solid #342b20;
+}
+.petrolero-catalog-compare-table__photo {
+  position: relative; height: 140px; margin-bottom: 15px;
+  background: radial-gradient(circle,#2b241c,#16130f 70%);
+}
+.petrolero-catalog-compare-table__photo > img {
+  padding: 9px; object-fit: contain !important;
+}
+.petrolero-catalog-compare-table thead strong {
+  display: block; min-height: 45px; color: #eee1cf; font-size: 12px; font-weight: 530;
+}
+.petrolero-catalog-compare-table thead button {
+  margin-top: 12px; padding: 4px 0; border: 0; background: none;
+  color: #be9664; font-size: 11px;
+}
+.petrolero-catalog-compare-table thead button:hover { color: #edc28a; }
+.petrolero-catalog-compare-table tbody th { background: #18140f; }
+.petrolero-catalog-compare-table tbody td { background: rgba(16,14,12,.6); }
+.petrolero-catalog-compare-dialog__footer {
+  display: flex; justify-content: space-between; align-items: center; gap: 25px;
+  padding: 18px 26px; border-top: 1px solid #342b20;
+}
+.petrolero-catalog-compare-dialog__footer span { color: #968674; font-size: 11px; line-height: 1.6; }
+.petrolero-catalog-compare-dialog__footer button {
+  flex: 0 0 auto; background: #271e14; border: 1px solid #8f6d47;
+  color: #e2bb82; padding: 11px 14px; font-size: 11px;
+}
+.petrolero-catalog-compare-dialog__empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  flex: 1; min-height: 250px; padding: 45px 25px; gap: 15px;
+  text-align: center; color: #bf9864;
+}
+.petrolero-catalog-compare-dialog__empty > svg { width: 30px; height: 30px; }
+.petrolero-catalog-compare-dialog__empty p { max-width: 360px; color: #baa992; font-size: 13px; line-height: 1.7; }
+.petrolero-catalog-compare-dialog__empty button {
+  padding: 12px 20px; border: 1px solid #9e734a;
+  background: #2d2116; color: #f1c88d; font-size: 12px;
+}
+
+
+/* Account favorites: keep feedback understated and readable in the catalog. */
+.petrolero-catalog-favorite-alert {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 14px;
+  padding: 12px 0; color: #e5bb87; font-size: 12px; line-height: 1.65;
+}
+.petrolero-catalog-favorite-alert button {
+  padding: 5px 0; color: #f5d2a3; border: 0;
+  border-bottom: 1px solid currentColor; background: none; cursor: pointer;
+}
+.petrolero-catalog-item__action-icon:disabled {
+  opacity: .5; cursor: wait;
+}

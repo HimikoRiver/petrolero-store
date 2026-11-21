@@ -1,0 +1,13 @@
+/* Shared chrome for inner pages; the header and scroll controls are the exact
+   components used by the catalog and homepage. */
+.petrolero-inner-pages {
+  min-height: 100svh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #090909;
+  color: #e9e1d5;
+}
+.petrolero-inner-pages > main {
+  flex: 1 0 auto;
+}

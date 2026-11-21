@@ -1,0 +1,78 @@
+name: Auth Integration
+
+on:
+  push:
+    branches:
+      - feature/storefront-catalog
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  auth:
+    name: PostgreSQL, SMTP and Better Auth end-to-end
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: petrolero_auth_test
+          POSTGRES_USER: petrolero_test
+          POSTGRES_PASSWORD: test_only_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U petrolero_test -d petrolero_auth_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 15
+      mailpit:
+        image: axllent/mailpit:v1.27
+        env:
+          MP_SMTP_AUTH_ACCEPT_ANY: "1"
+          MP_SMTP_AUTH_ALLOW_INSECURE: "1"
+        ports:
+          - 1025:1025
+          - 8025:8025
+
+    env:
+      CATALOG_SOURCE: database
+      DATABASE_URL: postgresql://petrolero_test:test_only_password@127.0.0.1:5432/petrolero_auth_test
+      BETTER_AUTH_URL: http://127.0.0.1:3000
+      BETTER_AUTH_SECRET: "petrolero-test-secret-only-do-not-use-in-production-2026"
+      SMTP_HOST: 127.0.0.1
+      SMTP_PORT: "1025"
+      SMTP_SECURE: "false"
+      SMTP_USER: "test"
+      SMTP_PASSWORD: "test"
+      SMTP_FROM: "Petrolero Test <noreply@petrolero.test>"
+      MAILPIT_URL: http://127.0.0.1:8025
+      AUTH_TEST_BASE_URL: http://127.0.0.1:3000
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install dependencies and generate Prisma Client
+        run: npm ci --no-audit --no-fund
+      - name: Apply real database migrations
+        run: npx prisma migrate deploy
+      - name: Start Next.js for integration tests
+        run: |
+          npm run dev -- --hostname 127.0.0.1 > /tmp/petrolero-auth-next.log 2>&1 &
+          echo $! > /tmp/petrolero-auth-next.pid
+      - name: Verify signup, emails, verification, login and password reset
+        run: node scripts/check-auth-flow.mjs
+      - name: Next.js logs on failure
+        if: failure()
+        run: tail -150 /tmp/petrolero-auth-next.log || true

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import SiteFooter from "@/features/home/footer/SiteFooter";
+import SiteFooter from "@/components/layout/footer/SiteFooter";
 import "../legal.css";
 
 export const metadata: Metadata = {

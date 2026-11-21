@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { MouseEvent as ReactMouseEvent, RefObject } from "react";
-import BrandLogo from "../home/header/BrandLogo";
+import BrandLogo from "@/components/layout/header/BrandLogo";
 import { MENU_ITEMS } from "./menuItems";
 import "./MenuShowcase.css";
 

@@ -1,0 +1,178 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+  phone         String?
+  addresses     DeliveryAddress[]
+  favorites     Favorite[]
+  demoOrders    DemoOrder[]
+  role          String    @default("CUSTOMER")
+  adminNote     String?
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model DeliveryAddress {
+  id         String   @id
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label      String
+  recipient  String
+  phone      String
+  city       String
+  street     String
+  apartment  String?
+  postalCode String?
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId, createdAt])
+  @@map("delivery_address")
+}
+
+model Favorite {
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, productId])
+  @@index([userId, createdAt])
+  @@map("favorite")
+}
+
+/**
+ * Demonstration checkout only: not a paid or accepted merchant order.
+ * Prices are snapshots from the demo catalog, never trusted from the browser.
+ */
+model DemoOrder {
+  id              String   @id
+  reference       String   @unique
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipient       String
+  phone           String
+  city            String
+  street          String
+  apartment       String?
+  postalCode      String?
+  note            String?
+  reviewStatus    String   @default("NEW")
+  staffNote       String?
+  reviewedAt      DateTime?
+  reviewedById    String?
+  subtotalKopecks Int
+  createdAt       DateTime @default(now())
+  items           DemoOrderItem[]
+
+  @@index([userId, createdAt])
+  @@index([reviewStatus, createdAt])
+  @@map("demo_order")
+}
+
+model DemoOrderItem {
+  id               String    @id
+  orderId          String
+  order            DemoOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId        String
+  sku              String
+  title            String
+  image            String?
+  quantity         Int
+  unitPriceKopecks Int
+  lineTotalKopecks Int
+
+  @@index([orderId])
+  @@map("demo_order_item")
+}
+
+
+model Product {
+  id            String   @id
+  slug          String   @unique
+  sku           String   @unique
+  title         String
+  category      String
+  description   String
+  packaging     String
+  image         String?
+  galleryImages String[] @default([])
+  priceKopecks  Int?
+  stockQuantity Int      @default(0)
+  published     Boolean  @default(false)
+  archivedAt    DateTime?
+  viscosity     String?
+  volumeLiters  Float?
+  acea          String[] @default([])
+  api           String[] @default([])
+  approvals     String[] @default([])
+  ilsac         String[] @default([])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([published, archivedAt, createdAt])
+  @@map("product")
+}

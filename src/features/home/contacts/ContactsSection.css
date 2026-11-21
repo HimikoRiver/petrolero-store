@@ -365,35 +365,20 @@ a.petrolero-contacts-detail-value:focus-visible {
 }
 
 .petrolero-contact-submit {
-  position: relative;
-  display: inline-flex;
   flex: 0 0 auto;
+}
+
+/* The shared button owns its color, dimensions, shimmer and hover effects. */
+.petrolero-contact-submit .petrolero-gold-shimmer-button__label {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: clamp(15px, 1.8vw, 28px);
-  min-height: 49px;
-  padding: 12px 21px;
-  border: 1px solid #f7d6a5;
-  border-radius: 7px;
-  color: #1b1006;
-  background: linear-gradient(115deg, #d49b56, #f2cc92 48%, #c7934d);
-  box-shadow: 0 5px 22px rgba(221,148,53,.18);
-  font-size: clamp(12px, .88vw, 14px);
-  font-weight: 680;
-  cursor: pointer;
-  transition: box-shadow 260ms ease, transform 260ms ease, background-position 260ms ease;
+  gap: clamp(10px, 1vw, 16px);
 }
 
 .petrolero-contact-submit svg,
 .petrolero-contacts-dealer-link svg {
   flex: 0 0 auto;
   transition: transform 230ms ease;
-}
-
-.petrolero-contact-submit:hover,
-.petrolero-contact-submit:focus-visible {
-  box-shadow: 0 7px 25px rgba(249,188,96,.4);
-  transform: translateY(-2px);
 }
 
 .petrolero-contact-submit:hover svg,
@@ -878,13 +863,6 @@ a.petrolero-contacts-detail-value:focus-visible {
 .petrolero-contact-form-footer {
   gap: clamp(9px, 1.1vw, 16px);
   margin-top: clamp(12px, 1.4vw, 18px);
-}
-
-.petrolero-contact-submit {
-  min-height: 41px;
-  gap: clamp(10px, 1vw, 16px);
-  padding: 9px 16px;
-  font-size: clamp(11px, .78vw, 12px);
 }
 
 .petrolero-contact-form-privacy,

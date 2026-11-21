@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import GoldShimmerButton from "@/components/ui/GoldShimmerButton";
 import "./ContactsSection.css";
 
 const CONTACT_EMAIL = "info@petrolero.ru";
@@ -234,9 +235,9 @@ export default function ContactsSection() {
               </div>
 
               <div className="petrolero-contact-form-footer">
-                <button type="submit" className="petrolero-contact-submit">
+                <GoldShimmerButton type="submit" className="petrolero-contact-submit">
                   Подготовить письмо <RightArrow />
-                </button>
+                </GoldShimmerButton>
               </div>
               <p className="petrolero-contact-form-privacy">
                 Отправляя письмо, вы соглашаетесь с{" "}
