@@ -276,7 +276,8 @@ export default function AdminProducts() {
                           const title=e.target.value;
                           setEditor(current => current ? ({
                             ...current, draft: { ...current.draft, title,
-                              slug: current.draft.slug || slugify(title) },
+                              slug: current.draft.slug === slugify(current.draft.title)
+                                ? slugify(title) : current.draft.slug },
                           }) : current);
                         }}/>
                     </label>
