@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import GoldShimmerButton from "@/components/ui/GoldShimmerButton";
 import { CATALOG_PRODUCTS } from "@/features/catalog/data/catalogData";
 import { priceLabel } from "@/features/catalog/lib/catalogUtils";
 import type { CartLine } from "../types";
@@ -14,9 +16,10 @@ type Props = {
 };
 
 export default function CatalogCartDrawer({ cartLines, cartCount, cartTotal, onClose, updateQuantity }: Props) {
+  const router = useRouter();
   return (
 <div className="petrolero-catalog-overlay" onPointerDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-          <aside className="petrolero-catalog-drawer" role="dialog" aria-modal="true" aria-label="Демонстрационная корзина">
+          <aside className="petrolero-catalog-drawer" role="dialog" aria-modal="true" aria-label="Корзина">
             <header>
               <div><p>Магазин Petrolero</p><h2>Корзина <span>({cartCount})</span></h2></div>
               <button type="button" className="petrolero-catalog-close" aria-label="Закрыть" onClick={() => onClose()}>×</button>
@@ -49,7 +52,13 @@ export default function CatalogCartDrawer({ cartLines, cartCount, cartTotal, onC
                 </div>
                 <div className="petrolero-catalog-drawer__summary">
                   <p><span>Итого (демо)</span><strong>{priceLabel(cartTotal)}</strong></p>
-                  <small>Оформление заказа временно недоступно.</small>
+                  <small>Демонстрационные товары и цены. Оплата и реальная доставка пока не подключены.</small>
+                  <GoldShimmerButton type="button" className="petrolero-catalog-drawer__checkout" onClick={() => {
+                    onClose();
+                    router.push("/checkout");
+                  }}>
+                    Перейти к оформлению
+                  </GoldShimmerButton>
                 </div>
               </>
             ) : (

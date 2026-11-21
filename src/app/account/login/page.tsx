@@ -15,15 +15,15 @@ type Props = {
 async function AccountLoginContent({ searchParams }: Props) {
   const { next: requestedNext, verified, error } = await searchParams;
 
-  // Accept redirects only to private account pages on this website.
+  // Accept only private account pages or the checkout on this origin.
   const next = requestedNext &&
-    requestedNext.startsWith("/account") &&
+    (requestedNext.startsWith("/account") || requestedNext === "/checkout") &&
     !requestedNext.startsWith("//") &&
     !requestedNext.includes("\\") &&
     !requestedNext.startsWith("/account/login") &&
     !requestedNext.startsWith("/account/reset-password") &&
     !requestedNext.startsWith("/account/preview") &&
-    /^\/account(?:\/|\?|$)/.test(requestedNext)
+    (/^\/account(?:\/|\?|$)/.test(requestedNext) || requestedNext === "/checkout")
       ? requestedNext
       : "/account";
 

@@ -89,3 +89,10 @@
 }
 .petrolero-catalog-feedback button:last-child {text-decoration: none; font-size: 20px}
 
+
+
+/* Checkout action in the existing catalog cart drawer. */
+.petrolero-catalog-drawer__checkout {
+  width: 100%;
+  margin-top: 17px;
+}
