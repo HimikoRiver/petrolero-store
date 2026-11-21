@@ -10,16 +10,6 @@
 .ph-page *,.ph-page *::before,.ph-page *::after{box-sizing:border-box;}
 .ph-page a{text-decoration:none;}
 .ph-page :is(a,summary):focus-visible{outline:2px solid #d6ae79;outline-offset:4px;}
-.ph-header{
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  min-height:90px;padding:0 clamp(20px,5vw,85px);
-  border-bottom:1px solid var(--ph-line);background:#101112;
-}
-.ph-brand{font-size:clamp(17px,2vw,23px);font-weight:600;letter-spacing:.20em;color:#e4d1ac;white-space:nowrap;}
-.ph-brand span{color:#98774a;}
-.ph-header__links{display:flex;align-items:center;gap:clamp(15px,3vw,42px);}
-.ph-header__links a{color:#b0aba2;font-size:12px;white-space:nowrap;}
-.ph-header__links a:hover{color:#e9c994;}
 .ph-intro{background:radial-gradient(ellipse 65% 95% at 94% 10%,rgba(102,68,34,.22),transparent),linear-gradient(130deg,#151514,#0d0e0f);border-bottom:1px solid var(--ph-line);}
 .ph-intro__inner{width:min(100%,1470px);margin:auto;padding:33px clamp(20px,5vw,85px) clamp(45px,6vw,88px);position:relative;overflow:hidden;}
 .ph-crumbs{position:relative;z-index:1;display:flex;align-items:center;flex-wrap:wrap;gap:11px;margin-bottom:48px;font-size:11px;color:#777874;}
@@ -88,11 +78,6 @@
 .ph-faq-item[open] .ph-faq-item__plus{transform:rotate(45deg);}
 .ph-faq-item__answer{padding:22px 35px 29px;}
 .ph-faq-item__answer p{font-size:13px;color:#9d9d99;line-height:1.85;max-width:700px;}
-.ph-footer{border-top:1px solid var(--ph-line);padding:29px clamp(20px,5vw,85px);display:flex;justify-content:space-between;align-items:center;gap:20px;max-width:100%;}
-.ph-footer > a{color:#ad9371;letter-spacing:.16em;font-size:14px;}
-.ph-footer > div{display:flex;flex-wrap:wrap;gap:23px;}
-.ph-footer > div a{color:#858782;font-size:11px;}
-.ph-footer a:hover{color:#edc995;}
 @media(max-width:990px){
   .ph-layout{grid-template-columns:200px minmax(0,1fr);gap:26px;}
   .ph-steps{grid-template-columns:1fr;}
@@ -117,7 +102,6 @@
   .ph-article-section{margin-bottom:35px;padding-bottom:34px;}
   .ph-faq-item summary{font-size:13px;min-height:72px;gap:12px;}
   .ph-faq-item__answer{padding:18px 10px 24px;}
-  .ph-footer{padding:27px 19px;align-items:flex-start;flex-direction:column;}
 }
 @media(prefers-reduced-motion:reduce){
   .ph-aside__link,.ph-faq-item__plus{transition:none;}
