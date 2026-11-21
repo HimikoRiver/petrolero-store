@@ -2,6 +2,7 @@ import Link from "next/link";
 import SignOutButton from "@/features/auth/components/SignOutButton";
 import { ACCOUNT_NAVIGATION, accountSectionPath, type AccountSection } from "../data/accountNavigation";
 import AccountIcon from "./AccountIcon";
+import AccountGoldGears from "./AccountGoldGears";
 import AccountFavorites from "./AccountFavorites";
 import AccountProfile from "./AccountProfile";
 import AccountAddresses from "./AccountAddresses";
@@ -13,6 +14,7 @@ import StorefrontChrome from "@/components/layout/StorefrontChrome";
 import "../styles/workspace.css";
 import "../styles/accountForms.css";
 import "../styles/accountOrders.css";
+import "../styles/gears.css";
 
 type AccountWorkspaceProps = {
   section: AccountSection;
@@ -308,7 +310,7 @@ export default function AccountWorkspace({
 
   return (
     <StorefrontChrome>
-      <main className="pa-workspace">
+      <main className={"pa-workspace" + (section === "overview" ? " pa-workspace--gears" : "")}>
       <div className="pa-body">
         <aside className="pa-sidebar">
           <div className="pa-sidebar__identity">
@@ -349,12 +351,13 @@ export default function AccountWorkspace({
               <AccountIcon name="chevron" size={14} />
               <span>{page.title}</span>
             </div>
-            <div className="pa-page-heading">
-              <div>
+            <div className={"pa-page-heading" + (section === "overview" ? " pa-page-heading--gears" : "")}>
+              <div className="pa-page-heading__copy">
                 <span className="pa-kicker">PETROLERO / АККАУНТ / {page.number}</span>
                 <h1>{page.title}</h1>
                 <p>{page.subtitle}</p>
               </div>
+              {section === "overview" && <AccountGoldGears />}
               <span className="pa-page-heading__number" aria-hidden="true">{page.number}</span>
             </div>
             <div className="pa-screen">
