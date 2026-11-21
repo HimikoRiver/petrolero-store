@@ -103,8 +103,10 @@ export default function AccountAddresses({ initialAddresses, preview }: Props) {
         setAddresses(current => {
           const removed = current.find(a => a.id === id);
           const remaining = current.filter(a => a.id !== id);
-          if (removed?.isDefault && remaining.length) remaining[0].isDefault = true;
-          return [...remaining].sort(sortDefault);
+          if (removed?.isDefault && remaining.length) {
+            return remaining.map((item, index) => ({ ...item, isDefault: index === 0 })).sort(sortDefault);
+          }
+          return remaining.sort(sortDefault);
         });
       } else {
         const response = await fetch("/api/account/addresses", {

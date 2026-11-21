@@ -127,6 +127,90 @@ assertOkay(session, "get session");
 assert.equal(session.data?.user?.email, email);
 assert.equal(session.data?.user?.emailVerified, true);
 
+console.log("4a. Check profile, owned addresses and unauthorized access");
+const unauthProfile = await authRequest("/api/account/profile", {
+  method: "PATCH",
+  body: { name: "Not Authorized", phone: "+7 900 111 22 33" },
+});
+assert.equal(unauthProfile.response.status, 401, "Profile update must require a session");
+const updateProfile = await authRequest("/api/account/profile", {
+  cookie,
+  method: "PATCH",
+  body: { name: "Petrolero Customer", phone: "+7 900 111 22 33" },
+});
+assertOkay(updateProfile, "update profile");
+assert.equal(updateProfile.data.profile.name, "Petrolero Customer");
+assert.equal(updateProfile.data.profile.phone, "+7 900 111 22 33");
+
+const addressPayload = {
+  label: "Дом",
+  recipient: "Petrolero Customer",
+  phone: "+7 900 111 22 33",
+  city: "Москва",
+  street: "Тестовая улица, 1",
+  apartment: "кв. 2",
+  postalCode: "101000",
+  isDefault: true,
+};
+const unauthorizedAddress = await authRequest("/api/account/addresses");
+assert.equal(unauthorizedAddress.response.status, 401, "Addresses must require a session");
+const addAddress = await authRequest("/api/account/addresses", {
+  cookie, body: addressPayload,
+});
+assert.equal(addAddress.response.status, 201, "Failed to add first address");
+assert.equal(addAddress.data.address.isDefault, true);
+const firstId = addAddress.data.address.id;
+
+const secondaryAddress = await authRequest("/api/account/addresses", {
+  cookie,
+  body: {
+    ...addressPayload,
+    label: "Работа",
+    street: "Деловая улица, 4",
+    isDefault: false,
+  },
+});
+assert.equal(secondaryAddress.response.status, 201);
+const secondId = secondaryAddress.data.address.id;
+
+const selectSecond = await authRequest("/api/account/addresses", {
+  cookie,
+  method: "PATCH",
+  body: {
+    ...addressPayload,
+    id: secondId,
+    label: "Работа",
+    street: "Деловая улица, 4",
+    isDefault: true,
+  },
+});
+assertOkay(selectSecond, "change default address");
+
+const listBeforeDelete = await authRequest("/api/account/addresses", { cookie });
+assertOkay(listBeforeDelete, "list own addresses");
+assert.equal(listBeforeDelete.data.addresses.length, 2);
+assert.equal(listBeforeDelete.data.addresses.filter(a => a.isDefault).length, 1);
+assert.equal(listBeforeDelete.data.addresses.find(a => a.isDefault).id, secondId);
+
+const deleteSecond = await authRequest("/api/account/addresses", {
+  cookie, method: "DELETE", body: { id: secondId },
+});
+assertOkay(deleteSecond, "remove default address");
+const listAfterDelete = await authRequest("/api/account/addresses", { cookie });
+assertOkay(listAfterDelete, "list after deletion");
+assert.equal(listAfterDelete.data.addresses.length, 1);
+assert.equal(listAfterDelete.data.addresses[0].id, firstId);
+assert.equal(listAfterDelete.data.addresses[0].isDefault, true);
+
+console.log("4b. Verify account preview page renders editable sections");
+for (const section of ["profile", "addresses"]) {
+  const page = await fetch(origin + "/account/preview?section=" + section);
+  assert.ok(page.ok, "Account preview page failed: " + section + " (" + page.status + ")");
+  const html = await page.text();
+  assert.ok(html.includes(section === "profile" ? "Контактная информация" : "Мои адреса"),
+    "Account preview missing section content: " + section);
+}
+
 console.log("5. Request password reset and collect the second email");
 const resetRequest = await authRequest("/api/auth/request-password-reset", {
   body: { email, redirectTo: origin + "/account/reset-password" },
@@ -165,4 +249,4 @@ const afterSignOut = await authRequest("/api/auth/get-session", { cookie: newCoo
 assertOkay(afterSignOut, "get session after sign-out");
 assert.equal(afterSignOut.data?.session, undefined, "Session survived sign-out");
 
-console.log("PASS: DB migration + SMTP + registration + verification + sessions + reset + logout");
+console.log("PASS: DB migration + SMTP + signup + verification + profile + addresses CRUD + reset + logout");
