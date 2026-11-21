@@ -3,6 +3,7 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { setTimeout as sleep } from "node:timers/promises";
+import pg from "pg";
 
 const origin = process.env.AUTH_TEST_BASE_URL || "http://127.0.0.1:3000";
 const mailpit = process.env.MAILPIT_URL || "http://127.0.0.1:8025";
@@ -89,6 +90,29 @@ await until(async () => {
   const response = await fetch(mailpit + "/api/v1/messages");
   return response.ok;
 }, "Mailpit API");
+
+// Test fixtures belong ONLY to this temporary PostgreSQL database.
+// Production catalog is never seeded; it is populated via /admin.
+console.log("0. Seed four test-only products for legacy cart and favorites cases");
+const db = new pg.Client({ connectionString: process.env.DATABASE_URL });
+await db.connect();
+try {
+  for (const [id, sku, title, price, category, packaging] of [
+    ["demo-fusion", "DEMO-FU-530", "PETROLERO FUSION 5W-30", 750000, "passenger", "drum"],
+    ["demo-ninja", "DEMO-NI-530", "PETROLERO NINJA 5W-30", 259000, "passenger", "canister"],
+    ["demo-elite", "DEMO-EL-530", "PETROLERO ELITE 5W-30", 800000, "passenger", "drum"],
+    ["demo-performance", "DEMO-AD-P1", "PETROLERO PERFORMANCE 1", 139000, "additives", "bottle"],
+  ]) {
+    await db.query(
+      'INSERT INTO "product" ("id","slug","sku","title","category","description","packaging","image","priceKopecks","stockQuantity","published") VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) ON CONFLICT ("id") DO NOTHING',
+      [id, id, sku, title, category, "Описание тестового товара для проверки магазина.", packaging,
+        category === "additives" ? "/catalog/products/additives/performance-1.avif" : "/catalog/products/oils/petrolero-drum.avif",
+        price, 12, true],
+    );
+  }
+} finally {
+  await db.end();
+}
 
 console.log("1. Create account and confirm verification email");
 const signUp = await authRequest("/api/auth/sign-up/email", {
@@ -379,6 +403,96 @@ assertOkay(foreignOrderPage, "SSR page for non-owned order");
 assert.ok(String(foreignOrderPage.data).includes("Заказ не найден"),
   "Foreign order should not be rendered in the account workspace");
 
+console.log("4f. Check administrator permissions, product CRUD and catalog publication");
+const ordinaryAdminAttempt = await authRequest("/api/admin/products", { cookie: secondCookie });
+assert.equal(ordinaryAdminAttempt.response.status, 403, "A buyer must not access admin products");
+const unauthAdminAttempt = await authRequest("/api/admin/products");
+assert.equal(unauthAdminAttempt.response.status, 401, "Anonymous admin access must be rejected");
+
+// Promotion simulates the separate, offline grant-admin.mjs command. It is
+// intentionally NOT available as a public API endpoint.
+const promoteDb = new pg.Client({ connectionString: process.env.DATABASE_URL });
+await promoteDb.connect();
+try {
+  const promoted = await promoteDb.query(
+    'UPDATE "user" SET "role" = $1 WHERE "email" = $2 AND "emailVerified" = TRUE RETURNING "id"',
+    ["ADMIN", email],
+  );
+  assert.equal(promoted.rowCount, 1);
+} finally {
+  await promoteDb.end();
+}
+
+const adminList = await authRequest("/api/admin/products", { cookie });
+assertOkay(adminList, "admin product list");
+assert.ok(adminList.data.products.length >= 4);
+const tokenSuffix = randomUUID().slice(0, 8);
+const adminItem = {
+  title: "PETROLERO TEST ADMIN " + tokenSuffix,
+  slug: "petrolero-test-admin-" + tokenSuffix,
+  sku: "ADMIN-" + tokenSuffix.toUpperCase(),
+  category: "passenger",
+  description: "Карточка, созданная в защищённой административной панели.",
+  packaging: "canister",
+  image: "/catalog/products/oils/petrolero-drum.avif",
+  galleryImages: [],
+  priceKopecks: 330000,
+  stockQuantity: 7,
+  published: false,
+  viscosity: "5W-30",
+  volumeLiters: 4,
+  acea: ["C3"],
+  api: ["SP"],
+  approvals: [],
+  ilsac: [],
+};
+const ordinaryWrite = await authRequest("/api/admin/products", {
+  cookie: secondCookie, body: adminItem,
+});
+assert.equal(ordinaryWrite.response.status, 403, "Buyer could create admin products");
+const createDraft = await authRequest("/api/admin/products", { cookie, body: adminItem });
+assert.equal(createDraft.response.status, 201,
+  "Admin must be able to create product: " + JSON.stringify(createDraft.data));
+const adminItemId = createDraft.data.product.id;
+assert.ok(adminItemId);
+const noPricePublished = await authRequest("/api/admin/products/" + adminItemId, {
+  cookie, method: "PUT",
+  body: { ...adminItem, priceKopecks: null, published: true },
+});
+assert.equal(noPricePublished.response.status, 400, "Cannot publish without price");
+
+const draftCatalog = await authRequest("/catalog");
+assertOkay(draftCatalog, "draft catalog page");
+assert.ok(!String(draftCatalog.data).includes(adminItem.title),
+  "Draft product leaked into public catalog");
+
+const publishProduct = await authRequest("/api/admin/products/" + adminItemId, {
+  cookie, method: "PUT", body: { ...adminItem, published: true },
+});
+assertOkay(publishProduct, "publish product from admin");
+assert.equal(publishProduct.data.product.published, true);
+const publicCatalog = await authRequest("/catalog");
+assertOkay(publicCatalog, "published catalog page");
+assert.ok(String(publicCatalog.data).includes(adminItem.title),
+  "Published product not visible in catalog");
+
+const unauthorizedDelete = await authRequest("/api/admin/products/" + adminItemId, {
+  cookie: secondCookie, method: "DELETE",
+});
+assert.equal(unauthorizedDelete.response.status, 403);
+const archiveProduct = await authRequest("/api/admin/products/" + adminItemId, {
+  cookie, method: "DELETE",
+});
+assertOkay(archiveProduct, "archive product");
+const hiddenCatalog = await authRequest("/catalog");
+assertOkay(hiddenCatalog, "catalog after archiving");
+assert.ok(!String(hiddenCatalog.data).includes(adminItem.title),
+  "Archived product remained visible");
+const afterArchive = await authRequest("/api/admin/products", { cookie });
+assertOkay(afterArchive, "admin list after archiving");
+assert.ok(!afterArchive.data.products.some(p => p.id === adminItemId),
+  "Archived product remained in active admin product list");
+
 console.log("5. Request password reset and collect the second email");
 const resetRequest = await authRequest("/api/auth/request-password-reset", {
   body: { email, redirectTo: origin + "/account/reset-password" },
@@ -417,4 +531,4 @@ const afterSignOut = await authRequest("/api/auth/get-session", { cookie: newCoo
 assertOkay(afterSignOut, "get session after sign-out");
 assert.equal(afterSignOut.data?.session, undefined, "Session survived sign-out");
 
-console.log("PASS: DB migration + SMTP + signup + verification + profile + addresses + favorites + private demo checkout + reset + logout");
+console.log("PASS: auth + profile + favorites + owner-scoped demo orders + admin RBAC + product create/publish/archive + catalog visibility");
