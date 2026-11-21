@@ -18,6 +18,7 @@ model User {
   phone         String?
   addresses     DeliveryAddress[]
   favorites     Favorite[]
+  demoOrders    DemoOrder[]
   sessions      Session[]
   accounts      Account[]
 
@@ -99,4 +100,44 @@ model Favorite {
   @@id([userId, productId])
   @@index([userId, createdAt])
   @@map("favorite")
+}
+
+/**
+ * Demonstration checkout only: not a paid or accepted merchant order.
+ * Prices are snapshots from the demo catalog, never trusted from the browser.
+ */
+model DemoOrder {
+  id              String   @id
+  reference       String   @unique
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipient       String
+  phone           String
+  city            String
+  street          String
+  apartment       String?
+  postalCode      String?
+  note            String?
+  subtotalKopecks Int
+  createdAt       DateTime @default(now())
+  items           DemoOrderItem[]
+
+  @@index([userId, createdAt])
+  @@map("demo_order")
+}
+
+model DemoOrderItem {
+  id               String    @id
+  orderId          String
+  order            DemoOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId        String
+  sku              String
+  title            String
+  image            String?
+  quantity         Int
+  unitPriceKopecks Int
+  lineTotalKopecks Int
+
+  @@index([orderId])
+  @@map("demo_order_item")
 }
