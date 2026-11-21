@@ -493,6 +493,105 @@ assertOkay(afterArchive, "admin list after archiving");
 assert.ok(!afterArchive.data.products.some(p => p.id === adminItemId),
   "Archived product remained in active admin product list");
 
+console.log("4g. Verify admin management of demo orders and buyers");
+for (const endpoint of ["/api/admin/orders", "/api/admin/customers"]) {
+  const anonymous = await authRequest(endpoint);
+  assert.equal(anonymous.response.status, 401, "Anonymous admin endpoint exposed: " + endpoint);
+  const buyerAttempt = await authRequest(endpoint, { cookie: secondCookie });
+  assert.equal(buyerAttempt.response.status, 403, "Buyer accessed protected admin endpoint: " + endpoint);
+}
+for (const pagePath of ["/admin/orders", "/admin/customers"]) {
+  const browserPage = await authRequest(pagePath, { cookie });
+  assertOkay(browserPage, "Admin page " + pagePath);
+  assert.ok(String(browserPage.data).includes(pagePath.endsWith("orders") ? "Заказы" : "Покупатели"));
+  const blockedPage = await authRequest(pagePath, { cookie: secondCookie });
+  assert.equal(blockedPage.response.status, 404,
+    "A buyer must not see administrative pages");
+}
+
+const adminOrders = await authRequest("/api/admin/orders", { cookie });
+assertOkay(adminOrders, "admin orders");
+assert.equal(adminOrders.data.total, 1);
+assert.equal(adminOrders.data.items[0].id, orderId);
+assert.equal(adminOrders.data.items[0].reviewStatus, "NEW");
+
+const adminOrderDetails = await authRequest("/api/admin/orders/" + encodeURIComponent(orderId), { cookie });
+assertOkay(adminOrderDetails, "admin order detail");
+assert.equal(adminOrderDetails.data.order.items.length, 2);
+assert.equal(adminOrderDetails.data.order.buyer.email, email);
+
+const foreignAdminDetail = await authRequest("/api/admin/orders/" + encodeURIComponent(orderId), {
+  cookie: secondCookie,
+});
+assert.equal(foreignAdminDetail.response.status, 403);
+
+const attemptChangePrice = await authRequest("/api/admin/orders/" + encodeURIComponent(orderId), {
+  cookie, method: "PATCH",
+  body: { reviewStatus: "REVIEWED", staffNote: "Проверено", subtotalKopecks: 1 },
+});
+assert.equal(attemptChangePrice.response.status, 400, "Admin must not tamper with order price");
+const invalidStatus = await authRequest("/api/admin/orders/" + encodeURIComponent(orderId), {
+  cookie, method: "PATCH", body: { reviewStatus: "PAID", staffNote: "Wrong" },
+});
+assert.equal(invalidStatus.response.status, 400, "Unexpected fulfillment status must be rejected");
+const buyerUpdateOrder = await authRequest("/api/admin/orders/" + encodeURIComponent(orderId), {
+  cookie: secondCookie, method: "PATCH",
+  body: { reviewStatus: "CLOSED", staffNote: "Unauthorized" },
+});
+assert.equal(buyerUpdateOrder.response.status, 403);
+const updateOrderReview = await authRequest("/api/admin/orders/" + encodeURIComponent(orderId), {
+  cookie, method: "PATCH",
+  body: { reviewStatus: "REVIEWED", staffNote: "Тестовая проверка заявки" },
+});
+assertOkay(updateOrderReview, "admin review update");
+assert.equal(updateOrderReview.data.order.reviewStatus, "REVIEWED");
+assert.equal(updateOrderReview.data.order.staffNote, "Тестовая проверка заявки");
+const filteredOrders = await authRequest("/api/admin/orders?status=REVIEWED", { cookie });
+assertOkay(filteredOrders, "filter reviewed orders");
+assert.equal(filteredOrders.data.total, 1);
+const noNewOrders = await authRequest("/api/admin/orders?status=NEW", { cookie });
+assertOkay(noNewOrders, "filter new orders");
+assert.equal(noNewOrders.data.total, 0);
+const buyerOrderAfterAdmin = await authRequest("/api/account/demo-orders/" + encodeURIComponent(orderId), { cookie });
+assertOkay(buyerOrderAfterAdmin, "buyer read after staff review");
+assert.equal(buyerOrderAfterAdmin.data.order.subtotalKopecks, 1759000);
+assert.ok(!("staffNote" in buyerOrderAfterAdmin.data.order),
+  "Internal notes must never be returned to the buyer");
+
+const adminCustomers = await authRequest("/api/admin/customers", { cookie });
+assertOkay(adminCustomers, "admin customer list");
+assert.equal(adminCustomers.data.total, 1, "Admins must not appear as customers");
+const second = adminCustomers.data.items.find(item => item.email === secondEmail);
+assert.ok(second?.id, "Customer must be present in admin list");
+assert.equal(second.ordersCount, 0);
+
+const customerDetail = await authRequest("/api/admin/customers/" + encodeURIComponent(second.id), { cookie });
+assertOkay(customerDetail, "admin customer detail");
+assert.equal(customerDetail.data.customer.email, secondEmail);
+assert.equal(customerDetail.data.customer.emailVerified, true);
+const buyerOwnCustomerData = await authRequest("/api/admin/customers/" + encodeURIComponent(second.id), {
+  cookie: secondCookie,
+});
+assert.equal(buyerOwnCustomerData.response.status, 403);
+const forbiddenRoleChange = await authRequest("/api/admin/customers/" + encodeURIComponent(second.id), {
+  cookie, method: "PATCH", body: { role: "ADMIN", adminNote: "hi" },
+});
+assert.equal(forbiddenRoleChange.response.status, 400, "Admin UI must not change account roles");
+const buyerCustomerNote = await authRequest("/api/admin/customers/" + encodeURIComponent(second.id), {
+  cookie: secondCookie, method: "PATCH", body: { adminNote: "stolen" },
+});
+assert.equal(buyerCustomerNote.response.status, 403);
+const savedNote = await authRequest("/api/admin/customers/" + encodeURIComponent(second.id), {
+  cookie, method: "PATCH", body: { adminNote: "Заметка только для администратора" },
+});
+assertOkay(savedNote, "save customer staff note");
+assert.equal(savedNote.data.customer.adminNote, "Заметка только для администратора");
+const searchedCustomers = await authRequest("/api/admin/customers?q=" + encodeURIComponent(secondEmail), {
+  cookie,
+});
+assertOkay(searchedCustomers, "search customer by email");
+assert.equal(searchedCustomers.data.total, 1);
+
 console.log("5. Request password reset and collect the second email");
 const resetRequest = await authRequest("/api/auth/request-password-reset", {
   body: { email, redirectTo: origin + "/account/reset-password" },
@@ -531,4 +630,4 @@ const afterSignOut = await authRequest("/api/auth/get-session", { cookie: newCoo
 assertOkay(afterSignOut, "get session after sign-out");
 assert.equal(afterSignOut.data?.session, undefined, "Session survived sign-out");
 
-console.log("PASS: auth + profile + favorites + owner-scoped demo orders + admin RBAC + product create/publish/archive + catalog visibility");
+console.log("PASS: auth + profile + favorites + owned demo checkout + admin RBAC + products + order reviews + customer notes");
