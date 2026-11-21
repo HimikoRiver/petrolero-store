@@ -19,6 +19,7 @@ model User {
   addresses     DeliveryAddress[]
   favorites     Favorite[]
   demoOrders    DemoOrder[]
+  role          String    @default("CUSTOMER")
   sessions      Session[]
   accounts      Account[]
 
@@ -140,4 +141,32 @@ model DemoOrderItem {
 
   @@index([orderId])
   @@map("demo_order_item")
+}
+
+
+model Product {
+  id            String   @id
+  slug          String   @unique
+  sku           String   @unique
+  title         String
+  category      String
+  description   String
+  packaging     String
+  image         String?
+  galleryImages String[] @default([])
+  priceKopecks  Int?
+  stockQuantity Int      @default(0)
+  published     Boolean  @default(false)
+  archivedAt    DateTime?
+  viscosity     String?
+  volumeLiters  Float?
+  acea          String[] @default([])
+  api           String[] @default([])
+  approvals     String[] @default([])
+  ilsac         String[] @default([])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([published, archivedAt, createdAt])
+  @@map("product")
 }
