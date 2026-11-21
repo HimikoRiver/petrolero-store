@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import BrandLogo from "./BrandLogo";
 import MenuShowcase from "@/features/menu/MenuShowcase";
 import { SearchIcon, AccountIcon, CartIcon } from "./HeaderIcons";
@@ -13,7 +14,7 @@ type Panel = "cart" | null;
 type PetroleroHeaderProps = {
   phase: 0 | 1 | 2 | 3;
   reducedMotion: boolean;
-  mode?: "home" | "catalog";
+  mode?: "home" | "catalog" | "inner";
   searchValue?: string;
   onSearchChange?: (value: string) => void;
   cartCount?: number;
@@ -29,6 +30,7 @@ export default function SiteHeader({
   cartCount = 0,
   onCartOpen,
 }: PetroleroHeaderProps) {
+  const router = useRouter();
   const searchRef = useRef<HTMLInputElement>(null);
   const searchWrapRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -138,6 +140,12 @@ export default function SiteHeader({
 
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (mode === "inner") {
+      const query = search.trim();
+      router.push(query ? `/catalog?search=${encodeURIComponent(query)}` : "/catalog");
+      setSearchOpen(false);
+      return;
+    }
     if (mode === "catalog") {
       setSearchOpen(false);
       document.getElementById("petrolero-catalog-products")?.scrollIntoView({ behavior: reducedMotion ? "instant" : "smooth" });
@@ -147,6 +155,11 @@ export default function SiteHeader({
   };
 
   const handleCartClick = () => {
+    if (mode === "inner") {
+      setSearchOpen(false);
+      router.push("/catalog");
+      return;
+    }
     if (mode === "catalog" && onCartOpen) {
       setSearchOpen(false);
       onCartOpen();
@@ -163,7 +176,7 @@ export default function SiteHeader({
         data-hidden={navHidden && phase === 3}
       >
         <div className="petrolero-fixed-brand" data-catalog={mode !== "home"}>
-          {mode === "catalog" ? (
+          {mode !== "home" ? (
             <Link href="/" aria-label="На главную Petrolero" className="petrolero-fixed-brand__link">
               <BrandLogo animated={false} variant="gold" />
             </Link>
@@ -221,13 +234,13 @@ export default function SiteHeader({
                 <SearchIcon />
               </button>
             </div>
-            <Link href="/account/login" className="petrolero-nav-button" aria-label="Вход в личный кабинет">
+            <Link href={mode === "inner" ? "/account" : "/account/login"} className="petrolero-nav-button" aria-label="Вход в личный кабинет">
               <AccountIcon />
             </Link>
             <button
               type="button"
               className="petrolero-nav-button petrolero-nav-cart"
-              aria-label={mode === "catalog" ? `Корзина, товаров: ${cartCount}` : "Корзина"}
+              aria-label={mode === "catalog" ? `Корзина, товаров: ${cartCount}` : mode === "inner" ? "Открыть каталог и корзину" : "Корзина"}
               aria-expanded={panel === "cart"}
               onClick={handleCartClick}
             >
