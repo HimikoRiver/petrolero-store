@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Marck_Script } from "next/font/google";
 import "./globals.css";
+import "@/components/ui/GoldShimmerButton.css";
 import GlobalScrollControls from "@/components/layout/GlobalScrollControls";
 import GlobalSiteHeader from "@/components/layout/header/GlobalSiteHeader";
 import { HeaderStateProvider } from "@/components/layout/header/HeaderStateProvider";

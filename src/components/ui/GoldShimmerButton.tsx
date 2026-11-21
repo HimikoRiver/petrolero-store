@@ -1,7 +1,7 @@
 "use client";
 
 import type { ButtonHTMLAttributes } from "react";
-import styles from "./GoldShimmerButton.module.css";
+
 
 type GoldShimmerButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
@@ -16,9 +16,9 @@ export default function GoldShimmerButton({
     <button
       {...props}
       type={type}
-      className={[styles.button, className].filter(Boolean).join(" ")}
+      className={["petrolero-gold-shimmer-button", className].filter(Boolean).join(" ")}
     >
-      <span className={styles.label}>{children}</span>
+      <span className="petrolero-gold-shimmer-button__label">{children}</span>
     </button>
   );
 }

@@ -1,4 +1,4 @@
-.button {
+.petrolero-gold-shimmer-button {
   position: relative;
   isolation: isolate;
   display: inline-flex;
@@ -32,7 +32,7 @@
   transition: box-shadow .3s ease, transform .3s ease;
 }
 
-.button::after {
+.petrolero-gold-shimmer-button::after {
   content: "";
   position: absolute;
   z-index: 0;
@@ -44,21 +44,21 @@
   pointer-events: none;
 }
 
-.label {
+.petrolero-gold-shimmer-button__label {
   position: relative;
   z-index: 1;
 }
 
-.button:hover:not(:disabled) {
+.petrolero-gold-shimmer-button:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 12px 45px rgba(215, 143, 44, .29), inset 0 1px 0 rgba(255, 249, 220, .7);
 }
 
-.button:active:not(:disabled) {
+.petrolero-gold-shimmer-button:active:not(:disabled) {
   transform: translateY(0);
 }
 
-.button:disabled {
+.petrolero-gold-shimmer-button:disabled {
   cursor: not-allowed;
   opacity: .65;
 }
@@ -74,8 +74,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .button,
-  .button::after {
+  .petrolero-gold-shimmer-button,
+  .petrolero-gold-shimmer-button::after {
     animation: none;
     transition: none;
   }

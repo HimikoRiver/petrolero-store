@@ -1,9 +1,14 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { useSyncExternalStore } from "react";
 import SiteHeader from "./SiteHeader";
 import { useHeaderState } from "./HeaderStateProvider";
 import useReducedMotion from "@/hooks/useReducedMotion";
+
+const subscribeHydration = () => () => {};
+const getClientSnapshot = () => true;
+const getServerSnapshot = () => false;
 
 /**
  * The only SiteHeader mount in the application.
@@ -13,6 +18,7 @@ import useReducedMotion from "@/hooks/useReducedMotion";
  */
 export default function GlobalSiteHeader() {
   const pathname = usePathname();
+  const hydrated = useSyncExternalStore(subscribeHydration, getClientSnapshot, getServerSnapshot);
   const reducedMotion = useReducedMotion();
   const {
     homePhase,
@@ -32,7 +38,7 @@ export default function GlobalSiteHeader() {
   return (
     <SiteHeader
       key={mode}
-      phase={mode === "home" ? homePhase : 3}
+      phase={mode === "home" ? (hydrated ? homePhase : 0) : 3}
       reducedMotion={reducedMotion}
       mode={mode}
       searchValue={mode === "catalog" ? catalogSearch : undefined}
