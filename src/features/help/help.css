@@ -208,72 +208,68 @@
 }
 
 
-/* Same transparent animated SVG as the buyer workspace. The numbered help
-   headings are kept intact, with the gears occupying the space beside them. */
+/* Decorative gearing stays centered inside the existing help-page hero.
+   Absolute positioning ensures the artwork never adds to document height. */
 .ph-page .ph-intro {
   background: #090909;
 }
 .ph-page .ph-intro__heading {
-  display: flex;
-  align-items: center;
-  gap: clamp(16px, 2vw, 34px);
-  min-height: 230px;
-  padding-right: clamp(125px, 13vw, 220px);
-  position: relative;
-  z-index: 1;
+  display: block;
+  position: static;
+  min-height: 0;
+  padding-right: 0;
 }
 .ph-page .ph-intro__copy {
-  flex: 1 1 440px;
-  min-width: 0;
   position: relative;
   z-index: 2;
+  max-width: min(52%, 650px);
 }
 .ph-page .ph-intro__heading .pa-page-heading__gears {
-  flex: 0 1 315px;
-  width: min(28vw, 315px);
-  min-width: 0;
-  margin-left: auto;
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 54%;
+  width: clamp(220px, 25vw, 355px);
+  max-width: 38%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  line-height: 0;
   pointer-events: none;
   user-select: none;
-  line-height: 0;
 }
 .ph-page .ph-intro__heading .pa-page-heading__gears img {
   display: block;
   width: 100%;
   height: auto;
-  max-height: 215px;
+  max-height: none;
   object-fit: contain;
 }
 .ph-page .ph-intro__watermark {
   z-index: 2;
 }
 @media (max-width: 1100px) {
-  .ph-page .ph-intro__heading {
-    padding-right: clamp(90px, 12vw, 140px);
-    min-height: 210px;
+  .ph-page .ph-intro__copy {
+    max-width: 56%;
   }
-  .ph-page .ph-intro__copy { flex-basis: 320px; }
   .ph-page .ph-intro__heading .pa-page-heading__gears {
-    flex-basis: 225px;
-    width: min(25vw, 225px);
+    width: clamp(190px, 24vw, 270px);
+    max-width: 32%;
+    left: 57%;
+    opacity: .78;
   }
 }
 @media (max-width: 720px) {
-  .ph-page .ph-intro__heading {
-    min-height: 175px;
-    padding-right: 65px;
-  }
   .ph-page .ph-intro__copy {
-    flex: 1 1 auto;
+    max-width: 100%;
+    padding-right: 0;
   }
   .ph-page .ph-intro__heading .pa-page-heading__gears {
-    position: absolute;
-    right: -18px;
-    top: 8px;
-    width: clamp(145px, 41vw, 230px);
-    margin: 0;
-    opacity: .45;
-    z-index: 1;
+    left: 54%;
+    top: 55%;
+    width: min(43vw, 190px);
+    max-width: none;
+    transform: translate(-50%, -50%);
+    opacity: .22;
   }
   .ph-page .ph-intro__watermark {
     right: 15px;
@@ -284,8 +280,7 @@
 }
 @media (max-width: 390px) {
   .ph-page .ph-intro__heading .pa-page-heading__gears {
-    right: -25px;
-    width: 155px;
-    opacity: .32;
+    width: 145px;
+    opacity: .17;
   }
 }
