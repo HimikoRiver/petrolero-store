@@ -1,0 +1,126 @@
+/* Transparent gold kinetic threads: isolated from the borderless login form. */
+.golden-threads-orb {
+  --threads-x: 0px;
+  --threads-y: 0px;
+  --threads-tilt-x: 0deg;
+  --threads-tilt-y: 0deg;
+  position: absolute;
+  z-index: 2;
+  left: 52%;
+  top: 42%;
+  width: clamp(275px, 29vw, 495px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+  opacity: .95;
+  contain: layout style;
+}
+
+.golden-threads-orb__float {
+  position: absolute;
+  inset: 0;
+  transform:
+    translate3d(var(--threads-x), var(--threads-y), 0)
+    rotateX(var(--threads-tilt-x))
+    rotateY(var(--threads-tilt-y));
+  transform-style: preserve-3d;
+  transition: transform 520ms cubic-bezier(.19, .76, .3, 1);
+  animation: threads-hover 8s ease-in-out infinite;
+}
+
+.golden-threads-orb__halo {
+  position: absolute;
+  inset: 23%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(208, 120, 34, .14), rgba(200, 130, 55, .045) 38%, transparent 70%);
+  filter: blur(27px);
+  opacity: .8;
+}
+
+.golden-threads-orb__art {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 0 8px rgba(209, 133, 45, .16));
+}
+
+.golden-threads-orb__orbit {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation: thread-orbit var(--duration, 18s) linear infinite;
+  will-change: transform;
+}
+
+.golden-threads-orb__orbit--1 { --angle: -17deg; --turn: 360deg; --duration: 23s; }
+.golden-threads-orb__orbit--2 { --angle: 36deg; --turn: -360deg; --duration: 29s; opacity: .81; }
+.golden-threads-orb__orbit--3 { --angle: 76deg; --turn: 360deg; --duration: 35s; }
+.golden-threads-orb__orbit--4 { --angle: 128deg; --turn: -360deg; --duration: 26s; }
+.golden-threads-orb__orbit--5 { --angle: 173deg; --turn: 360deg; --duration: 19s; opacity: .84; }
+.golden-threads-orb__orbit--6 { --angle: 227deg; --turn: -360deg; --duration: 37s; opacity: .67; }
+.golden-threads-orb__orbit--7 { --angle: 283deg; --turn: 360deg; --duration: 31s; }
+.golden-threads-orb__orbit--8 { --angle: 329deg; --turn: -360deg; --duration: 42s; opacity: .71; }
+.golden-threads-orb__orbit--9 { --angle: 84deg; --turn: 360deg; --duration: 48s; }
+
+.golden-threads-orb__spark {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation: thread-spark 11s linear infinite;
+}
+
+.golden-threads-orb__spark--2 { animation-duration: 15s; animation-direction: reverse; opacity: .7; }
+.golden-threads-orb__spark--3 { animation-duration: 19s; opacity: .58; }
+.golden-threads-orb__spark--4 { animation-duration: 24s; animation-direction: reverse; opacity: .62; }
+
+@keyframes thread-orbit {
+  from { transform: rotate(var(--angle)); }
+  to { transform: rotate(calc(var(--angle) + var(--turn))); }
+}
+
+@keyframes thread-spark {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes threads-hover {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -9px; }
+}
+
+@media (max-width: 1250px) {
+  .golden-threads-orb {
+    left: 69%;
+    top: 40%;
+    width: clamp(210px, 23vw, 295px);
+    opacity: .74;
+  }
+}
+
+@media (max-width: 950px) {
+  .golden-threads-orb {
+    left: 77%;
+    top: 36%;
+    width: clamp(170px, 22vw, 225px);
+    opacity: .44;
+  }
+}
+
+@media (max-width: 720px) {
+  .golden-threads-orb {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .golden-threads-orb__float,
+  .golden-threads-orb__orbit,
+  .golden-threads-orb__spark {
+    animation: none !important;
+    transition: none !important;
+  }
+  .golden-threads-orb__orbit {
+    transform: rotate(var(--angle));
+  }
+}

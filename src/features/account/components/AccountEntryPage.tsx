@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import GoldShimmerButton from "@/components/ui/GoldShimmerButton";
+import GoldenThreadsOrb from "@/components/account/GoldenThreadsOrb";
 import "../styles/account.css";
 
 type AuthMode = "login" | "register" | "forgot";
@@ -208,6 +209,7 @@ export default function AccountEntryPage({
     <main className="petrolero-account-page">
       <section className="petrolero-account-hero">
         <div className="petrolero-account-media" aria-hidden="true" />
+        <GoldenThreadsOrb />
 
         <Link href="/" className="petrolero-account-logo-link" aria-label="Petrolero — на главную">
           {/* eslint-disable-next-line @next/next/no-img-element */}
