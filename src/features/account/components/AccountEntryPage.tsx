@@ -1,51 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import "../styles/account.css";
 
 type AuthMode = "login" | "register" | "forgot";
 
-// This SVG exists in public/home/images/; it was previously referenced
-// as /petrolero-logo.svg, which returns 404 and shows a broken-image icon.
 const LOGO_SRC = "/home/images/petrolero-logo.svg";
 
 export default function AccountEntryPage() {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-
   const [mode, setMode] = useState<AuthMode>("login");
-  const [backgroundVisible, setBackgroundVisible] = useState(false);
-  const [panelVisible, setPanelVisible] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    let backgroundTimer: ReturnType<typeof setTimeout> | undefined;
-    let panelTimer: ReturnType<typeof setTimeout> | undefined;
-    let finished = false;
-
-    const handleEnded = () => {
-      if (finished) return;
-      finished = true;
-
-      backgroundTimer = setTimeout(() => setBackgroundVisible(true), 80);
-      panelTimer = setTimeout(() => setPanelVisible(true), 520);
-    };
-
-    video.addEventListener("ended", handleEnded);
-    // The page must remain usable if the visitor's browser cannot play WebM.
-    video.addEventListener("error", handleEnded);
-    if (video.ended || video.error) handleEnded();
-
-    return () => {
-      video.removeEventListener("ended", handleEnded);
-      video.removeEventListener("error", handleEnded);
-      if (backgroundTimer) clearTimeout(backgroundTimer);
-      if (panelTimer) clearTimeout(panelTimer);
-    };
-  }, []);
 
   const changeMode = (next: AuthMode) => {
     setMode(next);
@@ -55,46 +20,22 @@ export default function AccountEntryPage() {
   return (
     <main className="petrolero-account-page">
       <section className="petrolero-account-hero">
-        <div className="petrolero-account-media">
-          <video
-            ref={videoRef}
-            className="petrolero-account-video"
-            autoPlay
-            muted
-            playsInline
-            preload="auto"
-          >
-            <source src="/login/video/vidEnter.webm" type="video/webm" />
-          </video>
-
-          <div
-            className={`petrolero-account-bg-overlay ${backgroundVisible ? "is-visible" : ""}`}
-            style={{ backgroundImage: 'url("/login/images/fonLog.webp")' }}
-          />
-        </div>
+        <div className="petrolero-account-media" aria-hidden="true" />
 
         <Link href="/" className="petrolero-account-logo-link" aria-label="Petrolero — на главную">
-          {/* The local logo is an actual SVG, not an HTML page or missing root asset. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={LOGO_SRC} alt="Petrolero" className="petrolero-account-logo" />
         </Link>
-
-        <div className="petrolero-account-top-label">
-          PETROLERO / ЛИЧНЫЙ КАБИНЕТ
-        </div>
 
         <Link href="/" className="petrolero-account-home-link">
           На главную
         </Link>
 
         <div className="petrolero-account-center">
-          <div
-            className={`petrolero-account-panel ${panelVisible ? "is-visible" : ""}`}
-            aria-hidden={!panelVisible}
-            inert={!panelVisible}
-          >
+          <div className="petrolero-account-panel">
             <div className="petrolero-account-panel-inner">
-              <div className="petrolero-account-panel-line" />
+              <div className="petrolero-account-panel-line" aria-hidden="true" />
+              <div className="petrolero-account-top-label">PETROLERO / ЛИЧНЫЙ КАБИНЕТ</div>
 
               {mode === "login" && (
                 <>

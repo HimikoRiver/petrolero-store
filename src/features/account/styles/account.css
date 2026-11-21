@@ -1,8 +1,13 @@
-/* Petrolero / Account — login, registration, recovery */
+/* Petrolero — account entry, registration and password recovery.
+   Shared, completely borderless form on the new oil/graphite background. */
 .petrolero-account-page {
+  --account-gold: #e4b875;
+  --account-gold-light: #ffe0a1;
+  --account-text: #f6f0e8;
+  --account-muted: rgba(229, 217, 202, .68);
   min-height: 100svh;
-  background: #050505;
-  color: #f4efe9;
+  color: var(--account-text);
+  background: #09090a;
   font-family: var(--font-geist-sans), Arial, sans-serif;
 }
 
@@ -17,82 +22,60 @@
   font: inherit;
 }
 
-.petrolero-account-page button { cursor: pointer; }
+.petrolero-account-page button {
+  cursor: pointer;
+}
 
-.petrolero-account-page :is(a, button, input):focus-visible {
-  outline: 2px solid #ecc28a;
-  outline-offset: 3px;
+.petrolero-account-page :is(a, button):focus-visible {
+  outline: 2px solid var(--account-gold-light);
+  outline-offset: 4px;
 }
 
 .petrolero-account-hero {
   position: relative;
+  isolation: isolate;
+  display: flex;
   min-height: 100svh;
   overflow: hidden;
-  isolation: isolate;
-  background: #050505;
+  background: #09090a;
 }
 
-/* The still frame fills any edge not painted by the shifted video. */
+/* New static artwork, committed at /public/login/images/fon2.webp.
+   The image has dark negative space on the left for the borderless form. */
 .petrolero-account-media {
   position: absolute;
+  z-index: -2;
   inset: 0;
-  z-index: 0;
-  overflow: hidden;
+  background: #09090a url("/login/images/fon2.webp") center center / cover no-repeat;
   pointer-events: none;
-  background: #050505 url("/login/images/fonLog.webp") center 30% / cover no-repeat;
 }
 
-/* The video can contain a narrow dark strip in its source frame.
-   Hide only the first pixels with the matching still, feathering the seam.
-   This keeps the 10px alignment and does not zoom the video. */
-.petrolero-account-media::after {
+/* Subtle protection for form legibility. The illuminated oil stays visible. */
+.petrolero-account-hero::before {
   content: "";
   position: absolute;
+  z-index: -1;
   inset: 0;
-  z-index: 2;
-  background: url("/login/images/fonLog.webp") center 30% / cover no-repeat;
-  -webkit-mask-image: linear-gradient(to right, #000 0, #000 12px, transparent 28px);
-  mask-image: linear-gradient(to right, #000 0, #000 12px, transparent 28px);
+  background:
+    linear-gradient(90deg,
+      rgba(6, 6, 8, .80) 0%,
+      rgba(7, 7, 9, .69) 25%,
+      rgba(7, 7, 9, .34) 46%,
+      rgba(7, 7, 9, .08) 68%,
+      transparent 86%),
+    linear-gradient(0deg,
+      rgba(5, 5, 6, .24),
+      transparent 23%,
+      transparent 78%,
+      rgba(5, 5, 6, .17));
+  pointer-events: none;
 }
 
-.petrolero-account-video,
-.petrolero-account-bg-overlay {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-/* Preserve the image alignment that matched the video to the still. */
-.petrolero-account-video {
-  z-index: 1;
-  left: calc(50% + 10px); /* Change this 10px value to fine-tune horizontal alignment. */
-  right: auto;
-  width: calc(100% + 96px);
-  height: 100%;
-  transform: translateX(-50%);
-  object-fit: cover;
-  object-position: center 30%;
-  opacity: 1;
-}
-
-.petrolero-account-bg-overlay {
-  z-index: 3;
-  background-position: center 30%;
-  background-repeat: no-repeat;
-  background-size: cover;
-  opacity: 0;
-  transition: opacity 1.2s ease;
-}
-
-.petrolero-account-bg-overlay.is-visible { opacity: 1; }
-
-/* Top navigation remains clickable above the media. */
 .petrolero-account-logo-link {
   position: absolute;
-  z-index: 10;
-  top: 26px;
-  left: 30px;
+  z-index: 3;
+  top: clamp(22px, 4vh, 39px);
+  left: clamp(25px, 7.8vw, 145px);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -100,296 +83,460 @@
 
 .petrolero-account-logo {
   display: block;
-  width: 148px;
+  width: clamp(120px, 10vw, 147px);
   height: auto;
   object-fit: contain;
-  /* The bundled logo artwork is dark: tint it to the existing Petrolero gold. */
   filter: brightness(0) saturate(100%) invert(83%) sepia(16%) saturate(828%) hue-rotate(343deg) brightness(99%) contrast(89%);
-}
-
-.petrolero-account-top-label {
-  position: absolute;
-  z-index: 10;
-  top: 35px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: #d5a268;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: .17em;
-  text-align: center;
-  text-transform: uppercase;
-  white-space: nowrap;
 }
 
 .petrolero-account-home-link {
   position: absolute;
-  z-index: 10;
-  top: 25px;
-  right: 29px;
+  z-index: 3;
+  top: clamp(29px, 4.6vh, 48px);
+  right: clamp(24px, 5vw, 83px);
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  min-height: 41px;
-  padding: 0 16px;
-  border: 1px solid rgba(210, 154, 76, .44);
-  border-radius: 11px;
-  background: rgba(18, 10, 4, .42);
-  color: #f4e0bf;
-  font-size: 13px;
+  min-height: 30px;
+  padding: 0 0 6px;
+  color: #eed5ae;
+  font-size: 12px;
+  font-weight: 500;
   text-decoration: none;
-  transition: border-color .25s, background-color .25s, transform .25s;
+  border-bottom: 1px solid rgba(229, 181, 108, .45);
+  transition: color .25s ease, border-color .25s ease;
 }
 
 .petrolero-account-home-link:hover {
-  border-color: rgba(223, 170, 93, .88);
-  background: rgba(33, 18, 8, .66);
-  transform: translateY(-1px);
+  color: #fff2d5;
+  border-color: #f9cb7e;
 }
 
 .petrolero-account-center {
   position: relative;
-  z-index: 6;
+  z-index: 2;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 100svh;
-  padding: 96px 24px 34px;
-}
-
-/* Compact form sizing is shared by login, registration and recovery modes. */
-.petrolero-account-panel {
   width: 100%;
-  max-width: 425px;
-  /* The card always has its final translucency. Only its position animates. */
-  opacity: 1;
-  visibility: hidden;
-  transform: translateY(20px);
-  transition: transform .8s ease;
+  padding:
+    clamp(116px, 14vh, 148px)
+    clamp(26px, 8.8vw, 162px)
+    clamp(44px, 10vh, 84px);
 }
 
-.petrolero-account-panel.is-visible {
-  visibility: visible;
-  transform: translateY(0);
+.petrolero-account-panel {
+  width: min(100%, 424px);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  animation: petrolero-account-enter 750ms cubic-bezier(.2, .7, .3, 1) both;
 }
 
 .petrolero-account-panel-inner {
-  position: relative;
-  padding: 27px 29px 25px;
-  border: 1px solid rgba(210, 154, 76, .42);
-  border-radius: 21px;
-  background: rgba(31, 16, 7, .72);
-  box-shadow: 0 0 0 1px rgba(255, 220, 172, .05) inset,
-              0 24px 70px rgba(0, 0, 0, .32);
-  backdrop-filter: blur(8px);
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .petrolero-account-panel-line {
-  width: 39px;
+  width: 60px;
   height: 2px;
-  margin-bottom: 17px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #d7a04f, #f0c57c);
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, #b98035, #ffdb8c 65%, rgba(255, 226, 164, .17));
+  box-shadow: 0 0 15px rgba(232, 174, 92, .28);
+}
+
+.petrolero-account-top-label {
+  position: static;
+  margin-bottom: 18px;
+  color: #d8a968;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: .22em;
+  text-transform: uppercase;
 }
 
 .petrolero-account-form-title {
-  margin: 0 0 8px;
-  color: #f5efe7;
-  font-size: clamp(29px, 2.7vw, 36px);
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: -.045em;
+  margin: 0 0 10px;
+  color: var(--account-text);
+  font-size: clamp(33px, 3.2vw, 46px);
+  font-weight: 460;
+  line-height: 1.13;
+  letter-spacing: -.05em;
+  text-wrap: balance;
 }
 
 .petrolero-account-form-subtitle {
-  margin: 0 0 22px;
-  color: rgba(244, 239, 233, .7);
-  font-size: 12px;
-  line-height: 1.55;
+  max-width: 370px;
+  margin: 0 0 31px;
+  color: var(--account-muted);
+  font-size: 13px;
+  line-height: 1.7;
 }
 
 .petrolero-account-form {
   display: grid;
-  gap: 13px;
+  gap: 20px;
 }
 
 .petrolero-account-field {
+  position: relative;
   display: grid;
-  gap: 7px;
+  gap: 4px;
   min-width: 0;
 }
 
+/* The only frame around an input is a fine gold line below it. */
+.petrolero-account-field::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #b98541 0%, #ffe1a4 48%, #c49047 100%);
+  box-shadow: 0 0 12px rgba(241, 184, 93, .28);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 370ms cubic-bezier(.21, .75, .3, 1);
+  pointer-events: none;
+}
+
+.petrolero-account-field:focus-within::after {
+  transform: scaleX(1);
+}
+
 .petrolero-account-field-label {
-  color: rgba(244, 239, 233, .75);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .05em;
+  display: block;
+  color: #c3a17a;
+  font-size: 10px;
+  font-weight: 580;
+  line-height: 1.5;
+  letter-spacing: .14em;
   text-transform: uppercase;
 }
 
 .petrolero-account-field input {
   display: block;
   width: 100%;
-  height: 45px;
-  padding: 0 14px;
-  border: 1px solid rgba(216, 204, 190, .16);
-  border-radius: 12px;
-  background: #eef2fb;
-  color: #111;
-  font-size: 13px;
-  outline: none;
-  transition: border-color .25s, box-shadow .25s;
+  height: 52px;
+  padding: 2px 0 8px;
+  border: 0;
+  border-bottom: 1px solid rgba(212, 166, 100, .56);
+  border-radius: 0;
+  outline: 0;
+  background: transparent;
+  color: #fbf4e9;
+  caret-color: #f7cc8e;
+  box-shadow: none;
+  font-size: 15px;
+  font-weight: 410;
+  transition: border-color .25s ease, background-color .25s ease;
 }
 
-.petrolero-account-field input::placeholder { color: #68717e; }
-
-.petrolero-account-field input:focus {
-  border-color: rgba(210, 154, 76, .85);
-  box-shadow: 0 0 0 3px rgba(210, 154, 76, .14);
+.petrolero-account-field input::placeholder {
+  color: rgba(207, 192, 175, .47);
+  opacity: 1;
 }
 
-.petrolero-account-password-wrap { position: relative; }
-.petrolero-account-password-wrap input { padding-right: 95px; }
+.petrolero-account-field input:hover {
+  border-bottom-color: rgba(243, 191, 122, .8);
+}
+
+.petrolero-account-field input:focus,
+.petrolero-account-field input:focus-visible {
+  border-bottom-color: #f0c887;
+  outline: 0;
+  box-shadow: none;
+}
+
+/* Preserve autofill readability without inserting a colored browser rectangle. */
+.petrolero-account-field input:-webkit-autofill,
+.petrolero-account-field input:-webkit-autofill:hover,
+.petrolero-account-field input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #fbf4e9;
+  caret-color: #f7cc8e;
+  -webkit-box-shadow: 0 0 0 100px #0e0c0b inset;
+  transition: background-color 9999s ease-out 0s;
+}
+
+.petrolero-account-password-wrap {
+  position: relative;
+  min-width: 0;
+}
+
+.petrolero-account-password-wrap input {
+  padding-right: 82px;
+}
 
 .petrolero-account-password-toggle {
   position: absolute;
+  right: 0;
   top: 50%;
-  right: 13px;
   transform: translateY(-50%);
-  padding: 4px;
+  padding: 6px 0 8px 10px;
   border: 0;
   background: transparent;
-  color: #a76d21;
+  color: #d9ab70;
   font-size: 12px;
+  font-weight: 450;
+  transition: color .25s ease;
 }
 
-.petrolero-account-password-toggle:hover { color: #7d4e13; }
+.petrolero-account-password-toggle:hover {
+  color: #ffe0ab;
+}
 
 .petrolero-account-form-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 9px 12px;
-  margin-top: 1px;
+  gap: 10px 18px;
+  margin: 1px 0 0;
 }
 
 .petrolero-account-checkbox {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  color: rgba(244, 239, 233, .74);
-  font-size: 11px;
+  gap: 10px;
+  color: var(--account-muted);
+  font-size: 12px;
+  line-height: 1.4;
   cursor: pointer;
 }
 
 .petrolero-account-checkbox input {
+  appearance: none;
+  flex: none;
+  display: grid;
+  place-items: center;
   width: 15px;
   height: 15px;
   margin: 0;
-  accent-color: #d29a4c;
+  border: 1px solid #a17b4b;
+  border-radius: 2px;
+  background: rgba(5, 5, 5, .4);
+  cursor: pointer;
+}
+
+.petrolero-account-checkbox input:checked {
+  border-color: #e3b471;
+  background: #d7a765;
+}
+
+.petrolero-account-checkbox input:checked::after {
+  content: "";
+  width: 5px;
+  height: 8px;
+  border-right: 2px solid #15100a;
+  border-bottom: 2px solid #15100a;
+  transform: rotate(45deg) translateY(-1px);
+}
+
+.petrolero-account-checkbox input:focus-visible {
+  outline: 2px solid var(--account-gold-light);
+  outline-offset: 3px;
 }
 
 .petrolero-account-link-button {
+  display: inline;
   padding: 0;
   border: 0;
+  border-bottom: 1px solid transparent;
   background: transparent;
-  color: #d29a4c;
-  font-size: 11px;
+  color: #e6bb7c;
+  font-size: 12px;
+  line-height: 1.5;
   text-align: left;
+  transition: color .25s ease, border-color .25s ease;
 }
 
-.petrolero-account-link-button:hover { color: #f6ca8b; }
+.petrolero-account-link-button:hover,
+.petrolero-account-link-button:focus-visible {
+  color: #ffdfab;
+  border-bottom-color: rgba(255, 219, 157, .72);
+}
 
+/* Always-moving metallic gold, with one soft light sweep. */
 .petrolero-account-submit {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   width: 100%;
-  height: 47px;
-  margin-top: 3px;
+  min-height: 54px;
+  margin-top: 10px;
+  padding: 12px 18px;
   border: 0;
-  border-radius: 12px;
-  background: linear-gradient(180deg, #f0c57c, #d89d4a);
-  box-shadow: inset 0 1px 0 rgba(255, 240, 211, .52),
-              0 13px 29px rgba(176, 109, 26, .15);
-  color: #111;
-  font-size: 16px;
+  border-radius: 5px;
+  background:
+    linear-gradient(
+      105deg,
+      #b27832 0%,
+      #eabd73 15%,
+      #ffe7b0 29%,
+      #e0a853 43%,
+      #fbd790 56%,
+      #bd853c 72%,
+      #efc278 87%,
+      #b27832 100%
+    );
+  background-size: 230% 100%;
+  color: #191108;
+  box-shadow: 0 8px 33px rgba(194, 121, 29, .19), inset 0 1px 0 rgba(255, 249, 220, .53);
+  font-size: 15px;
   font-weight: 650;
-  transition: transform .25s, filter .25s;
+  letter-spacing: .005em;
+  text-shadow: 0 1px 0 rgba(255, 244, 214, .12);
+  animation: petrolero-account-gold-flow 6.5s linear infinite;
+  transition: box-shadow .3s ease, transform .3s ease;
+}
+
+.petrolero-account-submit::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -50% auto -50% -48%;
+  width: 32%;
+  transform: skewX(-23deg) translateX(-20%);
+  background: linear-gradient(90deg, transparent, rgba(255, 251, 226, .22), transparent);
+  animation: petrolero-account-light-pass 5s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .petrolero-account-submit:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.03);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 45px rgba(215, 143, 44, .29), inset 0 1px 0 rgba(255, 249, 220, .7);
+}
+
+.petrolero-account-submit:active {
+  transform: translateY(0);
 }
 
 .petrolero-account-bottom-text {
-  margin-top: 16px;
-  color: rgba(244, 239, 233, .71);
+  margin-top: 22px;
+  color: var(--account-muted);
   font-size: 12px;
+  line-height: 1.65;
 }
 
-/* Optional inherited controls in the local form variant. */
 .petrolero-account-back-home {
   display: inline-block;
   margin-top: 18px;
-  color: rgba(245, 237, 227, .48);
-  font-size: 11px;
+  color: rgba(242, 229, 211, .62);
+  font-size: 12px;
   text-decoration: none;
 }
-.petrolero-account-back-home:hover { color: #d8a358; }
 
-/* Medium screens: keep the form centered and the labels readable. */
-@media (max-width: 1000px) {
-  .petrolero-account-video { object-position: center 33%; }
-  .petrolero-account-bg-overlay { background-position: center 33%; }
+.petrolero-account-back-home:hover {
+  color: var(--account-gold-light);
 }
 
-@media (max-width: 767px) {
-  .petrolero-account-logo-link { top: 17px; left: 17px; }
-  .petrolero-account-logo { width: 116px; }
-  .petrolero-account-home-link {
-    top: 16px;
-    right: 17px;
-    min-height: 37px;
-    padding: 0 12px;
-    font-size: 12px;
-  }
-  .petrolero-account-top-label {
-    top: 70px;
-    width: calc(100% - 32px);
-    font-size: 10px;
-    letter-spacing: .12em;
-    white-space: normal;
-  }
-  .petrolero-account-video { object-position: center 36%; }
-  .petrolero-account-bg-overlay { background-position: center 36%; }
+@keyframes petrolero-account-gold-flow {
+  0% { background-position: 100% 50%; }
+  100% { background-position: -130% 50%; }
+}
+
+@keyframes petrolero-account-light-pass {
+  0%, 18% { left: -48%; }
+  45%, 100% { left: 120%; }
+}
+
+@keyframes petrolero-account-enter {
+  from { transform: translateY(14px); }
+  to { transform: translateY(0); }
+}
+
+/* Desktop / tablet: preserve negative space under the form. */
+@media (min-width: 1440px) {
+  .petrolero-account-media { background-position: center 50%; }
+}
+
+@media (max-width: 1050px) {
   .petrolero-account-center {
-    min-height: 100svh;
-    padding: 119px 16px 30px;
+    padding-left: clamp(36px, 6vw, 72px);
+    padding-right: 34px;
   }
-  .petrolero-account-panel { max-width: 410px; }
-  .petrolero-account-panel-inner {
-    padding: 25px 22px 22px;
-    border-radius: 18px;
+
+  .petrolero-account-logo-link { left: clamp(29px, 5.2vw, 60px); }
+
+  .petrolero-account-hero::before {
+    background: linear-gradient(90deg, rgba(6, 6, 8, .9) 0%, rgba(6, 6, 8, .7) 44%, rgba(6, 6, 8, .16) 83%, transparent);
   }
-  .petrolero-account-form-title { font-size: 30px; }
-  .petrolero-account-form-subtitle { margin-bottom: 18px; }
-  .petrolero-account-form-row { gap: 9px; }
-  .petrolero-account-submit { height: 45px; }
+}
+
+/* Phone: centered form, taller dark veil, no card or border. */
+@media (max-width: 720px) {
+  .petrolero-account-media {
+    background-position: 65% center;
+  }
+
+  .petrolero-account-hero::before {
+    background:
+      linear-gradient(90deg, rgba(6, 6, 8, .88), rgba(6, 6, 8, .57)),
+      linear-gradient(0deg, rgba(6, 6, 8, .58), transparent 20%, transparent 70%, rgba(6, 6, 8, .45));
+  }
+
+  .petrolero-account-logo-link {
+    top: 22px;
+    left: 23px;
+  }
+
+  .petrolero-account-logo {
+    width: 118px;
+  }
+
+  .petrolero-account-home-link {
+    top: 28px;
+    right: 23px;
+    min-height: 25px;
+    font-size: 11px;
+  }
+
+  .petrolero-account-center {
+    justify-content: center;
+    align-items: center;
+    padding: 123px 25px 48px;
+  }
+
+  .petrolero-account-panel {
+    max-width: 414px;
+  }
+
+  .petrolero-account-panel-line { margin-bottom: 15px; }
+  .petrolero-account-top-label { margin-bottom: 15px; font-size: 9px; }
+  .petrolero-account-form-title { font-size: clamp(30px, 8vw, 40px); }
+  .petrolero-account-form-subtitle { margin-bottom: 23px; }
+  .petrolero-account-submit { min-height: 51px; }
 }
 
 @media (max-width: 390px) {
-  .petrolero-account-top-label { font-size: 9px; }
-  .petrolero-account-panel-inner { padding-inline: 17px; }
-  .petrolero-account-form-title { font-size: 27px; }
-  .petrolero-account-form-row { flex-wrap: wrap; }
+  .petrolero-account-center { padding-inline: 19px; }
+  .petrolero-account-form { gap: 17px; }
+  .petrolero-account-form-title { font-size: 31px; }
+  .petrolero-account-form-row { gap: 13px; }
+  .petrolero-account-bottom-text { margin-top: 18px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .petrolero-account-panel,
-  .petrolero-account-bg-overlay,
-  .petrolero-account-submit,
-  .petrolero-account-home-link,
-  .petrolero-account-field input {
+  .petrolero-account-page *,
+  .petrolero-account-page *::before,
+  .petrolero-account-page *::after {
+    animation: none !important;
     transition-duration: .01ms !important;
   }
 }
