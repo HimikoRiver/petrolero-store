@@ -20,6 +20,7 @@ model User {
   favorites     Favorite[]
   demoOrders    DemoOrder[]
   role          String    @default("CUSTOMER")
+  adminNote     String?
   sessions      Session[]
   accounts      Account[]
 
@@ -119,11 +120,16 @@ model DemoOrder {
   apartment       String?
   postalCode      String?
   note            String?
+  reviewStatus    String   @default("NEW")
+  staffNote       String?
+  reviewedAt      DateTime?
+  reviewedById    String?
   subtotalKopecks Int
   createdAt       DateTime @default(now())
   items           DemoOrderItem[]
 
   @@index([userId, createdAt])
+  @@index([reviewStatus, createdAt])
   @@map("demo_order")
 }
 
