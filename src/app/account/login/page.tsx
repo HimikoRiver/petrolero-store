@@ -7,6 +7,30 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-export default function AccountLoginRoute() {
-  return <AccountEntryPage />;
+type Props = {
+  searchParams: Promise<{ next?: string; verified?: string; error?: string }>;
+};
+
+export default async function AccountLoginRoute({ searchParams }: Props) {
+  const { next: requestedNext, verified, error } = await searchParams;
+
+  // Accept redirects only to private account pages on this website.
+  const next = requestedNext &&
+    requestedNext.startsWith("/account") &&
+    !requestedNext.startsWith("//") &&
+    !requestedNext.includes("\\") &&
+    !requestedNext.startsWith("/account/login") &&
+    !requestedNext.startsWith("/account/reset-password") &&
+    !requestedNext.startsWith("/account/preview") &&
+    /^\/account(?:\/|\?|$)/.test(requestedNext)
+      ? requestedNext
+      : "/account";
+
+  return (
+    <AccountEntryPage
+      next={next}
+      verified={verified === "1"}
+      invalidLink={Boolean(error)}
+    />
+  );
 }
