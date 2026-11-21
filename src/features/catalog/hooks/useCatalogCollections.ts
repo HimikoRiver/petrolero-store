@@ -6,7 +6,7 @@ import useFavoriteProducts from "@/features/favorites/useFavoriteProducts";
 type ProductIdentity = { id: string };
 
 export default function useCatalogCollections(products: readonly ProductIdentity[]) {
-  const favorites = useFavoriteProducts();
+  const favorites = useFavoriteProducts(products as readonly { id: string; published: boolean }[]);
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [comparisonReady, setComparisonReady] = useState(false);
 

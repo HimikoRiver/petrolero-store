@@ -1,12 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { authClient } from "@/lib/auth-client";
-import { CATALOG_PRODUCTS } from "@/features/catalog/data/catalogData";
+import type { CatalogProduct } from "@/features/catalog/data/catalogData";
 
 const GUEST_KEY = "petrolero-demo-favorites";
 const LOCAL_EVENT = "petrolero:favorites-changed";
-const validIds = new Set(CATALOG_PRODUCTS.filter((product) => product.published).map((product) => product.id));
+
 
 type FavoritesState = {
   ids: string[];
@@ -22,16 +22,16 @@ const initialState: FavoritesState = {
   error: null,
 };
 
-function sanitize(value: unknown): string[] {
+function sanitize(value: unknown, validIds: ReadonlySet<string>): string[] {
   if (!Array.isArray(value)) return [];
   return [...new Set(value.filter((id): id is string =>
     typeof id === "string" && validIds.has(id),
   ))];
 }
 
-function readGuest(): string[] {
+function readGuest(validIds: ReadonlySet<string>): string[] {
   try {
-    return sanitize(JSON.parse(localStorage.getItem(GUEST_KEY) || "[]") as unknown);
+    return sanitize(JSON.parse(localStorage.getItem(GUEST_KEY) || "[]") as unknown, validIds);
   } catch {
     return [];
   }
@@ -46,7 +46,7 @@ function writeGuest(ids: string[]) {
   }
 }
 
-async function requestFavorites(method: "GET" | "POST" | "DELETE", payload?: unknown) {
+async function requestFavorites(method: "GET" | "POST" | "DELETE", validIds: ReadonlySet<string>, payload?: unknown) {
   const response = await fetch("/api/account/favorites", {
     method,
     cache: "no-store",
@@ -59,7 +59,7 @@ async function requestFavorites(method: "GET" | "POST" | "DELETE", payload?: unk
   if (!data || typeof data !== "object" || !("ids" in data)) {
     throw new Error("Неожиданный ответ сервера.");
   }
-  return sanitize((data as { ids: unknown }).ids);
+  return sanitize((data as { ids: unknown }).ids, validIds);
 }
 
 /**
@@ -67,7 +67,8 @@ async function requestFavorites(method: "GET" | "POST" | "DELETE", payload?: unk
  * the user's list, which is subsequently owned only by PostgreSQL.
  * Never write account favorites into the shared guest storage key.
  */
-export default function useFavoriteProducts(guestOnly = false) {
+export default function useFavoriteProducts(products: readonly Pick<CatalogProduct, "id" | "published">[], guestOnly = false) {
+  const validIds = useMemo(() => new Set(products.filter(p => p.published).map(p => p.id)), [products]);
   const { data: session, isPending } = authClient.useSession();
   const ownerId = guestOnly ? null : session?.user?.id ?? null;
   const waitingForSession = !guestOnly && isPending;
@@ -85,7 +86,7 @@ export default function useFavoriteProducts(guestOnly = false) {
     if (waitingForSession) return () => { cancelled = true; };
 
     if (!ownerId) {
-      setState({ ids: readGuest(), ready: true, saving: false, error: null });
+      setState({ ids: readGuest(validIds), ready: true, saving: false, error: null });
       return () => { cancelled = true; };
     }
 
@@ -93,8 +94,8 @@ export default function useFavoriteProducts(guestOnly = false) {
       const localGuestIds = readGuest();
       try {
         const ids = localGuestIds.length
-          ? await requestFavorites("POST", { ids: localGuestIds, ownerId })
-          : await requestFavorites("GET");
+          ? await requestFavorites("POST", validIds, { ids: localGuestIds, ownerId })
+          : await requestFavorites("GET", validIds);
 
         if (cancelled || ownerRef.current !== ownerId) return;
         // Clear only the guest's own selection, never the account's list.
@@ -113,7 +114,7 @@ export default function useFavoriteProducts(guestOnly = false) {
 
     void load();
     return () => { cancelled = true; };
-  }, [ownerId, waitingForSession, attempt]);
+  }, [ownerId, waitingForSession, attempt, validIds]);
 
   // Update an already open tab after a second device/tab saved new items.
   useEffect(() => {
@@ -151,7 +152,7 @@ export default function useFavoriteProducts(guestOnly = false) {
       window.removeEventListener("storage", onStorage);
       window.removeEventListener(LOCAL_EVENT, onGuestChange);
     };
-  }, [ownerId, state.ready, state.saving, waitingForSession]);
+  }, [ownerId, state.ready, state.saving, waitingForSession, validIds]);
 
   const retry = useCallback(() => setAttempt((value) => value + 1), []);
 
@@ -173,7 +174,7 @@ export default function useFavoriteProducts(guestOnly = false) {
     savingRef.current = true;
     setState((current) => ({ ...current, ids: next, saving: true, error: null }));
     try {
-      const ids = await requestFavorites(has ? "DELETE" : "POST", {
+      const ids = await requestFavorites(has ? "DELETE" : "POST", validIds, {
         id: productId, ownerId,
       });
       if (ownerRef.current === ownerId) {
@@ -195,7 +196,7 @@ export default function useFavoriteProducts(guestOnly = false) {
     } finally {
       savingRef.current = false;
     }
-  }, [ownerId, state.ready, state.ids]);
+  }, [ownerId, state.ready, state.ids, validIds]);
 
   return {
     favoriteIds: state.ids,

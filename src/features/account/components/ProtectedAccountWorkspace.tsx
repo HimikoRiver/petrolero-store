@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getAuth, isAuthConfigured } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
+import { getCatalogProducts } from "@/lib/product-repository";
 import { findDemoOrders, findDemoOrder } from "@/lib/demo-orders";
 import { accountSectionPath, type AccountSection } from "../data/accountNavigation";
 import AccountWorkspace from "./AccountWorkspace";
@@ -17,6 +18,7 @@ async function AuthorizedWorkspace({ section, orderId }: { section: AccountSecti
     redirect("/account/login?next=" + encodeURIComponent(requested));
   }
 
+  const catalogProducts = section === "favorites" ? await getCatalogProducts() : [];
   const profile = section === "profile"
     ? await getPrisma().user.findUnique({ where: { id: session.user.id }, select: { phone: true } })
     : null;
@@ -43,6 +45,7 @@ async function AuthorizedWorkspace({ section, orderId }: { section: AccountSecti
       emailVerified={session.user.emailVerified}
       phone={profile?.phone ?? null}
       addresses={addresses}
+      catalogProducts={catalogProducts}
       orders={orders}
       order={order}
     />

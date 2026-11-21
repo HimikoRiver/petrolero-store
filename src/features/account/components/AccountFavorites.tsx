@@ -3,10 +3,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import useFavoriteProducts from "@/features/favorites/useFavoriteProducts";
-import { CATALOG_PRODUCTS } from "@/features/catalog/data/catalogData";
+import type { CatalogProduct } from "@/features/catalog/data/catalogData";
 import AccountIcon from "./AccountIcon";
 
-export default function AccountFavorites({ preview = false }: { preview?: boolean }) {
+export default function AccountFavorites({ preview = false, products }: { preview?: boolean; products: readonly CatalogProduct[] }) {
   const {
     favoriteIds,
     favoritesReady,
@@ -14,9 +14,9 @@ export default function AccountFavorites({ preview = false }: { preview?: boolea
     favoritesError,
     toggleFavoriteId,
     retryFavorites,
-  } = useFavoriteProducts(preview);
+  } = useFavoriteProducts(products, preview);
 
-  const favorites = CATALOG_PRODUCTS.filter((product) =>
+  const favorites = products.filter((product) =>
     product.published && favoriteIds.includes(product.id),
   );
 

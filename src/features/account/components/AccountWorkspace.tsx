@@ -6,6 +6,7 @@ import AccountFavorites from "./AccountFavorites";
 import AccountProfile from "./AccountProfile";
 import AccountAddresses from "./AccountAddresses";
 import type { DeliveryAddress } from "../data/accountDetails";
+import { CATALOG_PRODUCTS, type CatalogProduct } from "@/features/catalog/data/catalogData";
 import type { DemoOrder } from "@/features/checkout/types";
 import { DemoOrdersList, DemoOrderDetails } from "./DemoOrdersView";
 import StorefrontChrome from "@/components/layout/StorefrontChrome";
@@ -21,6 +22,7 @@ type AccountWorkspaceProps = {
   emailVerified?: boolean;
   phone?: string | null;
   addresses?: DeliveryAddress[];
+  catalogProducts?: readonly CatalogProduct[];
   orders?: DemoOrder[];
   order?: DemoOrder | null;
 };
@@ -112,7 +114,7 @@ function LinkPanel({
 }
 
 function AccountScreen({
-  section, preview, name, email, emailVerified, phone, addresses = [], orders = [], order = null,
+  section, preview, name, email, emailVerified, phone, addresses = [], orders = [], order = null, catalogProducts = CATALOG_PRODUCTS,
 }: AccountWorkspaceProps & { preview: boolean }) {
   switch (section) {
     case "overview":
@@ -197,7 +199,7 @@ function AccountScreen({
           <div className="pa-surface__heading">
             <div><span className="pa-kicker">ВАШ ВЫБОР</span><h3>Сохранённые товары</h3></div>
           </div>
-          <AccountFavorites preview={preview} />
+          <AccountFavorites preview={preview} products={catalogProducts} />
         </section>
       );
     case "addresses":
@@ -299,7 +301,7 @@ function AccountScreen({
 }
 
 export default function AccountWorkspace({
-  section, preview = false, name = null, email = null, emailVerified = false, phone = null, addresses = [], orders = [], order = null,
+  section, preview = false, name = null, email = null, emailVerified = false, phone = null, addresses = [], orders = [], order = null, catalogProducts = CATALOG_PRODUCTS,
 }: AccountWorkspaceProps) {
   const page = PAGE_COPY[section];
   const currentNav = section === "order-detail" ? "orders" : section;
@@ -356,7 +358,7 @@ export default function AccountWorkspace({
               <span className="pa-page-heading__number" aria-hidden="true">{page.number}</span>
             </div>
             <div className="pa-screen">
-              <AccountScreen section={section} preview={preview} name={name} email={email} emailVerified={emailVerified} phone={phone} addresses={addresses} orders={orders} order={order}/>
+              <AccountScreen section={section} preview={preview} name={name} email={email} emailVerified={emailVerified} phone={phone} addresses={addresses} orders={orders} order={order} catalogProducts={catalogProducts}/>
             </div>
           </div>
         </div>
