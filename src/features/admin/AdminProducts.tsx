@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import GoldShimmerButton from "@/components/ui/GoldShimmerButton";
 import type { ProductInput } from "@/lib/product-validation";
+import { CATALOG_PRODUCTS } from "@/features/catalog/data/catalogData";
 import "./admin.css";
 
 type Product = ProductInput & {
@@ -71,9 +72,19 @@ async function api(path: string, options: RequestInit = {}) {
 
 type ActiveEditor = { id: string | null; draft: ProductInput };
 
-export default function AdminProducts() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+const sampleProducts: Product[] = CATALOG_PRODUCTS.slice(0, 3).map(p => ({
+  id: p.id, title: p.title, slug: p.slug, sku: p.sku,
+  category: p.category, description: p.description, packaging: p.packaging,
+  image: p.image, galleryImages: [], priceKopecks: p.priceKopecks,
+  stockQuantity: p.stockQuantity, published: p.published,
+  viscosity: p.viscosity ?? null, volumeLiters: p.volumeLiters ?? null,
+  acea: p.acea, api: p.api, approvals: p.approvals, ilsac: p.ilsac,
+  createdAt: p.createdAt, updatedAt: p.createdAt, archivedAt: null,
+}));
+
+export default function AdminProducts({ preview = false }: { preview?: boolean }) {
+  const [products, setProducts] = useState<Product[]>(preview ? sampleProducts : []);
+  const [loading, setLoading] = useState(!preview);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -82,6 +93,7 @@ export default function AdminProducts() {
   const [editor, setEditor] = useState<ActiveEditor | null>(null);
 
   const reload = useCallback(async () => {
+    if (preview) { setLoading(false); return; }
     setError("");
     try {
       const result = await api("/api/admin/products");
@@ -91,7 +103,7 @@ export default function AdminProducts() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [preview]);
 
   useEffect(() => { void reload(); }, [reload]);
 
@@ -142,6 +154,20 @@ export default function AdminProducts() {
     if (!editor || pending) return;
     setPending(true); setError(""); setNotice("");
     try {
+      if (preview) {
+        const now = new Date().toISOString();
+        const product: Product = {
+          ...editor.draft, id: editor.id ?? "preview-" + crypto.randomUUID(),
+          createdAt: products.find(p => p.id === editor.id)?.createdAt ?? now,
+          updatedAt: now, archivedAt: null,
+        };
+        setProducts(current => editor.id
+          ? current.map(p => p.id === editor.id ? product : p)
+          : [product, ...current]);
+        setNotice("Демонстрация: карточка изменена только на экране.");
+        setEditor(null);
+        return;
+      }
       const path = editor.id
         ? "/api/admin/products/" + encodeURIComponent(editor.id)
         : "/api/admin/products";
@@ -163,6 +189,12 @@ export default function AdminProducts() {
     if (pending || !window.confirm("Убрать «" + product.title + "» из каталога и архива? История заказов останется доступной.")) return;
     setPending(true); setError(""); setNotice("");
     try {
+      if (preview) {
+        setProducts(current => current.filter(item => item.id !== product.id));
+        setNotice("Демонстрация: товар скрыт только на экране.");
+        setEditor(null);
+        return;
+      }
       await api("/api/admin/products/" + encodeURIComponent(product.id), { method: "DELETE" });
       setNotice("Товар перенесён в архив.");
       setEditor(null);
@@ -189,6 +221,7 @@ export default function AdminProducts() {
           <GoldShimmerButton type="button" onClick={startNew}>+ Новый товар</GoldShimmerButton>
         </header>
 
+        {preview && <div className="pt-admin__message" role="note">ПРЕДПРОСМОТР · Изменения не записываются в базу и не влияют на каталог. Здесь можно проверить интерфейс.</div>}
         <div className="pt-admin__stats">
           <div><span>ВСЕ ТОВАРЫ</span><strong>{stats.all}</strong></div>
           <div><span>ОПУБЛИКОВАНО</span><strong>{stats.published}</strong></div>
@@ -248,7 +281,7 @@ export default function AdminProducts() {
         )}
 
         <p className="pt-admin__footnote">
-          Каталог получает опубликованные товары из PostgreSQL. Архивирование скрывает карточку, но сохраняет историю тестовых заказов.
+          {preview ? "Демонстрационный режим: карточки существуют только на этой странице." : "Каталог получает опубликованные товары из PostgreSQL. Архивирование скрывает карточку, но сохраняет историю тестовых заказов."}
         </p>
       </div>
 
