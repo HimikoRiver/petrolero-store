@@ -17,13 +17,13 @@ async function AccountLoginContent({ searchParams }: Props) {
 
   // Accept only private account pages or the checkout on this origin.
   const next = requestedNext &&
-    (requestedNext.startsWith("/account") || requestedNext === "/checkout" || requestedNext === "/admin") &&
+    (requestedNext.startsWith("/account") || requestedNext === "/checkout" || /^\/admin(?:\/orders|\/customers)?$/.test(requestedNext)) &&
     !requestedNext.startsWith("//") &&
     !requestedNext.includes("\\") &&
     !requestedNext.startsWith("/account/login") &&
     !requestedNext.startsWith("/account/reset-password") &&
     !requestedNext.startsWith("/account/preview") &&
-    (/^\/account(?:\/|\?|$)/.test(requestedNext) || requestedNext === "/checkout")
+    (/^\/account(?:\/|\?|$)/.test(requestedNext) || requestedNext === "/checkout" || /^\/admin(?:\/orders|\/customers)?$/.test(requestedNext))
       ? requestedNext
       : "/account";
 

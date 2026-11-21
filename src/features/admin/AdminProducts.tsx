@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react
 import Link from "next/link";
 import Image from "next/image";
 import GoldShimmerButton from "@/components/ui/GoldShimmerButton";
+import AdminNavigation from "./AdminNavigation";
+import "./management.css";
 import type { ProductInput } from "@/lib/product-validation";
 import { CATALOG_PRODUCTS } from "@/features/catalog/data/catalogData";
 import "./admin.css";
@@ -212,6 +214,7 @@ export default function AdminProducts({ preview = false }: { preview?: boolean }
         <nav className="pt-admin__breadcrumbs">
           <Link href="/">Petrolero</Link><span>/</span><span>Администрирование</span>
         </nav>
+        <AdminNavigation active="products" preview={preview} />
         <header className="pt-admin__header">
           <div>
             <span className="pt-admin__kicker">PETROLERO / ПАНЕЛЬ УПРАВЛЕНИЯ</span>
