@@ -6,9 +6,12 @@ import AccountFavorites from "./AccountFavorites";
 import AccountProfile from "./AccountProfile";
 import AccountAddresses from "./AccountAddresses";
 import type { DeliveryAddress } from "../data/accountDetails";
+import type { DemoOrder } from "@/features/checkout/types";
+import { DemoOrdersList, DemoOrderDetails } from "./DemoOrdersView";
 import StorefrontChrome from "@/components/layout/StorefrontChrome";
 import "../styles/workspace.css";
 import "../styles/accountForms.css";
+import "../styles/accountOrders.css";
 
 type AccountWorkspaceProps = {
   section: AccountSection;
@@ -18,6 +21,8 @@ type AccountWorkspaceProps = {
   emailVerified?: boolean;
   phone?: string | null;
   addresses?: DeliveryAddress[];
+  orders?: DemoOrder[];
+  order?: DemoOrder | null;
 };
 
 const PAGE_COPY: Record<AccountSection, { title: string; subtitle: string; number: string }> = {
@@ -107,7 +112,7 @@ function LinkPanel({
 }
 
 function AccountScreen({
-  section, preview, name, email, emailVerified, phone, addresses = [],
+  section, preview, name, email, emailVerified, phone, addresses = [], orders = [], order = null,
 }: AccountWorkspaceProps & { preview: boolean }) {
   switch (section) {
     case "overview":
@@ -133,10 +138,14 @@ function AccountScreen({
                 <div><span className="pa-kicker">ИСТОРИЯ ПОКУПОК</span><h3>Последние заказы</h3></div>
                 <Link href={accountSectionPath("orders", preview)} className="pa-text-link">Все заказы <AccountIcon name="arrow" size={16} /></Link>
               </div>
-              <div className="pa-compact-empty">
-                <AccountIcon name="bag" size={30} />
-                <p>У вас пока нет заказов.</p>
-              </div>
+              {orders.length ? (
+                <DemoOrdersList orders={orders.slice(0, 3)} compact />
+              ) : (
+                <div className="pa-compact-empty">
+                  <AccountIcon name="bag" size={30} />
+                  <p>Пока нет тестовых заказов.</p>
+                </div>
+              )}
             </section>
             <section className="pa-surface pa-surface--guide">
               <span className="pa-kicker">ИНФОРМАЦИЯ</span>
@@ -152,21 +161,28 @@ function AccountScreen({
       return (
         <section className="pa-surface">
           <div className="pa-surface__heading">
-            <div><span className="pa-kicker">ЗАКАЗЫ</span><h3>История покупок</h3></div>
-            <span className="pa-tag">Нет заказов</span>
+            <div><span className="pa-kicker">ЗАКАЗЫ</span><h3>История тестовых заказов</h3></div>
+            <span className="pa-tag">{orders.length ? orders.length + " записей" : "Нет заказов"}</span>
           </div>
-          <div className="pa-order-head" aria-hidden="true">
-            <span>Номер заказа</span><span>Дата</span><span>Статус</span><span>Сумма</span>
+          <div className="pa-demo-notice" role="note">
+            <span>ДЕМОНСТРАЦИЯ</span>
+            Сохранённые записи не передаются продавцу. Оплата и доставка не выполняются.
           </div>
-          <EmptyState
-            icon="orders" title="Заказов пока нет"
-            description="Ваши заказы будут отображаться здесь."
-            href="/catalog" action="Посмотреть каталог"
-          />
+          {orders.length ? (
+            <DemoOrdersList orders={orders} />
+          ) : (
+            <EmptyState
+              icon="orders" title="Заказов пока нет"
+              description="Создайте тестовую заявку через корзину. Она появится в этом разделе."
+              href="/catalog" action="Посмотреть каталог"
+            />
+          )}
         </section>
       );
     case "order-detail":
-      return (
+      return order ? (
+        <DemoOrderDetails order={order} />
+      ) : (
         <section className="pa-surface">
           <EmptyState
             icon="orders" title="Заказ не найден"
@@ -283,7 +299,7 @@ function AccountScreen({
 }
 
 export default function AccountWorkspace({
-  section, preview = false, name = null, email = null, emailVerified = false, phone = null, addresses = [],
+  section, preview = false, name = null, email = null, emailVerified = false, phone = null, addresses = [], orders = [], order = null,
 }: AccountWorkspaceProps) {
   const page = PAGE_COPY[section];
   const currentNav = section === "order-detail" ? "orders" : section;
@@ -340,7 +356,7 @@ export default function AccountWorkspace({
               <span className="pa-page-heading__number" aria-hidden="true">{page.number}</span>
             </div>
             <div className="pa-screen">
-              <AccountScreen section={section} preview={preview} name={name} email={email} emailVerified={emailVerified} phone={phone} addresses={addresses}/>
+              <AccountScreen section={section} preview={preview} name={name} email={email} emailVerified={emailVerified} phone={phone} addresses={addresses} orders={orders} order={order}/>
             </div>
           </div>
         </div>

@@ -3,11 +3,12 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getAuth, isAuthConfigured } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
+import { findDemoOrders, findDemoOrder } from "@/lib/demo-orders";
 import { accountSectionPath, type AccountSection } from "../data/accountNavigation";
 import AccountWorkspace from "./AccountWorkspace";
 import "../styles/workspaceStates.css";
 
-async function AuthorizedWorkspace({ section }: { section: AccountSection }) {
+async function AuthorizedWorkspace({ section, orderId }: { section: AccountSection; orderId?: string }) {
   if (!isAuthConfigured()) redirect(accountSectionPath(section, true));
 
   const session = await getAuth().api.getSession({ headers: await headers() });
@@ -27,6 +28,13 @@ async function AuthorizedWorkspace({ section }: { section: AccountSection }) {
       })
     : [];
 
+  const orders = section === "overview" || section === "orders"
+    ? await findDemoOrders(session.user.id, section === "overview" ? 3 : 50)
+    : [];
+  const order = section === "order-detail" && orderId
+    ? await findDemoOrder(session.user.id, orderId)
+    : null;
+
   return (
     <AccountWorkspace
       section={section}
@@ -35,14 +43,16 @@ async function AuthorizedWorkspace({ section }: { section: AccountSection }) {
       emailVerified={session.user.emailVerified}
       phone={profile?.phone ?? null}
       addresses={addresses}
+      orders={orders}
+      order={order}
     />
   );
 }
 
-export default function ProtectedAccountWorkspace({ section }: { section: AccountSection }) {
+export default function ProtectedAccountWorkspace({ section, orderId }: { section: AccountSection; orderId?: string }) {
   return (
     <Suspense fallback={<main className="pa-loading" role="status">Проверка сеанса…</main>}>
-      <AuthorizedWorkspace section={section} />
+      <AuthorizedWorkspace section={section} orderId={orderId} />
     </Suspense>
   );
 }

@@ -13,9 +13,7 @@ type Props = { params: Promise<{ orderId: string }> };
 async function OrderContent({ params }: Props) {
   const { orderId } = await params;
   if (!orderId || orderId.length > 128) notFound();
-  // No order repository exists yet; never infer ownership from the URL alone.
-  // A future server-side query must filter by both orderId and session.user.id.
-  return <ProtectedAccountWorkspace section="order-detail" />;
+  return <ProtectedAccountWorkspace section="order-detail" orderId={orderId} />;
 }
 
 export default function OrderDetailPage({ params }: Props) {
