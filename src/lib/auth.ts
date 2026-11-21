@@ -24,12 +24,17 @@ function createAuth() {
       minPasswordLength: 10,
       requireEmailVerification: true,
       revokeSessionsOnPasswordReset: true,
-      sendResetPassword: async ({ user, url }) => {
+      sendResetPassword: async ({ user, token }) => {
+        // The Better Auth API link is not our password form.
+        // Send the token directly to the actual storefront reset page.
+        const resetPage = new URL("/account/reset-password", process.env.BETTER_AUTH_URL!);
+        resetPage.searchParams.set("token", token);
+
         await sendAuthMail({
           to: user.email,
           subject: "Petrolero — восстановление пароля",
           description: "Для изменения пароля перейдите по ссылке:",
-          link: url,
+          link: resetPage.toString(),
         });
       },
     },
