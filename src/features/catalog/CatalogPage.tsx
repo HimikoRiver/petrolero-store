@@ -5,6 +5,7 @@ import SiteFooter from "@/components/layout/footer/SiteFooter";
 import SiteHeader from "@/components/layout/header/SiteHeader";
 import useReducedMotion from "@/hooks/useReducedMotion";
 import CatalogOilCategories from "./components/CatalogOilCategories";
+import CatalogAdditivesFeature from "./components/CatalogAdditivesFeature";
 import CatalogToolbar from "./components/CatalogToolbar";
 import CatalogProductCard from "./components/CatalogProductCard";
 import CatalogQuickView from "./components/CatalogQuickView";
@@ -17,6 +18,7 @@ import "./styles/dialogs.css";
 import "./styles/polish.css";
 import "./styles/responsive.css";
 import "./styles/gallery.css";
+import "./styles/additives.css";
 
 export default function CatalogPage() {
   const reducedMotion = useReducedMotion();
@@ -36,7 +38,7 @@ export default function CatalogPage() {
         onAccountOpen={() => { closeLayers(); setAccountOpen(true); }}
       />
 
-      <main className="petrolero-catalog-main">
+      <main className="petrolero-catalog-main" data-department={department}>
         <nav className="petrolero-catalog-breadcrumbs" aria-label="Навигационная цепочка">
           <Link href="/">Главная</Link><span aria-hidden="true">/</span>
           <span>Каталог</span><span aria-hidden="true">/</span>
@@ -51,6 +53,8 @@ export default function CatalogPage() {
         </div>
 
         <h1>{heading}</h1>
+
+        {department === "additives" && <CatalogAdditivesFeature />}
 
         {department === "oils" && (
           <CatalogOilCategories

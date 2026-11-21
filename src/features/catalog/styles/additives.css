@@ -1,0 +1,117 @@
+/* Additives-only editorial backdrop.
+   User asset: public/catalog/fon.webp (the public directory is omitted from URLs). */
+.petrolero-catalog-main {
+  position: relative;
+  isolation: isolate;
+}
+
+.petrolero-catalog-main[data-department="additives"]::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 75px;
+  right: -2.5%;
+  width: 106%;
+  height: 385px;
+  pointer-events: none;
+  background-image:
+    linear-gradient(90deg, #090909 0%, rgba(9, 9, 9, .92) 16%, rgba(9, 9, 9, .22) 56%, rgba(9, 9, 9, .06) 100%),
+    linear-gradient(180deg, rgba(9, 9, 9, .55) 0%, transparent 22%, transparent 65%, #090909 100%),
+    url("/catalog/fon.webp");
+  background-size: 100% 100%, 100% 100%, cover;
+  background-position: center, center, right 57%;
+  background-repeat: no-repeat;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 13%, #000 78%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent, #000 13%, #000 78%, transparent 100%);
+}
+
+.petrolero-catalog-additives-feature {
+  position: absolute;
+  z-index: 1;
+  top: 124px;
+  left: 31%;
+  width: min(630px, 52%);
+  pointer-events: none;
+}
+
+.petrolero-catalog-additives-feature h2 {
+  margin: 0 0 13px;
+  font-size: clamp(19px, 2.05vw, 29px);
+  line-height: 1.13;
+  letter-spacing: -.035em;
+  font-weight: 480;
+  color: #e9e2d8;
+  text-shadow: 0 2px 22px rgba(0, 0, 0, .8);
+}
+
+.petrolero-catalog-additives-feature h2 span { color: #d6a465; }
+
+.petrolero-catalog-additives-feature > p {
+  width: min(440px, 100%);
+  margin: 0;
+  color: #cec4b8;
+  font-size: clamp(12px, 1.1vw, 15px);
+  line-height: 1.65;
+  text-shadow: 0 2px 14px #000, 0 0 24px rgba(0, 0, 0, .95);
+}
+
+.petrolero-catalog-additives-feature__qualities {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(14px, 2.2vw, 32px);
+  margin-top: 22px;
+}
+
+.petrolero-catalog-additives-feature__qualities > span {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  color: #e2bf88;
+  font-size: clamp(9px, .8vw, 11px);
+  font-weight: 650;
+  letter-spacing: .06em;
+  text-shadow: 0 2px 15px rgba(0, 0, 0, .96);
+}
+
+.petrolero-catalog-additives-feature__qualities small {
+  color: #aca095;
+  font-size: clamp(9px, .75vw, 11px);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: normal;
+}
+
+@media (max-width: 1199px) {
+  .petrolero-catalog-additives-feature {
+    left: 39%;
+    width: 53%;
+  }
+  .petrolero-catalog-additives-feature__qualities {
+    gap: 14px;
+  }
+}
+
+@media (max-width: 1050px) {
+  .petrolero-catalog-main[data-department="additives"]::before {
+    top: 68px;
+    right: -3%;
+    width: 95%;
+    height: 345px;
+    background-position: center, center, 72% center;
+    opacity: .68;
+  }
+  .petrolero-catalog-additives-feature {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .petrolero-catalog-main[data-department="additives"]::before {
+    top: 68px;
+    right: -19px;
+    width: min(95vw, 500px);
+    height: 315px;
+    background-position: center, center, 67% center;
+    opacity: .30;
+  }
+}
