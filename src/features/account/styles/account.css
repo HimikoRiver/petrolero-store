@@ -380,6 +380,36 @@
   margin-top: 10px;
 }
 
+/* Accessible feedback for real authentication requests. */
+.petrolero-account-feedback {
+  margin: 0 0 20px;
+  max-width: 424px;
+  color: #eed1a2;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.petrolero-account-feedback[data-type="error"] {
+  color: #ffb9a4;
+}
+
+.petrolero-account-feedback[data-type="success"] {
+  color: #f7d59d;
+}
+
+.petrolero-account-resend {
+  display: inline-flex;
+  max-width: 100%;
+  margin: -8px 0 20px;
+  text-align: left;
+}
+
+.petrolero-account-resend:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+
 .petrolero-account-bottom-text {
   margin-top: 22px;
   color: var(--account-muted);
