@@ -11,9 +11,12 @@ export function jsonError(message: string, status: number) {
 
 export function isTrustedWrite(request: Request) {
   const origin = request.headers.get("origin");
-  if (!origin) return false;
+  const trustedOrigin = process.env.BETTER_AUTH_URL;
+  if (!origin || !trustedOrigin) return false;
   try {
-    return new URL(origin).origin === new URL(request.url).origin;
+    // Compare with the configured public site origin, not Next's internal
+    // request URL (which may be rewritten behind a reverse proxy).
+    return new URL(origin).origin === new URL(trustedOrigin).origin;
   } catch {
     return false;
   }
