@@ -47,7 +47,7 @@ export function DemoOrderDetails({ order }: { order: DemoOrder }) {
             <article className="pa-demo-item" key={item.id}>
               <div className="pa-demo-item__visual">
                 {item.image ? (
-                  <Image src={item.image} alt={item.title} fill
+                  <Image src={item.image} unoptimized={item.image.startsWith("https://")} alt={item.title} fill
                     sizes="(max-width: 550px) 68px, 90px" />
                 ) : <AccountIcon name="bag" size={27} />}
               </div>

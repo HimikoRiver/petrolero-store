@@ -34,7 +34,7 @@ export default function CatalogCartDrawer({ products, cartLines, cartCount, cart
                     return (
                       <div className="petrolero-catalog-drawer__item" key={line.id}>
                         {product.image ? (
-                          <Image src={product.image} alt={product.title} width={90} height={100} sizes="90px" />
+                          <Image src={product.image} unoptimized={product.image.startsWith("https://")} alt={product.title} width={90} height={100} sizes="90px" />
                         ) : (
                           <span className="petrolero-catalog-no-image" role="img" aria-label="Фото пока отсутствует">Нет фото</span>
                         )}

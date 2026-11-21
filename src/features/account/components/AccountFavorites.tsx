@@ -69,6 +69,7 @@ export default function AccountFavorites({ preview = false, products }: { previe
                 {product.image ? (
                   <Image
                     src={product.image}
+                    unoptimized={product.image.startsWith("https://")}
                     alt={product.title}
                     fill
                     sizes="(max-width: 550px) 112px, 160px"

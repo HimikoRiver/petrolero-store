@@ -233,7 +233,7 @@ export default function CheckoutPage({ catalogProducts }: { catalogProducts: rea
                 {products.map(({ id, quantity, product }) => product && (
                   <article className="pt-checkout__item" key={id}>
                     <div className="pt-checkout__item-image">
-                      {product.image ? <Image src={product.image} alt={product.title} fill
+                      {product.image ? <Image src={product.image} unoptimized={product.image.startsWith("https://")} alt={product.title} fill
                         sizes="(max-width: 650px) 68px, 80px" /> : <span>Нет фото</span>}
                     </div>
                     <div className="pt-checkout__item-info">
