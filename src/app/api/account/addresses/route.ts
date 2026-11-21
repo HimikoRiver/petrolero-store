@@ -1,8 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { accountPrisma, addressInput, authAccount, isTrustedWrite, jsonError } from "@/lib/account-api";
 
-export const runtime = "nodejs";
-
 const select = {
   id: true, label: true, recipient: true, phone: true,
   city: true, street: true, apartment: true,

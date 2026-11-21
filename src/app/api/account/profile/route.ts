@@ -1,7 +1,5 @@
 import { accountPrisma, authAccount, field, isTrustedWrite, jsonError, validPhone } from "@/lib/account-api";
 
-export const runtime = "nodejs";
-
 export async function PATCH(request: Request) {
   if (!isTrustedWrite(request)) return jsonError("Недопустимый источник запроса.", 403);
   const auth = await authAccount(request);
