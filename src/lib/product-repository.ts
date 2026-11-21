@@ -32,10 +32,12 @@ export function toCatalogProduct(row: {
     description: row.description,
     packaging: row.packaging as CatalogProduct["packaging"],
     image: row.image,
-    gallery: row.galleryImages.map((src, index) => ({
-      kind: "image" as const,
-      src, label: "Фото " + (index + 2),
-    })),
+    gallery: [
+      ...(row.image ? [{ kind: "image" as const, src: row.image, label: "Основное фото" }] : []),
+      ...row.galleryImages.map((src, index) => ({
+        kind: "image" as const, src, label: "Фото " + (index + 2),
+      })),
+    ],
     priceKopecks: row.priceKopecks,
     stockQuantity: row.stockQuantity,
     published: row.published,

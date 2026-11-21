@@ -1,20 +1,22 @@
 import { accountPrisma, authAccount, isTrustedWrite, jsonError } from "@/lib/account-api";
-import { CATALOG_PRODUCTS } from "@/features/catalog/data/catalogData";
+import { getCatalogProducts } from "@/lib/product-repository";
 
-const allowedIds = new Set(CATALOG_PRODUCTS.filter((item) => item.published).map((item) => item.id));
+async function allowedIds() {
+  return new Set((await getCatalogProducts()).map((item) => item.id));
+}
 const MAX_FAVORITES = 100;
 
-function validId(value: unknown): value is string {
+function validId(value: unknown, allowed: ReadonlySet<string>): value is string {
   return typeof value === "string" && value.length > 0 &&
-    value.length <= 128 && allowedIds.has(value);
+    value.length <= 128 && allowed.has(value);
 }
 
-function favorites(userId: string) {
+function favorites(userId: string, allowed: ReadonlySet<string>) {
   return accountPrisma().favorite.findMany({
     where: { userId },
     orderBy: [{ createdAt: "asc" }, { productId: "asc" }],
     select: { productId: true },
-  }).then((items) => items.map((item) => item.productId).filter((id) => allowedIds.has(id)));
+  }).then((items) => items.map((item) => item.productId).filter((id) => allowed.has(id)));
 }
 
 function success(ids: string[]) {
@@ -24,7 +26,7 @@ function success(ids: string[]) {
 export async function GET(request: Request) {
   const auth = await authAccount(request);
   if (!auth.userId) return jsonError("Требуется авторизация.", auth.status);
-  return success(await favorites(auth.userId));
+  return success(await favorites(auth.userId, await allowedIds()));
 }
 
 export async function POST(request: Request) {
@@ -44,8 +46,12 @@ export async function POST(request: Request) {
   // A batch operation merges a guest list into the account without replacing
   // favorites saved from other devices.
   const submitted = Array.isArray(data.ids) ? data.ids : [data.id];
-  if (submitted.length > MAX_FAVORITES || !submitted.every(validId)) {
+  if (submitted.length > MAX_FAVORITES || !submitted.every((item) => typeof item === "string" && item.length <= 128)) {
     return jsonError("Некорректные идентификаторы товаров.", 400);
+  }
+  const allowed = await allowedIds();
+  if (!submitted.every((item) => validId(item, allowed))) {
+    return jsonError("Товар больше не доступен.", 400);
   }
   const unique = [...new Set(submitted)];
   if (unique.length) {
@@ -54,7 +60,7 @@ export async function POST(request: Request) {
       skipDuplicates: true,
     });
   }
-  return success(await favorites(auth.userId));
+  return success(await favorites(auth.userId, await allowedIds()));
 }
 
 export async function DELETE(request: Request) {
@@ -76,5 +82,5 @@ export async function DELETE(request: Request) {
   await accountPrisma().favorite.deleteMany({
     where: { userId: auth.userId, productId: id },
   });
-  return success(await favorites(auth.userId));
+  return success(await favorites(auth.userId, await allowedIds()));
 }

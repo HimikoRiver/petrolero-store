@@ -97,6 +97,7 @@ export default function ProductGallery({
         ) : frame.kind === "image" ? (
           <Image
             src={frame.src}
+            unoptimized={frame.src.startsWith("https://")}
             alt={title + " — " + frame.label}
             fill
             sizes={mode === "preview"

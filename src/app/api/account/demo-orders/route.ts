@@ -1,9 +1,9 @@
 import { randomUUID } from "node:crypto";
 import { accountPrisma, authAccount, field, isTrustedWrite, jsonError, validPhone } from "@/lib/account-api";
-import { CATALOG_PRODUCTS } from "@/features/catalog/data/catalogData";
+import { getCatalogProducts } from "@/lib/product-repository";
 import { findDemoOrders } from "@/lib/demo-orders";
 
-const productMap = new Map(CATALOG_PRODUCTS.filter((product) => product.published).map((product) => [product.id, product]));
+
 
 export async function GET(request: Request) {
   const auth = await authAccount(request);
@@ -41,6 +41,7 @@ export async function POST(request: Request) {
   if (!Array.isArray(lines) || lines.length === 0 || lines.length > 30) {
     return jsonError("Корзина должна содержать от 1 до 30 позиций.", 400);
   }
+  const productMap = new Map((await getCatalogProducts()).map((product) => [product.id, product]));
   const unique = new Set<string>();
   let itemsTotal = 0;
   let unitCount = 0;
