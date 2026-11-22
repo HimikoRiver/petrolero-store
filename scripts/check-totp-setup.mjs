@@ -39,4 +39,14 @@ try {
 
 assert.equal(await checkTotpSetupCode("not-a-totp-uri", "123456"), null,
   "Malformed URI should defer to the server rather than block enrollment");
-console.log("PASS: local TOTP diagnostic matches RFC 6238 and time-window checks");
+const enrollmentUi = await readFile("src/features/account/components/TwoFactorSettings.tsx", "utf8");
+const begin = enrollmentUi.indexOf("  const confirm = async ");
+const finish = enrollmentUi.indexOf("  const disable = async ", begin);
+assert.ok(begin > 0 && finish > begin, "Enrollment confirmation handler is missing");
+const confirmation = enrollmentUi.slice(begin, finish);
+const serverVerify = confirmation.indexOf("authClient.twoFactor.verifyTotp(");
+const localDiagnostic = confirmation.indexOf("checkTotpSetupCode(uri, code)");
+assert.ok(serverVerify >= 0 && localDiagnostic > serverVerify,
+  "Never block correct authenticator codes by checking the browser clock before Better Auth");
+
+console.log("PASS: RFC 6238 diagnostic, plus server-first enrollment verification");
