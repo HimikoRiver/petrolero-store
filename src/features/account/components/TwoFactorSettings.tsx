@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import GoldShimmerButton from "@/components/ui/GoldShimmerButton";
 import { qrcodegen } from "@/lib/vendor/qrcodegen";
+import { checkTotpSetupCode } from "../lib/checkTotpSetup";
 import "../styles/twoFactor.css";
 
 type Props = { enabled: boolean };
@@ -83,21 +84,34 @@ export default function TwoFactorSettings({ enabled }: Props) {
     if (pending || !/^\d{6}$/.test(code)) return;
     setPending(true); setStatus(null);
     try {
+      const localMatch = await checkTotpSetupCode(uri, code);
+      if (localMatch === false) {
+        setStatus({
+          error: true,
+          text: "Код не соответствует текущему QR-коду. Проверьте, что выбрана последняя запись Petrolero в приложении, и синхронизируйте время телефона и компьютера.",
+        });
+        return;
+      }
+
+      // Only Better Auth can confirm enrollment. The browser-side check above
+      // is diagnostic; it never marks the account as 2FA-protected.
       const result = await authClient.twoFactor.verifyTotp({ code, trustDevice: false });
       if (result.error) {
         const errorCode = String(result.error.code ?? "").toUpperCase();
         const statusCode = result.error.status;
         const message = statusCode === 429
           ? "Слишком много попыток подтверждения. Повторите позже."
-          : errorCode.includes("TWO_FACTOR_COOKIE") || statusCode === 401 || statusCode === 403
-            ? "Сеанс подтверждения недействителен. Войдите в аккаунт заново и начните подключение ещё раз."
-            : statusCode >= 500
-              ? "Сервер не смог проверить код. Проверьте журнал Next.js; повторно вводить тот же код не нужно."
-              : errorCode === "INVALID_CODE" || errorCode.includes("INVALID_TOTP") || errorCode.includes("INVALID_TWO_FACTOR_CODE")
-                ? "Одноразовый код не совпал. Проверьте автоматическую синхронизацию времени на телефоне и компьютере и используйте свежий код."
-                : "Не удалось подтвердить код. " + (errorCode
-                  ? "Ошибка сервера: " + errorCode + "."
-                  : "Проверьте соединение и попробуйте ещё раз.");
+          : localMatch === true && (errorCode.includes("TWO_FACTOR_COOKIE") || statusCode === 401 || statusCode === 403)
+            ? "Код соответствует текущему QR-коду, но сервер отклонил подтверждение. Проверьте время Windows и активную сессию на localhost:3000. Если ошибка повторится, нужен текст из CMD."
+            : errorCode.includes("TWO_FACTOR_COOKIE") || statusCode === 401 || statusCode === 403
+              ? "Не удалось проверить код в текущей сессии. Обновите страницу и начните подключение с новым QR-кодом."
+              : statusCode >= 500
+                ? "Сервер не смог проверить код. Проверьте журнал Next.js; повторно вводить тот же код не нужно."
+                : errorCode === "INVALID_CODE" || errorCode.includes("INVALID_TOTP") || errorCode.includes("INVALID_TWO_FACTOR_CODE")
+                  ? "Одноразовый код не совпал. Проверьте синхронизацию времени и используйте свежий код."
+                  : "Не удалось подтвердить код. " + (errorCode
+                    ? "Ошибка сервера: " + errorCode + "."
+                    : "Проверьте соединение и попробуйте ещё раз.");
         setStatus({ error: true, text: message });
         return;
       }
