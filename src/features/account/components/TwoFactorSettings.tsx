@@ -85,9 +85,20 @@ export default function TwoFactorSettings({ enabled }: Props) {
     try {
       const result = await authClient.twoFactor.verifyTotp({ code, trustDevice: false });
       if (result.error) {
-        setStatus({ error: true, text: result.error.status === 429
-          ? "Слишком много попыток. Попробуйте позднее."
-          : "Код не подошёл. Проверьте время на телефоне и введите актуальный код." });
+        const errorCode = String(result.error.code ?? "").toUpperCase();
+        const statusCode = result.error.status;
+        const message = statusCode === 429
+          ? "Слишком много попыток подтверждения. Повторите позже."
+          : errorCode.includes("TWO_FACTOR_COOKIE") || statusCode === 401 || statusCode === 403
+            ? "Сеанс подтверждения недействителен. Войдите в аккаунт заново и начните подключение ещё раз."
+            : statusCode >= 500
+              ? "Сервер не смог проверить код. Проверьте журнал Next.js; повторно вводить тот же код не нужно."
+              : errorCode === "INVALID_CODE" || errorCode.includes("INVALID_TOTP") || errorCode.includes("INVALID_TWO_FACTOR_CODE")
+                ? "Одноразовый код не совпал. Проверьте автоматическую синхронизацию времени на телефоне и компьютере и используйте свежий код."
+                : "Не удалось подтвердить код. " + (errorCode
+                  ? "Ошибка сервера: " + errorCode + "."
+                  : "Проверьте соединение и попробуйте ещё раз.");
+        setStatus({ error: true, text: message });
         return;
       }
       setActive(true);
@@ -167,7 +178,7 @@ export default function TwoFactorSettings({ enabled }: Props) {
 
       {!active && mode === "enroll" && uri && (
         <div className="pa-2fa__enroll">
-          <p className="pa-2fa__description">Откройте Google Authenticator, Microsoft Authenticator или другое приложение TOTP и отсканируйте код.</p>
+          <p className="pa-2fa__description">Откройте Google Authenticator, Microsoft Authenticator или другое приложение TOTP и отсканируйте этот QR-код. Если вы запускали подключение повторно, выберите новую запись Petrolero в приложении: прежние коды могут больше не подходить.</p>
           <TotpQr uri={uri} />
           {secret && (
             <div className="pa-2fa__manual">
