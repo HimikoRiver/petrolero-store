@@ -1,7 +1,7 @@
 // Integration test against disposable PostgreSQL and Mailpit services.
 // Uses real Better Auth API routes and real SMTP transport, without production credentials.
 import assert from "node:assert/strict";
-import { randomUUID } from "node:crypto";
+import { createHmac, randomUUID } from "node:crypto";
 import { setTimeout as sleep } from "node:timers/promises";
 import pg from "pg";
 
@@ -637,6 +637,53 @@ const newLogin = await authRequest("/api/auth/sign-in/email", {
 });
 assertOkay(newLogin, "new password sign in");
 const newCookie = cookieOf(newLogin.response);
+
+console.log("8. Enroll TOTP second factor with a verified authenticator code");
+const twoFactorEnable = await authRequest("/api/auth/two-factor/enable", {
+  cookie: newCookie, body: { password: newPassword, method: "totp", issuer: "Petrolero" },
+});
+assertOkay(twoFactorEnable, "enable TOTP");
+const totpURI = twoFactorEnable.data?.totpURI;
+const backupCodes = twoFactorEnable.data?.backupCodes;
+assert.ok(typeof totpURI === "string" && totpURI.startsWith("otpauth://totp/"));
+assert.ok(Array.isArray(backupCodes) && backupCodes.length > 0);
+const secret = new URL(totpURI).searchParams.get("secret");
+assert.ok(secret, "TOTP URI does not contain an authenticator secret");
+
+function makeTotp(base32, timeMs = Date.now()) {
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+  let bits = 0, value = 0;
+  const bytes = [];
+  for (const char of base32.replace(/=+$/, "").toUpperCase()) {
+    const digit = alphabet.indexOf(char);
+    assert.ok(digit >= 0, "Unexpected character in TOTP secret");
+    value = (value << 5) | digit;
+    bits += 5;
+    if (bits >= 8) {
+      bits -= 8;
+      bytes.push((value >>> bits) & 255);
+    }
+  }
+  const counter = Buffer.alloc(8);
+  counter.writeBigUInt64BE(BigInt(Math.floor(timeMs / 30_000)));
+  const hash = createHmac("sha1", Buffer.from(bytes)).update(counter).digest();
+  const offset = hash[hash.length - 1] & 0x0f;
+  const number = (hash.readUInt32BE(offset) & 0x7fffffff) % 1_000_000;
+  return String(number).padStart(6, "0");
+}
+const enableCookie = [
+  newCookie,
+  ...twoFactorEnable.response.headers.getSetCookie().map(v => v.split(";")[0]),
+].join("; ");
+const confirmTotp = await authRequest("/api/auth/two-factor/verify-totp", {
+  cookie: enableCookie, body: { code: makeTotp(secret), trustDevice: false },
+});
+assertOkay(confirmTotp, "verify authenticator enrollment");
+const afterEnrollment = await authRequest("/api/auth/get-session", { cookie: newCookie });
+assertOkay(afterEnrollment, "session after enabling 2FA");
+assert.equal(afterEnrollment.data?.user?.twoFactorEnabled, true, "TOTP was not enabled");
+
+console.log("9. Signing in must NOT issue a session before TOTP verification");
 const signOut = await authRequest("/api/auth/sign-out", {
   cookie: newCookie,
   body: {},
@@ -646,4 +693,46 @@ const afterSignOut = await authRequest("/api/auth/get-session", { cookie: newCoo
 assertOkay(afterSignOut, "get session after sign-out");
 assert.equal(afterSignOut.data?.session, undefined, "Session survived sign-out");
 
-console.log("PASS: auth + profile + favorites + owned demo checkout + admin RBAC + products + order reviews + customer notes");
+const challenge = await authRequest("/api/auth/sign-in/email", {
+  body: { email, password: newPassword },
+});
+assertOkay(challenge, "2FA sign in starts challenge");
+assert.equal(challenge.data?.twoFactorRedirect, true, "TOTP sign in bypassed second factor");
+const challengeCookie = cookieOf(challenge.response);
+const pendingSession = await authRequest("/api/auth/get-session", { cookie: challengeCookie });
+assertOkay(pendingSession, "2FA pending session");
+assert.equal(pendingSession.data?.session, undefined, "2FA exposed a session before verification");
+
+const incorrect = await authRequest("/api/auth/two-factor/verify-totp", {
+  cookie: challengeCookie, body: { code: "invalid", trustDevice: false },
+});
+assert.ok(!incorrect.response.ok, "Invalid TOTP was accepted");
+
+const completed = await authRequest("/api/auth/two-factor/verify-totp", {
+  cookie: challengeCookie, body: { code: makeTotp(secret), trustDevice: false },
+});
+assertOkay(completed, "2FA completed");
+const completedCookie = cookieOf(completed.response);
+const completedSession = await authRequest("/api/auth/get-session", { cookie: completedCookie });
+assertOkay(completedSession, "session after TOTP");
+assert.equal(completedSession.data?.user?.email, email, "TOTP did not issue user session");
+
+console.log("10. Single-use backup code completes a new 2FA challenge");
+const signOutAfter2fa = await authRequest("/api/auth/sign-out", { cookie: completedCookie, body: {} });
+assertOkay(signOutAfter2fa, "sign out 2FA session");
+const backupLogin = await authRequest("/api/auth/sign-in/email", {
+  body: { email, password: newPassword },
+});
+assertOkay(backupLogin, "start recovery sign-in");
+assert.equal(backupLogin.data?.twoFactorRedirect, true);
+const backupChallengeCookie = cookieOf(backupLogin.response);
+const recovered = await authRequest("/api/auth/two-factor/verify-backup-code", {
+  cookie: backupChallengeCookie, body: { code: backupCodes[0], trustDevice: false },
+});
+assertOkay(recovered, "verify backup code");
+const recoveredCookie = cookieOf(recovered.response);
+const recoveredSession = await authRequest("/api/auth/get-session", { cookie: recoveredCookie });
+assertOkay(recoveredSession, "session restored via backup code");
+assert.equal(recoveredSession.data?.user?.email, email);
+
+console.log("PASS: auth + 2FA (TOTP and backup code) + profile + favorites + cart + admin RBAC + products + orders");
