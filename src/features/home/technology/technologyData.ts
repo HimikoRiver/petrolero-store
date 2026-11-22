@@ -6,12 +6,12 @@ export const VEHICLE_TYPES = [
 
 // The 1200x675 SVG matches the 16:9 video. Anchor endpoints are editable
 // independently; these are visual placements based on the engine reference.
-// Left/right labels sit at x≈5% / 82%, dots terminate on the engine itself.
+// Connection endpoints now align with the new transparent engine video.
 export const ENGINE_NOTES = [
   {
     id: "protection", title: "Надёжная защита", detail: "двигателя",
     icon: "shield", side: "left", position: "top", time: 1.5,
-    dotX: 385, dotY: 250, line: "M128 202H260L385 250", compactLine: "M248 202H282L375 248",
+    dotX: 355, dotY: 234, line: "M128 202H270L355 234", compactLine: "M248 202H282L355 234",
   },
 {
   id: "innovation",
@@ -21,15 +21,15 @@ export const ENGINE_NOTES = [
   side: "right",
   position: "top",
   time: 3.4,
-  dotX: 740,
-  dotY: 224,
-  line: "M1074 202H900L740 224",
-  compactLine: "M956 202H933L893 269",
+  dotX: 840,
+  dotY: 240,
+  line: "M1074 202H940L840 240",
+  compactLine: "M956 202H925L840 240",
 },
   {
     id: "efficiency", title: "Максимальная", detail: "эффективность",
     icon: "gauge", side: "left", position: "bottom", time: 5.3,
-    dotX: 445, dotY: 466, line: "M170 500H290L445 466", compactLine: "M248 500H306L470 452",
+    dotX: 407, dotY: 552, line: "M170 500H310L407 552", compactLine: "M248 500H320L407 552",
   },
 {
   id: "stability",
@@ -39,9 +39,9 @@ export const ENGINE_NOTES = [
   side: "right",
   position: "bottom",
   time: 7.2,
-  dotX: 958,
-  dotY: 410,
-  line: "M1060 494H996L958 410",
-  compactLine: "M956 500H926L833 452",
+  dotX: 846,
+  dotY: 486,
+  line: "M1060 494H945L846 486",
+  compactLine: "M956 500H920L846 486",
 },
 ] as const;
