@@ -26,7 +26,7 @@ const demoOrderItems = [
 
 const previewOrders: AdminOrderDetails[] = [
   {
-    id: "preview-order-1", reference: "DEMO-0148B1A0", createdAt: "2026-11-20T13:15:00Z",
+    id: "preview-order-1", reference: "PTR-0148B1A0", createdAt: "2026-11-20T13:15:00Z",
     recipient: "Александр К.", phone: "+7 900 000-11-22",
     subtotalKopecks: 1107000, reviewStatus: "NEW", staffNote: null,
     reviewedAt: null, reviewedById: null, itemCount: 2, buyer,
@@ -35,7 +35,7 @@ const previewOrders: AdminOrderDetails[] = [
     items: demoOrderItems,
   },
   {
-    id: "preview-order-2", reference: "DEMO-B5227D9F", createdAt: "2026-11-19T10:05:00Z",
+    id: "preview-order-2", reference: "PTR-B5227D9F", createdAt: "2026-11-19T10:05:00Z",
     recipient: "Елена В.", phone: "+7 900 000-33-44",
     subtotalKopecks: 459000, reviewStatus: "REVIEWED", staffNote: "Проверены контактные данные.",
     reviewedAt: "2026-11-20T11:00:00Z", reviewedById: "preview-admin",
@@ -294,7 +294,7 @@ export default function AdminOrders({ preview = false }: { preview?: boolean }) 
                             alt={item.title} fill sizes="65px" /> : <span>Фото</span>}
                         </div>
                         <div><strong>{item.title}</strong>
-                          <small>{item.sku} · {item.quantity} шт. × {formatMoney(item.unitPriceKopecks)}</small>
+                          <small>{!item.sku.startsWith("DEMO-") && <>{item.sku} · </>}{item.quantity} шт. × {formatMoney(item.unitPriceKopecks)}</small>
                         </div>
                         <b>{formatMoney(item.lineTotalKopecks)}</b>
                       </div>

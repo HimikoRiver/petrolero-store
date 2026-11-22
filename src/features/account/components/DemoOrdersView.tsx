@@ -49,7 +49,7 @@ export function DemoOrderDetails({ order }: { order: DemoOrder }) {
               </div>
               <div className="pa-demo-item__body">
                 <strong>{item.title}</strong>
-                <span>АРТ. {item.sku} · {item.quantity} шт. × {priceLabel(item.unitPriceKopecks)}</span>
+                <span>{!item.sku.startsWith("DEMO-") && <>АРТ. {item.sku} · </>}{item.quantity} шт. × {priceLabel(item.unitPriceKopecks)}</span>
               </div>
               <strong className="pa-demo-item__price">{priceLabel(item.lineTotalKopecks)}</strong>
             </article>

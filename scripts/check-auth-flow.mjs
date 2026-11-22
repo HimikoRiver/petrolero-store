@@ -369,7 +369,7 @@ const createOrder = await authRequest("/api/account/demo-orders", {
 });
 assert.equal(createOrder.response.status, 201, "Demo checkout must create a test record");
 const orderId = createOrder.data.order?.id;
-assert.ok(orderId && createOrder.data.order.reference.startsWith("DEMO-"));
+assert.ok(orderId && createOrder.data.order.reference.startsWith("PTR-"));
 
 const listOrders = await authRequest("/api/account/demo-orders", { cookie });
 assertOkay(listOrders, "Own demo order history");

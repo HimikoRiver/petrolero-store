@@ -78,7 +78,7 @@ export default function AccountFavorites({ preview = false, products }: { previe
                 ) : <AccountIcon name="bag" size={30} />}
               </div>
               <div className="pa-favorite__info">
-                <span className="pa-kicker">АРТ. {product.sku}</span>
+                {!product.isDemo && <span className="pa-kicker">АРТ. {product.sku}</span>}
                 <h3>{product.title}</h3>
               </div>
               <button

@@ -234,7 +234,7 @@ export default function CheckoutPage({ catalogProducts }: { catalogProducts: rea
                     </div>
                     <div className="pt-checkout__item-info">
                       <strong>{product.title}</strong>
-                      <span>АРТ. {product.sku}</span>
+                      {!product.isDemo && <span>АРТ. {product.sku}</span>}
                       <div className="pt-checkout__quantity">
                         <button type="button" onClick={() => updateQuantity(id, -1)}
                           disabled={pending} aria-label={"Уменьшить количество " + product.title}>−</button>

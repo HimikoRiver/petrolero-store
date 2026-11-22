@@ -23,7 +23,7 @@ const previewCustomers: AdminCustomerDetails[] = [
       postalCode: "101000", isDefault: true,
     }],
     orders: [{
-      id: "preview-order-1", reference: "DEMO-0148B1A0",
+      id: "preview-order-1", reference: "PTR-0148B1A0",
       createdAt: "2026-11-20T13:15:00Z",
       subtotalKopecks: 1107000, reviewStatus: "NEW",
     }],
@@ -35,7 +35,7 @@ const previewCustomers: AdminCustomerDetails[] = [
     ordersCount: 1, addressesCount: 0, favoritesCount: 0,
     adminNote: null, addresses: [],
     orders: [{
-      id: "preview-order-2", reference: "DEMO-B5227D9F",
+      id: "preview-order-2", reference: "PTR-B5227D9F",
       createdAt: "2026-11-19T10:05:00Z",
       subtotalKopecks: 459000, reviewStatus: "REVIEWED",
     }],

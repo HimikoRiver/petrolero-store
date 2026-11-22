@@ -94,7 +94,7 @@ export async function POST(request: Request) {
   const order = await db.demoOrder.create({
     data: {
       id,
-      reference: "DEMO-" + id.slice(0, 8).toUpperCase(),
+      reference: "PTR-" + id.slice(0, 8).toUpperCase(),
       userId: auth.userId,
       recipient, phone, city, street,
       apartment: apartment || null,
