@@ -6,6 +6,7 @@ import AccountGoldGears from "./AccountGoldGears";
 import AccountFavorites from "./AccountFavorites";
 import AccountProfile from "./AccountProfile";
 import AccountAddresses from "./AccountAddresses";
+import TwoFactorSettings from "./TwoFactorSettings";
 import type { DeliveryAddress } from "../data/accountDetails";
 import { CATALOG_PRODUCTS, type CatalogProduct } from "@/features/catalog/data/catalogData";
 import type { DemoOrder } from "@/features/checkout/types";
@@ -22,6 +23,7 @@ type AccountWorkspaceProps = {
   name?: string | null;
   email?: string | null;
   emailVerified?: boolean;
+  twoFactorEnabled?: boolean;
   phone?: string | null;
   addresses?: DeliveryAddress[];
   catalogProducts?: readonly CatalogProduct[];
@@ -116,7 +118,7 @@ function LinkPanel({
 }
 
 function AccountScreen({
-  section, preview, name, email, emailVerified, phone, addresses = [], orders = [], order = null, catalogProducts = CATALOG_PRODUCTS,
+  section, preview, name, email, emailVerified, twoFactorEnabled = false, phone, addresses = [], orders = [], order = null, catalogProducts = CATALOG_PRODUCTS,
 }: AccountWorkspaceProps & { preview: boolean }) {
   switch (section) {
     case "overview":
@@ -257,9 +259,9 @@ function AccountScreen({
                 title="Подтверждение e-mail"
                 value={preview ? null : emailVerified ? "Подтверждён" : "Не подтверждён"}
               />
-              <Field title="Пароль" value={preview ? null : "Защищён"} />
             </div>
           </section>
+          {!preview && <TwoFactorSettings enabled={twoFactorEnabled} />}
           <section className="pa-surface pa-surface--short">
             <span className="pa-kicker">ВОССТАНОВЛЕНИЕ</span>
             <h3>Забыли пароль?</h3>
@@ -299,7 +301,7 @@ function AccountScreen({
 }
 
 export default function AccountWorkspace({
-  section, preview = false, name = null, email = null, emailVerified = false, phone = null, addresses = [], orders = [], order = null, catalogProducts = CATALOG_PRODUCTS,
+  section, preview = false, name = null, email = null, emailVerified = false, twoFactorEnabled = false, phone = null, addresses = [], orders = [], order = null, catalogProducts = CATALOG_PRODUCTS,
 }: AccountWorkspaceProps) {
   const page = PAGE_COPY[section];
   const currentNav = section === "order-detail" ? "orders" : section;
@@ -357,7 +359,7 @@ export default function AccountWorkspace({
               <span className="pa-page-heading__number" aria-hidden="true">{page.number}</span>
             </div>
             <div className="pa-screen">
-              <AccountScreen section={section} preview={preview} name={name} email={email} emailVerified={emailVerified} phone={phone} addresses={addresses} orders={orders} order={order} catalogProducts={catalogProducts}/>
+              <AccountScreen section={section} preview={preview} name={name} email={email} emailVerified={emailVerified} twoFactorEnabled={twoFactorEnabled} phone={phone} addresses={addresses} orders={orders} order={order} catalogProducts={catalogProducts}/>
             </div>
           </div>
         </div>

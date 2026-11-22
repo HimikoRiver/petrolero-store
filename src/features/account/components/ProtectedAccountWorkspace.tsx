@@ -43,6 +43,7 @@ async function AuthorizedWorkspace({ section, orderId }: { section: AccountSecti
       name={session.user.name}
       email={session.user.email}
       emailVerified={session.user.emailVerified}
+      twoFactorEnabled={session.user.twoFactorEnabled ?? false}
       phone={profile?.phone ?? null}
       addresses={addresses}
       catalogProducts={catalogProducts}
