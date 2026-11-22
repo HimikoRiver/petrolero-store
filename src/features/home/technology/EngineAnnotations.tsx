@@ -93,6 +93,27 @@ function buildPath(
   ].join("");
 }
 
+
+/* Shift only the innovation connector's elbow downward.
+ * Keep its label attachment and glowing engine endpoint unchanged. */
+function buildLoweredInnovationPath(
+  startX: number,
+  startY: number,
+  bendX: number,
+  dotX: number,
+  dotY: number,
+): string {
+  const shoulderX = Math.min(startX - 12, bendX + 48);
+  const loweredY = Math.min(dotY - 6, startY + 26);
+
+  return [
+    `M${startX.toFixed(2)} ${startY.toFixed(2)}`,
+    `H${shoulderX.toFixed(2)}`,
+    `L${bendX.toFixed(2)} ${loweredY.toFixed(2)}`,
+    `L${dotX} ${dotY}`,
+  ].join("");
+}
+
 export default function EngineAnnotations({
   revealedCount,
 }: EngineAnnotationsProps) {
@@ -190,13 +211,24 @@ export default function EngineAnnotations({
           ? note.compactLine
           : note.line;
 
-        next[note.id] = buildPath(
-          startX,
-          startY,
-          getBendX(originalPath),
-          note.dotX,
-          note.dotY,
-        );
+        const bendX = getBendX(originalPath);
+
+        next[note.id] =
+          note.id === "innovation" && !compact
+            ? buildLoweredInnovationPath(
+                startX,
+                startY,
+                bendX,
+                note.dotX,
+                note.dotY,
+              )
+            : buildPath(
+                startX,
+                startY,
+                bendX,
+                note.dotX,
+                note.dotY,
+              );
       }
 
       setConnections((previous) => {
