@@ -164,18 +164,15 @@ export default function EngineAnnotations({
               CONNECTION_GAP) *
             scaleX;
         } else {
-          // Keep other right-side connectors unchanged. The top-right
-          // innovation line extends 110 CSS pixels beneath its gear icon.
+          // Start at the icon's visible edge. Extending the path
+          // underneath the icon would be hidden, not visibly longer.
           const iconRect =
             iconElement.getBoundingClientRect();
-
-          const extensionPx = note.id === "innovation" ? 110 : 0;
 
           startX =
             (iconRect.left -
               containerRect.left -
-              CONNECTION_GAP +
-              extensionPx) *
+              CONNECTION_GAP) *
             scaleX;
         }
 
