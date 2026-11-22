@@ -6,7 +6,10 @@ import EngineAnnotations from "./EngineAnnotations";
 import { ENGINE_NOTES } from "./technologyData";
 import "./TechnologySection.css";
 
-const VIDEO_SRC = "/home/video/block4.webm";
+const VIDEO_SOURCES = [
+  { src: "/home/video/heroOilmotor.webm", type: "video/webm" },
+  { src: "/home/video/heroOilmotor.mp4", type: "video/mp4" },
+] as const;
 
 export default function TechnologySection({
   reducedMotion = false,
@@ -115,7 +118,6 @@ export default function TechnologySection({
           <video
             ref={videoRef}
             className="petrolero-tech-video"
-            src={VIDEO_SRC}
             muted
             playsInline
             loop
@@ -129,12 +131,16 @@ export default function TechnologySection({
               setVideoError(true);
               setPaused(true);
             }}
-          />
+          >
+            {VIDEO_SOURCES.map(({ src, type }) => (
+              <source key={src} src={src} type={type} />
+            ))}
+          </video>
 
           {videoError ? (
             <p className="petrolero-tech-error" role="status">
               Не удалось загрузить видео. Проверь файл
-              public/home/video/block4.webm.
+              public/home/video/heroOilmotor.webm или heroOilmotor.mp4.
             </p>
           ) : null}
 
