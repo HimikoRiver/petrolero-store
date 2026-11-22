@@ -103,12 +103,11 @@ function buildLoweredInnovationPath(
   dotX: number,
   dotY: number,
 ): string {
-  const shoulderX = Math.min(startX - 12, bendX + 48);
   const loweredY = Math.min(dotY - 6, startY + 26);
 
+  // Exactly two straight segments with one lowered bend.
   return [
     `M${startX.toFixed(2)} ${startY.toFixed(2)}`,
-    `H${shoulderX.toFixed(2)}`,
     `L${bendX.toFixed(2)} ${loweredY.toFixed(2)}`,
     `L${dotX} ${dotY}`,
   ].join("");
