@@ -21,10 +21,10 @@ export const ENGINE_NOTES = [
   side: "right",
   position: "top",
   time: 3.4,
-  dotX: 840,
+  dotX: 690,
   dotY: 240,
-  line: "M1074 202H940L840 240",
-  compactLine: "M956 202H925L840 240",
+  line: "M1074 202H940L690 240",
+  compactLine: "M956 202H925L690 240",
 },
   {
     id: "efficiency", title: "Максимальная", detail: "эффективность",
