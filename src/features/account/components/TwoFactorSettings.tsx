@@ -82,48 +82,56 @@ export default function TwoFactorSettings({ enabled }: Props) {
   const confirm = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (pending || !/^\d{6}$/.test(code)) return;
-    setPending(true); setStatus(null);
+    setPending(true);
+    setStatus(null);
     try {
-      const localMatch = await checkTotpSetupCode(uri, code);
-      if (localMatch === false) {
-        setStatus({
-          error: true,
-          text: "Код не соответствует текущему QR-коду. Проверьте, что выбрана последняя запись Petrolero в приложении, и синхронизируйте время телефона и компьютера.",
-        });
-        return;
-      }
+      // The server is authoritative. A local TOTP check MUST NOT reject a
+      // code before Better Auth sees it: client and server clocks may differ.
+      const result = await authClient.twoFactor.verifyTotp({
+        code,
+        trustDevice: false,
+      });
 
-      // Only Better Auth can confirm enrollment. The browser-side check above
-      // is diagnostic; it never marks the account as 2FA-protected.
-      const result = await authClient.twoFactor.verifyTotp({ code, trustDevice: false });
       if (result.error) {
+        // This is a diagnostic only, performed *after* a server rejection.
+        // Some versions of Better Auth return 401 even for incorrect TOTP;
+        // never assume a 401 always means the user has lost their session.
+        const localMatch = await checkTotpSetupCode(uri, code);
         const errorCode = String(result.error.code ?? "").toUpperCase();
         const statusCode = result.error.status;
-        const message = statusCode === 429
-          ? "Слишком много попыток подтверждения. Повторите позже."
-          : localMatch === true && (errorCode.includes("TWO_FACTOR_COOKIE") || statusCode === 401 || statusCode === 403)
-            ? "Код соответствует текущему QR-коду, но сервер отклонил подтверждение. Проверьте время Windows и активную сессию на localhost:3000. Если ошибка повторится, нужен текст из CMD."
-            : errorCode.includes("TWO_FACTOR_COOKIE") || statusCode === 401 || statusCode === 403
-              ? "Не удалось проверить код в текущей сессии. Обновите страницу и начните подключение с новым QR-кодом."
-              : statusCode >= 500
-                ? "Сервер не смог проверить код. Проверьте журнал Next.js; повторно вводить тот же код не нужно."
-                : errorCode === "INVALID_CODE" || errorCode.includes("INVALID_TOTP") || errorCode.includes("INVALID_TWO_FACTOR_CODE")
-                  ? "Одноразовый код не совпал. Проверьте синхронизацию времени и используйте свежий код."
-                  : "Не удалось подтвердить код. " + (errorCode
-                    ? "Ошибка сервера: " + errorCode + "."
-                    : "Проверьте соединение и попробуйте ещё раз.");
+        const message =
+          statusCode === 429
+            ? "Слишком много попыток. Повторите позже."
+            : statusCode >= 500
+              ? "Ошибка сервера при проверке кода. Откройте CMD с Next.js, чтобы увидеть причину."
+              : localMatch === true
+                ? "Код соответствует текущему QR-коду по времени этого компьютера, но сервер его отклонил. Проверьте часы Windows и работу сессии; если ошибка повторится, покажите текст ошибки из CMD."
+                : localMatch === false
+                  ? "Сервер отклонил код. Проверка по часам компьютера также не совпала: проверьте синхронизацию времени Windows и телефона. Затем используйте свежий код."
+                  : errorCode.includes("TWO_FACTOR_COOKIE")
+                    ? "Не удалось подтвердить код в текущей сессии. Перезайдите в аккаунт и начните подключение заново."
+                    : "Сервер отклонил код подтверждения. Проверьте часы Windows и введите новый код после его смены.";
         setStatus({ error: true, text: message });
         return;
       }
+
       setActive(true);
       setUri("");
       setCode("");
-      setStatus({ error: false, text: "Двухфакторная защита включена. Сохраните резервные коды в надёжном месте — позже они не будут показаны автоматически." });
+      setStatus({
+        error: false,
+        text: "Двухфакторная защита включена. Сохраните резервные коды в надёжном месте — позже они не будут показаны автоматически.",
+      });
       setMode("idle");
       router.refresh();
     } catch {
-      setStatus({ error: true, text: "Не удалось подтвердить код. Повторите попытку." });
-    } finally { setPending(false); }
+      setStatus({
+        error: true,
+        text: "Не удалось обратиться к серверу подтверждения. Проверьте CMD, затем повторите попытку.",
+      });
+    } finally {
+      setPending(false);
+    }
   };
 
   const disable = async (event: FormEvent<HTMLFormElement>) => {
