@@ -2,10 +2,10 @@
 .golden-threads-orb {
   position: absolute;
   z-index: 2;
-  left: 54%;
-  top: 43%;
-  width: clamp(275px, 29vw, 460px);
-  aspect-ratio: 1;
+  left: 62%;
+  top: 49%;
+  width: clamp(600px, 64vw, 980px);
+  height: clamp(480px, 76svh, 730px);
   transform: translate(-50%, -50%);
   pointer-events: none;
   user-select: none;
@@ -21,19 +21,21 @@
 
 @media (max-width: 1250px) {
   .golden-threads-orb {
-    left: 69%;
-    top: 40%;
-    width: clamp(210px, 23vw, 310px);
-    opacity: .74;
+    left: 67%;
+    top: 47%;
+    width: clamp(420px, 63vw, 700px);
+    height: clamp(390px, 69svh, 610px);
+    opacity: .78;
   }
 }
 
 @media (max-width: 950px) {
   .golden-threads-orb {
-    left: 77%;
-    top: 36%;
-    width: clamp(165px, 22vw, 225px);
-    opacity: .5;
+    left: 73%;
+    top: 45%;
+    width: clamp(320px, 66vw, 530px);
+    height: clamp(310px, 60svh, 490px);
+    opacity: .56;
   }
 }
 
