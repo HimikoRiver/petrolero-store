@@ -27,7 +27,7 @@ try {
     "RFC 6238 SHA-1 8-digit code must match");
   assert.equal(await checkTotpSetupCode(uri, "12345678"), false,
     "Incorrect code must not match the current QR");
-  Date.now = () => 90_000; // Within adjacent time window
+  Date.now = () => 60_000; // Within adjacent time window
   assert.equal(await checkTotpSetupCode(uri, "94287082"), true,
     "One adjacent time window must remain valid");
   Date.now = () => 200_000;
