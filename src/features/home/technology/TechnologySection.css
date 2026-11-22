@@ -174,7 +174,8 @@
   mask-image: radial-gradient(ellipse 76% 88% at center, #000 59%, rgba(0, 0, 0, .96) 73%, rgba(0, 0, 0, .55) 88%, transparent 100%);
 }
 
-/* A light edge vignette avoids double-darkening the engine itself. */
+/* Blend the video's straight left/right edges into the section black.
+   Keep the bottom fade narrow so the amber oil sump stays visible. */
 .petrolero-tech-stage::after {
   content: "";
   position: absolute;
@@ -183,9 +184,9 @@
   pointer-events: none;
   background:
     linear-gradient(to bottom, rgba(5, 5, 5, .30) 0%, transparent 13%),
-    linear-gradient(to top, rgba(5, 5, 5, .40) 0%, transparent 15%),
-    linear-gradient(to right, rgba(5, 5, 5, .30) 0%, transparent 12%),
-    linear-gradient(to left, rgba(5, 5, 5, .30) 0%, transparent 12%);
+    linear-gradient(to top, rgba(5, 5, 5, .48) 0%, rgba(5, 5, 5, .12) 5%, transparent 9%),
+    linear-gradient(to right, #050505 0%, rgba(5, 5, 5, .72) 5%, transparent 15%),
+    linear-gradient(to left, #050505 0%, rgba(5, 5, 5, .72) 5%, transparent 15%);
 }
 
 .petrolero-tech-annotations {
