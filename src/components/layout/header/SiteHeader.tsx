@@ -240,7 +240,7 @@ export default function SiteHeader({
                 <SearchIcon />
               </button>
             </div>
-            <Link href={mode === "inner" ? "/account" : "/account/login"} className="petrolero-nav-button" aria-label="Вход в личный кабинет">
+            <Link href="/account" className="petrolero-nav-button" aria-label="Личный кабинет">
               <AccountIcon />
             </Link>
             <button
