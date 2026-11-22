@@ -14,7 +14,7 @@
     "db:studio": "prisma studio",
     "local:setup": "node scripts/setup-local-backend.mjs",
     "local:up": "docker compose --env-file .env.local -f compose.local.yml up -d --wait",
-    "local:db:deploy": "node --env-file=.env.local scripts/check-local-backend.mjs --target-only && prisma migrate deploy",
+    "local:db:deploy": "node --env-file=.env.local scripts/check-local-backend.mjs --target-only && prisma migrate deploy && prisma generate",
     "local:check": "node --env-file=.env.local scripts/check-local-backend.mjs",
     "local:down": "docker compose --env-file .env.local -f compose.local.yml down"
   },
