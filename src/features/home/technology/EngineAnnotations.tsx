@@ -164,14 +164,18 @@ export default function EngineAnnotations({
               CONNECTION_GAP) *
             scaleX;
         } else {
-          // Lines on the right stop before the icon.
+          // Keep other right-side connectors unchanged. The top-right
+          // innovation line extends 30 CSS pixels beneath its gear icon.
           const iconRect =
             iconElement.getBoundingClientRect();
+
+          const extensionPx = note.id === "innovation" ? 30 : 0;
 
           startX =
             (iconRect.left -
               containerRect.left -
-              CONNECTION_GAP) *
+              CONNECTION_GAP +
+              extensionPx) *
             scaleX;
         }
 
