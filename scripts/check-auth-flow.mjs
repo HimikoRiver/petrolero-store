@@ -684,7 +684,18 @@ assertOkay(afterEnrollment, "session after enabling 2FA");
 console.log("8a. Render authenticated security settings using the same persisted Prisma field");
 const securityPage = await authRequest("/account/security", { cookie: newCookie });
 assertOkay(securityPage, "authenticated 2FA security page");
-assert.ok(String(securityPage.data).includes("Дополнительная защита"),
+const securityHtml = String(securityPage.data);
+console.log("Security SSR diagnostics:", {
+  containsAccount: securityHtml.includes("Личный кабинет"),
+  containsSecurity: securityHtml.includes("Безопасность аккаунта"),
+  containsTotp: securityHtml.includes("Дополнительная защита"),
+  containsLogin: securityHtml.includes("Вход в аккаунт"),
+  containsRedirect: securityHtml.includes("/account/login"),
+  hasSession: Boolean(afterEnrollment.data?.session),
+  hasUser: Boolean(afterEnrollment.data?.user),
+});
+assert.ok(Boolean(afterEnrollment.data?.session), "Signed-in session missing after TOTP enrollment");
+assert.ok(securityHtml.includes("Дополнительная защита"),
   "Security page should render the 2FA enrollment interface");
 const enrollmentDb = new pg.Client({ connectionString: process.env.DATABASE_URL });
 await enrollmentDb.connect();
