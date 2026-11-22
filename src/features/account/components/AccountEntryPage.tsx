@@ -8,7 +8,7 @@ import GoldShimmerButton from "@/components/ui/GoldShimmerButton";
 import GoldenThreadsOrb from "@/components/account/GoldenThreadsOrb";
 import "../styles/account.css";
 
-type AuthMode = "login" | "register" | "forgot";
+type AuthMode = "login" | "register" | "forgot" | "two-factor";
 
 const LOGO_SRC = "/home/images/petrolero-logo.svg";
 
@@ -28,6 +28,7 @@ export default function AccountEntryPage({
   const router = useRouter();
   const [mode, setMode] = useState<AuthMode>("login");
   const [showPassword, setShowPassword] = useState(false);
+  const [backupMode, setBackupMode] = useState(false);
   const [email, setEmail] = useState("");
   const [pending, setPending] = useState(false);
   const [verificationEmail, setVerificationEmail] = useState("");
@@ -45,6 +46,7 @@ export default function AccountEntryPage({
     if (pending) return;
     setMode(nextMode);
     setShowPassword(false);
+    setBackupMode(false);
     setFeedback(null);
     setVerificationEmail("");
   };
@@ -81,10 +83,56 @@ export default function AccountEntryPage({
         return;
       }
 
+      // Better Auth deliberately does NOT create an authenticated session
+      // until the second factor has been verified.
+      if (result.data && "twoFactorRedirect" in result.data && result.data.twoFactorRedirect === true) {
+        setBackupMode(false);
+        setMode("two-factor");
+        return;
+      }
       router.replace(next);
       router.refresh();
     } catch {
       setFeedback({ type: "error", text: "Не удалось связаться с сервером. Попробуйте снова." });
+    } finally {
+      setPending(false);
+    }
+  };
+
+  const handleTwoFactor = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (pending) return;
+    const data = new FormData(event.currentTarget);
+    const code = String(data.get("code") ?? "").trim();
+
+    if (!backupMode && !/^\d{6}$/.test(code)) {
+      setFeedback({ type: "error", text: "Введите шестизначный код из приложения." });
+      return;
+    }
+    if (backupMode && !code) {
+      setFeedback({ type: "error", text: "Введите резервный код." });
+      return;
+    }
+
+    setPending(true);
+    setFeedback(null);
+    try {
+      const result = backupMode
+        ? await authClient.twoFactor.verifyBackupCode({ code, trustDevice: false })
+        : await authClient.twoFactor.verifyTotp({ code, trustDevice: false });
+      if (result.error) {
+        setFeedback({
+          type: "error",
+          text: result.error.status === 429
+            ? "Слишком много попыток. Попробуйте позже."
+            : "Код не подошёл или срок его действия истёк. Попробуйте снова.",
+        });
+        return;
+      }
+      router.replace(next);
+      router.refresh();
+    } catch {
+      setFeedback({ type: "error", text: "Не удалось подтвердить код. Попробуйте снова." });
     } finally {
       setPending(false);
     }
@@ -316,6 +364,54 @@ export default function AccountEntryPage({
                       onClick={() => changeMode("register")}
                     >
                       Зарегистрироваться
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {mode === "two-factor" && (
+                <>
+                  <h1 className="petrolero-account-form-title">Подтверждение входа</h1>
+                  <p className="petrolero-account-form-subtitle">
+                    {backupMode
+                      ? "Введите один из сохранённых резервных кодов."
+                      : "Введите одноразовый код из приложения-аутентификатора."}
+                  </p>
+                  <form className="petrolero-account-form" onSubmit={handleTwoFactor}>
+                    <label className="petrolero-account-field">
+                      <span className="petrolero-account-field-label">
+                        {backupMode ? "Резервный код" : "Код подтверждения"}
+                      </span>
+                      <input
+                        key={backupMode ? "backup" : "totp"}
+                        type="text"
+                        name="code"
+                        inputMode={backupMode ? "text" : "numeric"}
+                        autoComplete="one-time-code"
+                        maxLength={backupMode ? 100 : 6}
+                        pattern={backupMode ? undefined : "[0-9]{6}"}
+                        placeholder={backupMode ? "Введите резервный код" : "000000"}
+                        required
+                        autoFocus
+                      />
+                    </label>
+                    <GoldShimmerButton type="submit" className="petrolero-account-submit" disabled={pending}>
+                      {pending ? "Проверка кода…" : "Подтвердить вход"}
+                    </GoldShimmerButton>
+                  </form>
+                  <div className="petrolero-account-bottom-text">
+                    <button
+                      type="button" className="petrolero-account-link-button"
+                      disabled={pending}
+                      onClick={() => { setBackupMode(value => !value); setFeedback(null); }}
+                    >
+                      {backupMode ? "Ввести код из приложения" : "Использовать резервный код"}
+                    </button>
+                  </div>
+                  <div className="petrolero-account-bottom-text">
+                    <button type="button" className="petrolero-account-link-button"
+                      disabled={pending} onClick={() => changeMode("login")}>
+                      Вернуться ко входу
                     </button>
                   </div>
                 </>
