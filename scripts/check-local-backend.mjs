@@ -65,7 +65,7 @@ try {
 
   const requiredTables = [
     "user", "session", "account", "verification",
-    "delivery_address", "favorite", "demo_order",
+    "twoFactor", "delivery_address", "favorite", "demo_order",
     "demo_order_item", "product", "_prisma_migrations",
   ];
   const result = await client.query(

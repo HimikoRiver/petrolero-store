@@ -1,5 +1,6 @@
 import "server-only";
 import { betterAuth } from "better-auth";
+import { twoFactor } from "better-auth/plugins";
 import { prismaAdapter } from "@better-auth/prisma-adapter";
 import { getPrisma } from "./prisma";
 import { isAuthMailConfigured, sendAuthMail } from "./auth-mail";
@@ -16,6 +17,8 @@ export function isAuthConfigured(): boolean {
 
 function createAuth() {
   return betterAuth({
+    appName: "Petrolero",
+    plugins: [twoFactor({ issuer: "Petrolero" })],
     baseURL: process.env.BETTER_AUTH_URL!,
     secret: process.env.BETTER_AUTH_SECRET!,
     database: prismaAdapter(getPrisma(), { provider: "postgresql" }),

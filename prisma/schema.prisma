@@ -12,6 +12,7 @@ model User {
   name          String
   email         String    @unique
   emailVerified Boolean
+  twoFactorEnabled Boolean @default(false)
   image         String?
   createdAt     DateTime
   updatedAt     DateTime
@@ -23,8 +24,23 @@ model User {
   adminNote     String?
   sessions      Session[]
   accounts      Account[]
+  twoFactors    TwoFactor[]
 
   @@map("user")
+}
+
+model TwoFactor {
+  id                      String    @id
+  userId                  String
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  secret                  String
+  backupCodes             String
+  verified                Boolean   @default(false)
+  failedVerificationCount Int       @default(0)
+  lockedUntil             DateTime?
+
+  @@index([userId])
+  @@map("twoFactor")
 }
 
 model Session {
