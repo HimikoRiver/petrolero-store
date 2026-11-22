@@ -15,7 +15,7 @@ const previewCustomers: AdminCustomerDetails[] = [
     phone: "+7 900 000-11-22", emailVerified: true,
     createdAt: "2026-11-10T09:00:00Z",
     ordersCount: 1, addressesCount: 1, favoritesCount: 3,
-    adminNote: "Покупатель в демонстрационном режиме.",
+    adminNote: "Предпочтительный способ связи — телефон.",
     addresses: [{
       id: "demo-address-1", label: "Дом", recipient: "Александр К.",
       phone: "+7 900 000-11-22", city: "Москва",
@@ -158,7 +158,7 @@ export default function AdminCustomers({ preview = false }: { preview?: boolean 
         setRevision(value => value + 1);
       }
       setDetail(updated);
-      setNotice(preview ? "В предпросмотре заметка изменена только на экране." : "Заметка покупателя сохранена.");
+      setNotice(preview ? "" : "Заметка покупателя сохранена.");
     } catch (e) {
       setDetailError(e instanceof Error ? e.message : "Не удалось сохранить заметку.");
     } finally {
@@ -181,14 +181,13 @@ export default function AdminCustomers({ preview = false }: { preview?: boolean 
           <div>
             <span className="pt-admin__kicker">PETROLERO / КЛИЕНТСКАЯ БАЗА</span>
             <h1>Покупатели<span>.</span></h1>
-            <p>Контакты зарегистрированных клиентов, подтверждение почты и история тестовых заявок.</p>
+            <p>Контакты зарегистрированных клиентов, подтверждение почты и история заявок.</p>
           </div>
           <div className="pt-manage__header-metric">
             <span>НАЙДЕНО ПОКУПАТЕЛЕЙ</span>
             <strong>{total}</strong>
           </div>
         </header>
-        {preview && <div className="pt-admin__message" role="note">Предпросмотр: используются вымышленные покупатели. Данные и заметки не сохраняются.</div>}
         <div className="pt-admin__toolbar pt-manage__toolbar">
           <label>
             <span className="pt-admin__sr-only">Поиск покупателя</span>
@@ -267,7 +266,7 @@ export default function AdminCustomers({ preview = false }: { preview?: boolean 
                       <span>{detail.emailVerified ? "Подтверждена" : "Не подтверждена"}</span></div>
                     <div><small>Телефон</small><strong>{detail.phone || "Не указан"}</strong></div>
                     <div><small>Дата регистрации</small><strong>{formatDate(detail.createdAt)}</strong></div>
-                    <div><small>Активность</small><strong>{detail.ordersCount} тестовых заявок</strong>
+                    <div><small>Активность</small><strong>{detail.ordersCount} заявок</strong>
                       <span>{detail.favoritesCount} в избранном · {detail.addressesCount} адресов</span></div>
                   </div>
                   <section className="pt-manage__detail-section">
@@ -288,7 +287,7 @@ export default function AdminCustomers({ preview = false }: { preview?: boolean 
                     ) : <p className="pt-manage__muted">Адреса ещё не добавлены.</p>}
                   </section>
                   <section className="pt-manage__detail-section">
-                    <h3>Последние тестовые заявки</h3>
+                    <h3>Последние заявки</h3>
                     {detail.orders.length ? (
                       <div className="pt-manage__customer-orders">
                         {detail.orders.map(order => (

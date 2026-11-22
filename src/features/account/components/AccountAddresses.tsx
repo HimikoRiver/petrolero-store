@@ -83,10 +83,7 @@ export default function AccountAddresses({ initialAddresses, preview }: Props) {
       }
 
       setEditingId(null);
-      setMessage({
-        error: false,
-        text: preview ? "Демоадрес добавлен на экран. После обновления страницы он исчезнет." : "Адрес сохранён.",
-      });
+      setMessage(preview ? null : { error: false, text: "Адрес сохранён." });
     } catch (error) {
       setMessage({ error: true, text: error instanceof Error ? error.message : "Не удалось сохранить адрес." });
     } finally {
@@ -120,7 +117,7 @@ export default function AccountAddresses({ initialAddresses, preview }: Props) {
       }
       if (editingId === id) setEditingId(null);
       setDeleteId(null);
-      setMessage({ error: false, text: preview ? "Демоадрес убран." : "Адрес удалён." });
+      setMessage(preview ? null : { error: false, text: "Адрес удалён." });
     } catch (error) {
       setMessage({ error: true, text: error instanceof Error ? error.message : "Не удалось удалить адрес." });
     } finally {
@@ -141,7 +138,6 @@ export default function AccountAddresses({ initialAddresses, preview }: Props) {
           </button>
         )}
       </div>
-      {preview && <p className="pa-addresses__notice">Предпросмотр: добавленные здесь адреса существуют только на экране и не сохраняются.</p>}
       {message && <p className="pa-form-message" role={message.error ? "alert" : "status"} data-error={message.error}>{message.text}</p>}
 
       {addresses.length > 0 && (

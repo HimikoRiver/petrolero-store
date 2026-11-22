@@ -31,7 +31,7 @@ export default function AccountProfile({ name, email, phone, preview }: Props) {
 
     if (preview) {
       setError(false);
-      setMessage("Предпросмотр: форма работает, но изменения не сохраняются в базе данных.");
+      setMessage("");
       return;
     }
 
@@ -97,7 +97,6 @@ export default function AccountProfile({ name, email, phone, preview }: Props) {
           <GoldShimmerButton type="submit" disabled={pending}>
             {pending ? "Сохранение…" : "Сохранить изменения"}
           </GoldShimmerButton>
-          {preview && <span className="pa-form-hint">Деморежим: данные не отправляются на сервер.</span>}
         </div>
         {message && <p className="pa-form-message" data-error={error} role={error ? "alert" : "status"}>{message}</p>}
       </form>

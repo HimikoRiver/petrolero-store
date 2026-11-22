@@ -151,6 +151,16 @@ assertOkay(session, "get session");
 assert.equal(session.data?.user?.email, email);
 assert.equal(session.data?.user?.emailVerified, true);
 
+console.log("4. Check account navigation and session across the homepage");
+const authenticatedHome = await authRequest("/", { cookie });
+assertOkay(authenticatedHome, "homepage with active session");
+assert.ok(String(authenticatedHome.data).includes('href="/account"'),
+  "Header account icon must link to the protected account route");
+const accountAfterHome = await authRequest("/account", { cookie });
+assertOkay(accountAfterHome, "account remains accessible after visiting homepage");
+assert.ok(String(accountAfterHome.data).includes("Личный кабинет"),
+  "Active session must be usable after visiting the homepage");
+
 console.log("4a. Check profile, owned addresses and unauthorized access");
 const unauthProfile = await authRequest("/api/account/profile", {
   method: "PATCH",
@@ -393,8 +403,8 @@ assert.equal(unauthOrderDetail.response.status, 401);
 
 const ownOrderPage = await authRequest("/account/orders/" + encodeURIComponent(orderId), { cookie });
 assertOkay(ownOrderPage, "SSR owned order page");
-assert.ok(String(ownOrderPage.data).includes("Тестовый"),
-  "Owned order page should show its demonstration status");
+assert.ok(String(ownOrderPage.data).includes("Стоимость товаров"),
+  "Owned order page should render its saved line items and subtotal");
 
 const foreignOrderPage = await authRequest(
   "/account/orders/" + encodeURIComponent(orderId), { cookie: secondCookie },

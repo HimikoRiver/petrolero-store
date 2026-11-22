@@ -166,7 +166,7 @@ export default function AdminProducts({ preview = false }: { preview?: boolean }
         setProducts(current => editor.id
           ? current.map(p => p.id === editor.id ? product : p)
           : [product, ...current]);
-        setNotice("Демонстрация: карточка изменена только на экране.");
+        setNotice("");
         setEditor(null);
         return;
       }
@@ -193,7 +193,7 @@ export default function AdminProducts({ preview = false }: { preview?: boolean }
     try {
       if (preview) {
         setProducts(current => current.filter(item => item.id !== product.id));
-        setNotice("Демонстрация: товар скрыт только на экране.");
+        setNotice("");
         setEditor(null);
         return;
       }
@@ -224,7 +224,6 @@ export default function AdminProducts({ preview = false }: { preview?: boolean }
           <GoldShimmerButton type="button" onClick={startNew}>+ Новый товар</GoldShimmerButton>
         </header>
 
-        {preview && <div className="pt-admin__message" role="note">ПРЕДПРОСМОТР · Изменения не записываются в базу и не влияют на каталог. Здесь можно проверить интерфейс.</div>}
         <div className="pt-admin__stats">
           <div><span>ВСЕ ТОВАРЫ</span><strong>{stats.all}</strong></div>
           <div><span>ОПУБЛИКОВАНО</span><strong>{stats.published}</strong></div>
@@ -283,9 +282,6 @@ export default function AdminProducts({ preview = false }: { preview?: boolean }
           </div>
         )}
 
-        <p className="pt-admin__footnote">
-          {preview ? "Демонстрационный режим: карточки существуют только на этой странице." : "Каталог получает опубликованные товары из PostgreSQL. Архивирование скрывает карточку, но сохраняет историю тестовых заказов."}
-        </p>
       </div>
 
       {editor && (

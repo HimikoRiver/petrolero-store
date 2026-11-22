@@ -28,7 +28,6 @@ export default function CatalogProductCard({
     <article className="petrolero-catalog-item" data-category={product.category}>
       <div className="petrolero-catalog-item__media-column">
         <div className="petrolero-catalog-item__media">
-          {product.isDemo && <span className="petrolero-catalog-item__demo">ДЕМО</span>}
           <ProductGallery
             image={product.image}
             gallery={product.gallery}
@@ -45,7 +44,7 @@ export default function CatalogProductCard({
       </div>
 
       <div className="petrolero-catalog-item__body">
-        <p className="petrolero-catalog-item__sku">АРТ. {product.sku}</p>
+        {!product.isDemo && <p className="petrolero-catalog-item__sku">АРТ. {product.sku}</p>}
         <button
           className="petrolero-catalog-item__name"
           type="button"
@@ -60,7 +59,7 @@ export default function CatalogProductCard({
         <div className="petrolero-catalog-item__bottom">
           <div className="petrolero-catalog-item__price">
             <strong>{priceLabel(product.priceKopecks)}</strong>
-            <span>{product.isDemo ? "Тестовая цена" : product.stockQuantity > 0 ? "В наличии" : "Нет в наличии"}</span>
+            {!product.isDemo && <span>{product.stockQuantity > 0 ? "В наличии" : "Нет в наличии"}</span>}
           </div>
           <div className="petrolero-catalog-item__actions">
             <button type="button" className="petrolero-catalog-add petrolero-catalog-liquid-button"

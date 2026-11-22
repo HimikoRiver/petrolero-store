@@ -5,8 +5,8 @@ import { isAccountSection } from "@/features/account/data/accountNavigation";
 import "@/features/account/styles/workspaceStates.css";
 
 export const metadata: Metadata = {
-  title: "Предпросмотр личного кабинета — Petrolero",
-  description: "Демонстрация интерфейса личного кабинета без персональных данных.",
+  title: "Личный кабинет — Petrolero",
+  description: "Личный кабинет Petrolero: заказы, адреса и избранное.",
   robots: { index: false, follow: false },
 };
 
@@ -21,7 +21,7 @@ async function PreviewWorkspace({ searchParams }: Props) {
 
 export default function PreviewPage({ searchParams }: Props) {
   return (
-    <Suspense fallback={<main className="pa-loading" role="status">Открываем предпросмотр…</main>}>
+    <Suspense fallback={<main className="pa-loading" role="status">Загрузка личного кабинета…</main>}>
       <PreviewWorkspace searchParams={searchParams} />
     </Suspense>
   );

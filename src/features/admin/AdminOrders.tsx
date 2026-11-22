@@ -31,7 +31,7 @@ const previewOrders: AdminOrderDetails[] = [
     subtotalKopecks: 1107000, reviewStatus: "NEW", staffNote: null,
     reviewedAt: null, reviewedById: null, itemCount: 2, buyer,
     city: "Москва", street: "ул. Примерная, 10",
-    apartment: "кв. 14", postalCode: "101000", note: "Тестовый комментарий покупателя",
+    apartment: "кв. 14", postalCode: "101000", note: "Свяжитесь со мной по телефону",
     items: demoOrderItems,
   },
   {
@@ -170,7 +170,7 @@ export default function AdminOrders({ preview = false }: { preview?: boolean }) 
         setRevision(value => value + 1);
       }
       setDetail(updated);
-      setNotice(preview ? "В предпросмотре изменения действуют только на экране." : "Заявка обновлена.");
+      setNotice(preview ? "" : "Заявка обновлена.");
     } catch (e) {
       setDetailError(e instanceof Error ? e.message : "Не удалось сохранить заявку.");
     } finally {
@@ -193,18 +193,13 @@ export default function AdminOrders({ preview = false }: { preview?: boolean }) 
           <div>
             <span className="pt-admin__kicker">PETROLERO / ЗАЯВКИ</span>
             <h1>Заказы<span>.</span></h1>
-            <p>Внутренняя проверка тестовых заявок, контактов и состава корзины.</p>
+            <p>Просмотр заявок, контактных данных и состава корзины.</p>
           </div>
           <div className="pt-manage__header-metric">
             <span>НАЙДЕНО ЗАЯВОК</span>
             <strong>{total}</strong>
           </div>
         </header>
-        <div className="pt-manage__warning" role="note">
-          <strong>ТЕСТОВЫЕ ЗАЯВКИ</strong>
-          <p>Статусы — только внутренние пометки администратора. Покупка не оплачена, товары не зарезервированы и доставка не запущена.</p>
-        </div>
-        {preview && <div className="pt-admin__message" role="note">Предпросмотр: все покупатели, адреса и заявки вымышлены. Изменения не сохраняются.</div>}
         <div className="pt-admin__toolbar pt-manage__toolbar">
           <label>
             <span className="pt-admin__sr-only">Поиск заявки</span>
@@ -212,7 +207,7 @@ export default function AdminOrders({ preview = false }: { preview?: boolean }) 
               onChange={event => { setQuery(event.target.value); setPage(1); }}
               placeholder="Номер заявки, получатель, телефон или почта…" />
           </label>
-          <div className="pt-admin__tabs" role="group" aria-label="Статус тестовой заявки">
+          <div className="pt-admin__tabs" role="group" aria-label="Статус заявки">
             <button type="button" aria-pressed={status === "all"}
               onClick={() => { setStatus("all"); setPage(1); }}>Все</button>
             {REVIEW_STATUSES.map(item => (
@@ -228,7 +223,7 @@ export default function AdminOrders({ preview = false }: { preview?: boolean }) 
         </div>}
         {loading ? <p className="pt-admin__placeholder" role="status">Загружаем заявки…</p>
           : displayed.length ? (
-            <div className="pt-manage__table" role="list" aria-label="Тестовые заявки">
+            <div className="pt-manage__table" role="list" aria-label="Заявки">
               <div className="pt-manage__table-head pt-manage__orders-head">
                 <span>НОМЕР И ДАТА</span><span>ПОКУПАТЕЛЬ</span>
                 <span>ПОЗИЦИИ</span><span>СУММА ТОВАРОВ</span><span>ВНУТРЕННИЙ СТАТУС</span><span></span>
@@ -255,7 +250,7 @@ export default function AdminOrders({ preview = false }: { preview?: boolean }) 
           ) : (
             <div className="pt-admin__empty">
               <h2>Заявок не найдено</h2>
-              <p>Проверьте фильтры. Новые тестовые заявки появятся после сохранения формы оформления.</p>
+              <p>Проверьте фильтры. Новые заявки появятся после заполнения формы оформления.</p>
             </div>
           )}
         <div className="pt-manage__pagination" aria-label="Навигация по страницам заявок">
@@ -274,7 +269,7 @@ export default function AdminOrders({ preview = false }: { preview?: boolean }) 
           <aside className="pt-admin__editor pt-manage__drawer" role="dialog" aria-modal="true" aria-labelledby="pt-order-title">
             <header className="pt-admin__editor-head">
               <div>
-                <span className="pt-admin__kicker">ТЕСТОВАЯ ЗАЯВКА / ДЕТАЛИ</span>
+                <span className="pt-admin__kicker">ЗАЯВКА / ДЕТАЛИ</span>
                 <h2 id="pt-order-title">{detail?.reference ?? "Загрузка…"}</h2>
               </div>
               <button ref={closeButton} type="button" aria-label="Закрыть" onClick={close} disabled={saving}>×</button>
@@ -291,7 +286,7 @@ export default function AdminOrders({ preview = false }: { preview?: boolean }) 
                   </div>
                   {detail.note && <div className="pt-manage__buyer-note"><small>Комментарий покупателя</small><p>{detail.note}</p></div>}
                   <section className="pt-manage__detail-section">
-                    <h3>Состав тестовой заявки</h3>
+                    <h3>Состав заявки</h3>
                     {detail.items.map(item => (
                       <div className="pt-manage__item" key={item.id}>
                         <div className="pt-manage__item-image">
@@ -304,8 +299,7 @@ export default function AdminOrders({ preview = false }: { preview?: boolean }) 
                         <b>{formatMoney(item.lineTotalKopecks)}</b>
                       </div>
                     ))}
-                    <div className="pt-manage__sum"><span>Стоимость товаров (тест)</span><strong>{formatMoney(detail.subtotalKopecks)}</strong></div>
-                    <p className="pt-manage__fine">Оплата не производится. Доставка и резервирование отключены.</p>
+                    <div className="pt-manage__sum"><span>Стоимость товаров</span><strong>{formatMoney(detail.subtotalKopecks)}</strong></div>
                   </section>
                   <form className="pt-manage__edit-form" onSubmit={save}>
                     <h3>Внутренняя обработка</h3>

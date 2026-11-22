@@ -65,14 +65,14 @@ export async function POST(request: Request) {
       return jsonError("Один из товаров недоступен.", 400);
     }
     if (!product.isDemo && (quantity as number) > product.stockQuantity) {
-      return jsonError("Недостаточно товара для тестовой заявки.", 400);
+      return jsonError("Недостаточно товара для заявки.", 400);
     }
     unique.add(id);
     unitCount += quantity as number;
     const lineTotalKopecks = product.priceKopecks * (quantity as number);
     itemsTotal += lineTotalKopecks;
     if (!Number.isSafeInteger(itemsTotal) || itemsTotal > 1_000_000_000 || unitCount > 100) {
-      return jsonError("Превышен допустимый объём демонстрационной корзины.", 400);
+      return jsonError("Превышен допустимый объём корзины.", 400);
     }
     items.push({
       id: randomUUID(),
@@ -88,7 +88,7 @@ export async function POST(request: Request) {
 
   const db = accountPrisma();
   if (await db.demoOrder.count({ where: { userId: auth.userId } }) >= 100) {
-    return jsonError("Лимит тестовых заказов достигнут.", 409);
+    return jsonError("Достигнут лимит сохранённых заявок.", 409);
   }
   const id = randomUUID();
   const order = await db.demoOrder.create({

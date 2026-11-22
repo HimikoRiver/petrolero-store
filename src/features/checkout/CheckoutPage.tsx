@@ -108,7 +108,7 @@ export default function CheckoutPage({ catalogProducts }: { catalogProducts: rea
       });
       const data = await response.json();
       if (!response.ok) {
-        setError(data.error || "Не удалось сохранить тестовый заказ.");
+        setError(data.error || "Не удалось сохранить заявку.");
         return;
       }
       clearCart();
@@ -141,10 +141,6 @@ export default function CheckoutPage({ catalogProducts }: { catalogProducts: rea
           </div>
           <span className="pt-checkout__number" aria-hidden="true">01</span>
         </header>
-        <div className="pt-checkout__demo" role="note">
-          <span className="pt-checkout__demo-label">ДЕМОНСТРАЦИОННЫЙ РЕЖИМ</span>
-          <p>Оформление работает в тестовом режиме: оплаты, доставки и передачи заказа продавцу пока нет. Сохранение создаёт только запись в личном кабинете.</p>
-        </div>
 
         {!cartHydrated ? (
           <div className="pt-checkout__loading" role="status">Загружаем корзину…</div>
@@ -161,7 +157,7 @@ export default function CheckoutPage({ catalogProducts }: { catalogProducts: rea
               <h2 id="pt-checkout-customer-title">Контактные данные</h2>
               {!sessionPending && !session?.user && (
                 <div className="pt-checkout__login-note">
-                  Для сохранения тестового заказа понадобится аккаунт.
+                  Для сохранения заявки войдите в аккаунт.
                   <Link href="/account/login?next=%2Fcheckout">Войти или зарегистрироваться</Link>
                   <small>Корзина сохранится в этом браузере, пока вы входите.</small>
                 </div>
@@ -218,7 +214,7 @@ export default function CheckoutPage({ catalogProducts }: { catalogProducts: rea
                       onChange={e => setField("postalCode", e.target.value)} />
                   </label>
                   <label className="pt-checkout__field pt-checkout__field--wide">
-                    <span>Комментарий к тестовому заказу</span>
+                    <span>Комментарий к заказу</span>
                     <textarea maxLength={500} rows={3} placeholder="Дополнительные пожелания"
                       value={form.note} onChange={e => setField("note", e.target.value)} />
                   </label>
@@ -252,21 +248,20 @@ export default function CheckoutPage({ catalogProducts }: { catalogProducts: rea
                 ))}
               </div>
               <div className="pt-checkout__total">
-                <span>Товары · тестовая стоимость</span>
+                <span>Стоимость товаров</span>
                 <strong>{priceLabel(cartTotal)}</strong>
               </div>
-              <p className="pt-checkout__delivery">Стоимость доставки и итоговая сумма не рассчитаны.</p>
               {session?.user ? (
                 <GoldShimmerButton type="submit" className="pt-checkout__submit"
                   form="pt-checkout-form" disabled={pending || !cartHydrated}>
-                  {pending ? "Сохранение…" : "Сохранить тестовый заказ"}
+                  {pending ? "Сохранение…" : "Сохранить заявку"}
                 </GoldShimmerButton>
               ) : (
                 <Link href="/account/login?next=%2Fcheckout" className="pt-checkout__login-link">
                   Войти для сохранения заказа
                 </Link>
               )}
-              <p className="pt-checkout__disclaimer">Оплата не производится. Заказ не передаётся продавцу и не резервирует товары.</p>
+              <p className="pt-checkout__disclaimer">Заявка сохранится в личном кабинете без оплаты и отправки продавцу.</p>
             </aside>
           </div>
         )}

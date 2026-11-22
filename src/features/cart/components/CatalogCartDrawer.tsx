@@ -52,8 +52,7 @@ export default function CatalogCartDrawer({ products, cartLines, cartCount, cart
                   })}
                 </div>
                 <div className="petrolero-catalog-drawer__summary">
-                  <p><span>Итого (демо)</span><strong>{priceLabel(cartTotal)}</strong></p>
-                  <small>Оформление заявки пока тестовое. Оплата и реальная доставка отключены.</small>
+                  <p><span>Стоимость товаров</span><strong>{priceLabel(cartTotal)}</strong></p>
                   <GoldShimmerButton type="button" className="petrolero-catalog-drawer__checkout" onClick={() => {
                     onClose();
                     router.push("/checkout");

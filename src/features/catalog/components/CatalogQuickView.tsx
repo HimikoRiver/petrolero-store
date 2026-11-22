@@ -21,7 +21,7 @@ export default function CatalogQuickView({ product: preview, onClose, onAdd }: P
               />
             </div>
             <div className="petrolero-catalog-quickview__content">
-              <p className="petrolero-catalog-item__sku">АРТ. {preview.sku}</p>
+              {!preview.isDemo && <p className="petrolero-catalog-item__sku">АРТ. {preview.sku}</p>}
               <h2>{preview.title}</h2>
               <p>{preview.description}</p>
               <dl>
@@ -32,7 +32,7 @@ export default function CatalogQuickView({ product: preview, onClose, onAdd }: P
                 {!!preview.ilsac.length && <><dt>ILSAC</dt><dd>{preview.ilsac.join(", ")}</dd></>}
                 {preview.volumeLiters && <><dt>Объём</dt><dd>{preview.volumeLiters < 1 ? preview.volumeLiters * 1000 + " мл" : preview.volumeLiters + " л"}</dd></>}
               </dl>
-              <strong>{priceLabel(preview.priceKopecks)} {preview.isDemo && <small>демо</small>}</strong>
+              <strong>{priceLabel(preview.priceKopecks)}</strong>
               <button type="button" className="petrolero-catalog-liquid-button" disabled={!preview.isDemo && preview.stockQuantity <= 0} onClick={() => onAdd(preview)}>В корзину</button>
             </div>
           </section>

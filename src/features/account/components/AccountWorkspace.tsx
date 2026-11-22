@@ -31,8 +31,8 @@ type AccountWorkspaceProps = {
 
 const PAGE_COPY: Record<AccountSection, { title: string; subtitle: string; number: string }> = {
   overview: { title: "Личный кабинет", subtitle: "Ваши покупки и сохранённые товары в одном месте.", number: "01" },
-  orders: { title: "Мои заказы", subtitle: "История покупок, оплата и отслеживание доставки.", number: "02" },
-  "order-detail": { title: "Информация о заказе", subtitle: "Подробности покупки и её доставки.", number: "02" },
+  orders: { title: "Мои заказы", subtitle: "Сохранённые заявки и история заказов.", number: "02" },
+  "order-detail": { title: "Информация о заказе", subtitle: "Состав заявки и данные получателя.", number: "02" },
   favorites: { title: "Избранное", subtitle: "Товары, к которым хочется вернуться.", number: "03" },
   addresses: { title: "Адреса и получатели", subtitle: "Данные для оформления будущих заказов.", number: "04" },
   profile: { title: "Личные данные", subtitle: "Контактная информация вашего аккаунта.", number: "05" },
@@ -147,7 +147,7 @@ function AccountScreen({
               ) : (
                 <div className="pa-compact-empty">
                   <AccountIcon name="bag" size={30} />
-                  <p>Пока нет тестовых заказов.</p>
+                  <p>Заказов пока нет.</p>
                 </div>
               )}
             </section>
@@ -165,19 +165,15 @@ function AccountScreen({
       return (
         <section className="pa-surface">
           <div className="pa-surface__heading">
-            <div><span className="pa-kicker">ЗАКАЗЫ</span><h3>История тестовых заказов</h3></div>
+            <div><span className="pa-kicker">ЗАКАЗЫ</span><h3>История заказов</h3></div>
             <span className="pa-tag">{orders.length ? orders.length + " записей" : "Нет заказов"}</span>
-          </div>
-          <div className="pa-demo-notice" role="note">
-            <span>ДЕМОНСТРАЦИЯ</span>
-            Сохранённые записи не передаются продавцу. Оплата и доставка не выполняются.
           </div>
           {orders.length ? (
             <DemoOrdersList orders={orders} />
           ) : (
             <EmptyState
               icon="orders" title="Заказов пока нет"
-              description="Создайте тестовую заявку через корзину. Она появится в этом разделе."
+              description="Сохранённые заявки появятся здесь после заполнения формы."
               href="/catalog" action="Посмотреть каталог"
             />
           )}
@@ -239,7 +235,7 @@ function AccountScreen({
           </div>
           <div className="pa-settings-row">
             <span className="pa-link-panel__icon"><AccountIcon name="orders" size={23}/></span>
-            <div><h4>Уведомления о заказах</h4><p>Подтверждение покупки, оплата, отправка и доставка. Эти письма относятся к вашим покупкам.</p></div>
+            <div><h4>Уведомления о заказах</h4><p>Информация о заказах и статусах ваших заявок.</p></div>
           </div>
           <div className="pa-settings-row">
             <span className="pa-link-panel__icon"><AccountIcon name="mail" size={23}/></span>

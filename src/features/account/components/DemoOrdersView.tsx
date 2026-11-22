@@ -19,10 +19,10 @@ export function DemoOrdersList({ orders, compact = false }: { orders: DemoOrder[
             <span className="pa-demo-order__reference">{order.reference}</span>
             <span className="pa-demo-order__date">{orderDate(order.createdAt)}</span>
           </div>
-          <div className="pa-demo-order__status">Тестовый</div>
+          <div className="pa-demo-order__status">Сохранён</div>
           <div className="pa-demo-order__total">{priceLabel(order.subtotalKopecks)}</div>
           <AccountIcon name="arrow" size={17}/>
-          {!compact && <small>Сохранён для проверки интерфейса, без оплаты и доставки</small>}
+          {!compact && <small>Заявка в личном кабинете</small>}
         </Link>
       ))}
     </div>
@@ -32,14 +32,10 @@ export function DemoOrdersList({ orders, compact = false }: { orders: DemoOrder[
 export function DemoOrderDetails({ order }: { order: DemoOrder }) {
   return (
     <>
-      <div className="pa-demo-notice" role="note">
-        <span>ДЕМОНСТРАЦИЯ</span>
-        Эта запись не является оформленным заказом. Оплата, резервирование и доставка не выполняются.
-      </div>
       <section className="pa-surface">
         <div className="pa-surface__heading">
           <div><span className="pa-kicker">СОСТАВ ЗАКАЗА</span><h3>{order.reference}</h3></div>
-          <span className="pa-tag">Тестовый</span>
+          <span className="pa-tag">Сохранён</span>
         </div>
         <p className="pa-demo-order-date">Создан {orderDate(order.createdAt)}</p>
         <div className="pa-demo-items">
@@ -60,10 +56,10 @@ export function DemoOrderDetails({ order }: { order: DemoOrder }) {
           ))}
         </div>
         <div className="pa-demo-order-subtotal">
-          <span>Стоимость товаров (тестовая)</span>
+          <span>Стоимость товаров</span>
           <strong>{priceLabel(order.subtotalKopecks)}</strong>
         </div>
-        <p className="pa-demo-order-footnote">Стоимость доставки не рассчитана. Итог к оплате отсутствует.</p>
+        <p className="pa-demo-order-footnote">Стоимость доставки не включена.</p>
       </section>
       <section className="pa-surface">
         <div className="pa-surface__heading">
