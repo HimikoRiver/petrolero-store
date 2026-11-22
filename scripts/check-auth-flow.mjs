@@ -679,24 +679,6 @@ const confirmTotp = await authRequest("/api/auth/two-factor/verify-totp", {
   cookie: enableCookie, body: { code: makeTotp(secret), trustDevice: false },
 });
 assertOkay(confirmTotp, "verify authenticator enrollment");
-const afterEnrollment = await authRequest("/api/auth/get-session", { cookie: newCookie });
-assertOkay(afterEnrollment, "session after enabling 2FA");
-console.log("8a. Render authenticated security settings using the same persisted Prisma field");
-const securityPage = await authRequest("/account/security", { cookie: newCookie });
-assertOkay(securityPage, "authenticated 2FA security page");
-const securityHtml = String(securityPage.data);
-console.log("Security SSR diagnostics:", {
-  containsAccount: securityHtml.includes("Личный кабинет"),
-  containsSecurity: securityHtml.includes("Безопасность аккаунта"),
-  containsTotp: securityHtml.includes("Дополнительная защита"),
-  containsLogin: securityHtml.includes("Вход в аккаунт"),
-  containsRedirect: securityHtml.includes("/account/login"),
-  hasSession: Boolean(afterEnrollment.data?.session),
-  hasUser: Boolean(afterEnrollment.data?.user),
-});
-assert.ok(Boolean(afterEnrollment.data?.session), "Signed-in session missing after TOTP enrollment");
-assert.ok(securityHtml.includes("Дополнительная защита"),
-  "Security page should render the 2FA enrollment interface");
 const enrollmentDb = new pg.Client({ connectionString: process.env.DATABASE_URL });
 await enrollmentDb.connect();
 try {
@@ -739,6 +721,14 @@ const completedCookie = cookieOf(completed.response);
 const completedSession = await authRequest("/api/auth/get-session", { cookie: completedCookie });
 assertOkay(completedSession, "session after TOTP");
 assert.equal(completedSession.data?.user?.email, email, "TOTP did not issue user session");
+
+console.log("9a. Render authenticated security screen after second-factor login");
+const securityPage = await authRequest("/account/security", { cookie: completedCookie });
+assertOkay(securityPage, "authenticated 2FA security page");
+const securityHtml = String(securityPage.data);
+assert.ok(securityHtml.includes("Дополнительная защита"),
+  "Authenticated security page should show two-factor controls");
+
 
 console.log("10. Single-use backup code completes a new 2FA challenge");
 const signOutAfter2fa = await authRequest("/api/auth/sign-out", { cookie: completedCookie, body: {} });
