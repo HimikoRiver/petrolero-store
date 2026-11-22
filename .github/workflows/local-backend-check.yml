@@ -1,0 +1,47 @@
+name: Local Backend Smoke Test
+
+on:
+  push:
+    branches:
+      - feature/storefront-catalog
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  local-backend:
+    name: Docker PostgreSQL, Mailpit and migrations
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Verify JavaScript syntax
+        run: |
+          node --check scripts/setup-local-backend.mjs
+          node --check scripts/check-local-backend.mjs
+      - name: Generate isolated local development credentials
+        run: npm run local:setup
+      - name: Validate Docker Compose configuration
+        run: docker compose --env-file .env.local -f compose.local.yml config --quiet
+      - name: Start PostgreSQL and Mailpit
+        run: npm run local:up
+      - name: Apply schema migrations to local database
+        run: npm run local:db:deploy
+      - name: Verify database schema and Mailpit API
+        run: npm run local:check
+      - name: Stop services without deleting data
+        if: always()
+        run: |
+          if [ -f .env.local ]; then
+            npm run local:down
+          fi
