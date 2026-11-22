@@ -6,7 +6,7 @@ import EngineAnnotations from "./EngineAnnotations";
 import { ENGINE_NOTES } from "./technologyData";
 import "./TechnologySection.css";
 
-const VIDEO_SRC = "/home/video/block4.webm";
+const VIDEO_SRC = "/home/video/heroOilmotor.webm";
 
 export default function TechnologySection({
   reducedMotion = false,
@@ -134,7 +134,7 @@ export default function TechnologySection({
           {videoError ? (
             <p className="petrolero-tech-error" role="status">
               Не удалось загрузить видео. Проверь файл
-              public/home/video/block4.webm.
+              public/home/video/heroOilmotor.webm.
             </p>
           ) : null}
 
