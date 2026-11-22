@@ -18,6 +18,12 @@ async function AuthorizedWorkspace({ section, orderId }: { section: AccountSecti
     redirect("/account/login?next=" + encodeURIComponent(requested));
   }
 
+  const twoFactorSettings = section === "security"
+    ? await getPrisma().user.findUnique({
+        where: { id: session.user.id },
+        select: { twoFactorEnabled: true },
+      })
+    : null;
   const catalogProducts = section === "favorites" ? await getCatalogProducts() : [];
   const profile = section === "profile"
     ? await getPrisma().user.findUnique({ where: { id: session.user.id }, select: { phone: true } })
@@ -43,7 +49,7 @@ async function AuthorizedWorkspace({ section, orderId }: { section: AccountSecti
       name={session.user.name}
       email={session.user.email}
       emailVerified={session.user.emailVerified}
-      twoFactorEnabled={session.user.twoFactorEnabled ?? false}
+      twoFactorEnabled={twoFactorSettings?.twoFactorEnabled ?? false}
       phone={profile?.phone ?? null}
       addresses={addresses}
       catalogProducts={catalogProducts}

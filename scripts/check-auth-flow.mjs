@@ -681,7 +681,14 @@ const confirmTotp = await authRequest("/api/auth/two-factor/verify-totp", {
 assertOkay(confirmTotp, "verify authenticator enrollment");
 const afterEnrollment = await authRequest("/api/auth/get-session", { cookie: newCookie });
 assertOkay(afterEnrollment, "session after enabling 2FA");
-assert.equal(afterEnrollment.data?.user?.twoFactorEnabled, true, "TOTP was not enabled");
+const enrollmentDb = new pg.Client({ connectionString: process.env.DATABASE_URL });
+await enrollmentDb.connect();
+try {
+  const enrolled = await enrollmentDb.query(
+    'SELECT "twoFactorEnabled" FROM "user" WHERE "email" = $1', [email],
+  );
+  assert.equal(enrolled.rows[0]?.twoFactorEnabled, true, "TOTP was not enabled in the database");
+} finally { await enrollmentDb.end(); }
 
 console.log("9. Signing in must NOT issue a session before TOTP verification");
 const signOut = await authRequest("/api/auth/sign-out", {
