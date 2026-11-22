@@ -16,7 +16,7 @@ type GoldParticle = {
   speed: number;
 };
 
-const PARTICLE_COUNT = 40;
+const PARTICLE_COUNT = 90;
 const MAX_DPR = 2;
 
 /** A quiet field of gold dust, with soft cursor repulsion.
@@ -57,13 +57,16 @@ export default function GoldenThreadsOrb() {
 
     function createParticles() {
       particles = Array.from({ length: PARTICLE_COUNT }, (_, i) => {
-        const column = i % 8;
-        const row = Math.floor(i / 8);
-        // Wide, softly staggered field rather than a tight cluster.
-        const u = (column + 0.5 + (random(i + 1) - 0.5) * 0.68) / 8;
-        const v = (row + 0.5 + (random(i + 23) - 0.5) * 0.68) / 5;
-        const x = (0.045 + u * 0.91) * width;
-        const y = (0.07 + v * 0.86) * height;
+        const columns = 10;
+        const rows = 9;
+        const column = i % columns;
+        const row = Math.floor(i / columns);
+        // Spread particles across the entire field, including the top edge.
+        // Seeded jitter keeps the pattern organic without reshuffling on re-render.
+        const u = (column + 0.5 + (random(i + 1) - 0.5) * 0.76) / columns;
+        const v = (row + 0.5 + (random(i + 23) - 0.5) * 0.78) / rows;
+        const x = (0.025 + u * 0.95) * width;
+        const y = (0.012 + v * 0.966) * height;
 
         return {
           anchorX: x,
