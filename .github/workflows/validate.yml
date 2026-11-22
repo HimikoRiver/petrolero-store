@@ -32,6 +32,8 @@ jobs:
         run: npx next typegen
       - name: TypeScript
         run: npx tsc --noEmit
+      - name: TOTP enrollment diagnostic (RFC 6238)
+        run: node scripts/check-totp-setup.mjs
       - name: Production build
         run: npm run build
       # Some legacy homepage effects and WebGL uniforms predate React 19 lint rules.
