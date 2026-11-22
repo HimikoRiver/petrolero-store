@@ -681,6 +681,11 @@ const confirmTotp = await authRequest("/api/auth/two-factor/verify-totp", {
 assertOkay(confirmTotp, "verify authenticator enrollment");
 const afterEnrollment = await authRequest("/api/auth/get-session", { cookie: newCookie });
 assertOkay(afterEnrollment, "session after enabling 2FA");
+console.log("8a. Render authenticated security settings using the same persisted Prisma field");
+const securityPage = await authRequest("/account/security", { cookie: newCookie });
+assertOkay(securityPage, "authenticated 2FA security page");
+assert.ok(String(securityPage.data).includes("Дополнительная защита"),
+  "Security page should render the 2FA enrollment interface");
 const enrollmentDb = new pg.Client({ connectionString: process.env.DATABASE_URL });
 await enrollmentDb.connect();
 try {
