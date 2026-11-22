@@ -30,10 +30,15 @@
   </defs>
   <style>
     .gear { transform-box: fill-box; transform-origin: center; }
-    .gear--large { animation: spin-clockwise 26s linear infinite; }
-    .gear--medium { animation: spin-counterclockwise 16s linear infinite; }
-    .gear--small { animation: spin-clockwise 12s linear infinite; }
+    .gear--large { animation: spin-clockwise 22.5s linear infinite; }
+    .gear--medium { animation: spin-counterclockwise 15s linear infinite; }
+    .gear--small { animation: spin-small-meshed 11.25s linear infinite; }
     @keyframes spin-clockwise { to { transform: rotate(360deg); } }
+    /* Half a small-tooth pitch (15deg) seats its teeth in the medium gear gaps. */
+    @keyframes spin-small-meshed {
+      from { transform: rotate(15deg); }
+      to { transform: rotate(375deg); }
+    }
     @keyframes spin-counterclockwise { to { transform: rotate(-360deg); } }
     @media (prefers-reduced-motion: reduce) { .gear { animation: none; } }
   </style>
