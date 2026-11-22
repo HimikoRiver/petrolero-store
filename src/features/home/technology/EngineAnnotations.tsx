@@ -94,25 +94,6 @@ function buildPath(
 }
 
 
-/* Shift only the innovation connector's elbow downward.
- * Keep its label attachment and glowing engine endpoint unchanged. */
-function buildLoweredInnovationPath(
-  startX: number,
-  startY: number,
-  bendX: number,
-  dotX: number,
-  dotY: number,
-): string {
-  const loweredY = Math.min(dotY - 6, startY + 26);
-
-  // Exactly two straight segments with one lowered bend.
-  return [
-    `M${startX.toFixed(2)} ${startY.toFixed(2)}`,
-    `L${bendX.toFixed(2)} ${loweredY.toFixed(2)}`,
-    `L${dotX} ${dotY}`,
-  ].join("");
-}
-
 export default function EngineAnnotations({
   revealedCount,
 }: EngineAnnotationsProps) {
@@ -213,14 +194,8 @@ export default function EngineAnnotations({
         const bendX = getBendX(originalPath);
 
         next[note.id] =
-          note.id === "innovation" && !compact
-            ? buildLoweredInnovationPath(
-                startX,
-                startY,
-                bendX,
-                note.dotX,
-                note.dotY,
-              )
+          note.id === "innovation"
+            ? `M${startX.toFixed(2)} ${startY.toFixed(2)}L${note.dotX} ${note.dotY}`
             : buildPath(
                 startX,
                 startY,
