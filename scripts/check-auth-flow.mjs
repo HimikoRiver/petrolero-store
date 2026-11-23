@@ -450,6 +450,25 @@ const secondLogin = await authRequest("/api/auth/sign-in/email", {
 });
 assertOkay(secondLogin, "second account login");
 const secondCookie = cookieOf(secondLogin.response);
+
+// IDOR regression: a buyer must not list, edit or remove someone else's addresses.
+const secondAddresses = await authRequest("/api/account/addresses", { cookie: secondCookie });
+assertOkay(secondAddresses, "list separate buyer addresses");
+assert.deepEqual(secondAddresses.data.addresses, [], "Another buyer's addresses leaked");
+const foreignAddressUpdate = await authRequest("/api/account/addresses", {
+  cookie: secondCookie, method: "PATCH", body: { ...addressPayload, id: firstId },
+});
+assert.equal(foreignAddressUpdate.response.status, 404,
+  "A buyer was able to edit another buyer's address");
+const foreignAddressDelete = await authRequest("/api/account/addresses", {
+  cookie: secondCookie, method: "DELETE", body: { id: firstId },
+});
+assert.equal(foreignAddressDelete.response.status, 404,
+  "A buyer was able to remove another buyer's address");
+const originalAddresses = await authRequest("/api/account/addresses", { cookie });
+assertOkay(originalAddresses, "original buyer addresses after IDOR attempts");
+assert.equal(originalAddresses.data.addresses.length, 1);
+assert.equal(originalAddresses.data.addresses[0].id, firstId);
 const crossAccountRevoke = await authRequest("/api/account/sessions", {
   cookie: secondCookie, method: "DELETE", body: { id: ownerCurrent.id },
 });
@@ -477,7 +496,8 @@ const firstListAfterSecond = await authRequest("/api/account/favorites", { cooki
 assertOkay(firstListAfterSecond, "first account must be unchanged");
 assert.deepEqual([...firstListAfterSecond.data.ids].sort(), ["demo-ninja", "demo-performance"].sort());
 
-console.log("4e. Check demo checkout validation and ownership");
+console.log("4e. Check demo checkout validation, stored-XSS escaping and ownership");
+const storedXssProbe = "PETROLERO-XSS-<img src=x onerror=alert(1)>";
 const publicOrderList = await authRequest("/api/account/demo-orders");
 assert.equal(publicOrderList.response.status, 401, "Orders list must be private");
 const publicSubmit = await authRequest("/api/account/demo-orders", {
@@ -492,7 +512,7 @@ const orderInput = {
   street: "Тестовая улица, 1",
   apartment: "кв. 2",
   postalCode: "101000",
-  note: "Только тест, без доставки",
+  note: storedXssProbe,
   lines: [
     { id: "demo-fusion", quantity: 2, priceKopecks: 1 },
     { id: "demo-ninja", quantity: 1, priceKopecks: 1 },
@@ -553,6 +573,11 @@ const ownOrderPage = await authRequest("/account/orders/" + encodeURIComponent(o
 assertOkay(ownOrderPage, "SSR owned order page");
 assert.ok(String(ownOrderPage.data).includes("Стоимость товаров"),
   "Owned order page should render its saved line items and subtotal");
+const orderMarkup = String(ownOrderPage.data);
+assert.ok(orderMarkup.includes("&lt;img src=x onerror=alert(1)&gt;"),
+  "Saved customer comment must be escaped in the server-rendered order page");
+assert.ok(!orderMarkup.includes("<img src=x onerror=alert(1)>"),
+  "Saved customer HTML was rendered as executable markup");
 
 const foreignOrderPage = await authRequest(
   "/account/orders/" + encodeURIComponent(orderId), { cookie: secondCookie },
