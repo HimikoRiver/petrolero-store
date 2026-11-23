@@ -173,6 +173,81 @@ assertOkay(session, "get session");
 assert.equal(session.data?.user?.email, email);
 assert.equal(session.data?.user?.emailVerified, true);
 
+console.log("4. Exercise session management, ownership and revocation");
+const guestSessionList = await authRequest("/api/account/sessions");
+assert.equal(guestSessionList.response.status, 401, "Session list must require login");
+const ownerSessions = await authRequest("/api/account/sessions", { cookie });
+assertOkay(ownerSessions, "list sessions on first device");
+const ownerCurrent = ownerSessions.data.sessions.find(s => s.current);
+assert.ok(ownerCurrent?.id, "Current session must be marked");
+assert.ok(ownerSessions.data.sessions.every(s => !("token" in s) && !("userAgent" in s)),
+  "Session listing must not expose bearer tokens or raw user agents");
+
+const secondDeviceLogin = await authRequest("/api/auth/sign-in/email", {
+  body: { email, password: firstPassword },
+});
+assertOkay(secondDeviceLogin, "second device login");
+const device2Cookie = cookieOf(secondDeviceLogin.response);
+const thirdDeviceLogin = await authRequest("/api/auth/sign-in/email", {
+  body: { email, password: firstPassword },
+});
+assertOkay(thirdDeviceLogin, "third device login");
+const device3Cookie = cookieOf(thirdDeviceLogin.response);
+const device2List = await authRequest("/api/account/sessions", { cookie: device2Cookie });
+assertOkay(device2List, "read second device sessions");
+const device2Session = device2List.data.sessions.find(s => s.current);
+assert.ok(device2Session?.id && device2Session.id !== ownerCurrent.id);
+const device3List = await authRequest("/api/account/sessions", { cookie: device3Cookie });
+assertOkay(device3List, "read third device sessions");
+const device3Session = device3List.data.sessions.find(s => s.current);
+assert.ok(device3Session?.id && device3Session.id !== ownerCurrent.id);
+const allDeviceList = await authRequest("/api/account/sessions", { cookie });
+assert.equal(allDeviceList.data.sessions.length, 3, "Expected three active sessions");
+assert.equal(allDeviceList.data.sessions.filter(s => s.current).length, 1);
+assert.equal(allDeviceList.data.sessions[0].id, ownerCurrent.id,
+  "Current device must be listed first");
+
+const blockOwnSession = await authRequest("/api/account/sessions", {
+  cookie, method: "DELETE", body: { id: ownerCurrent.id },
+});
+assert.equal(blockOwnSession.response.status, 400, "Current session must not be accidentally revoked");
+const blockMalformed = await authRequest("/api/account/sessions", {
+  cookie, method: "DELETE", body: { scope: "others", id: device2Session.id },
+});
+assert.equal(blockMalformed.response.status, 400, "Mixed session revocation scopes must fail");
+const blockGuestRevoke = await authRequest("/api/account/sessions", {
+  method: "DELETE", body: { id: device2Session.id },
+});
+assert.equal(blockGuestRevoke.response.status, 401, "Anonymous session revocation was allowed");
+const crossOriginRevoke = await fetch(origin + "/api/account/sessions", {
+  method: "DELETE",
+  headers: { cookie, origin: "https://attacker.invalid", "content-type": "application/json" },
+  body: JSON.stringify({ id: device2Session.id }),
+});
+assert.equal(crossOriginRevoke.status, 403, "CSRF session revocation was allowed");
+
+const revokeOne = await authRequest("/api/account/sessions", {
+  cookie, method: "DELETE", body: { id: device2Session.id },
+});
+assertOkay(revokeOne, "revoke individual session");
+assert.equal(revokeOne.data.revoked, 1);
+const revokedDevice = await authRequest("/api/account/sessions", { cookie: device2Cookie });
+assert.equal(revokedDevice.response.status, 401,
+  "Revoked second-device cookie must no longer authenticate");
+
+const revokeOthers = await authRequest("/api/account/sessions", {
+  cookie, method: "DELETE", body: { scope: "others" },
+});
+assertOkay(revokeOthers, "revoke all other sessions");
+assert.equal(revokeOthers.data.revoked, 1);
+const revokedThird = await authRequest("/api/account/sessions", { cookie: device3Cookie });
+assert.equal(revokedThird.response.status, 401,
+  "Bulk revocation left another device authenticated");
+const stillCurrent = await authRequest("/api/account/sessions", { cookie });
+assertOkay(stillCurrent, "current device remains active");
+assert.equal(stillCurrent.data.sessions.length, 1);
+assert.equal(stillCurrent.data.sessions[0].id, ownerCurrent.id);
+
 console.log("4. Check account navigation and session across the homepage");
 const authenticatedHome = await authRequest("/", { cookie });
 assertOkay(authenticatedHome, "homepage with active session");
@@ -371,6 +446,14 @@ const secondLogin = await authRequest("/api/auth/sign-in/email", {
 });
 assertOkay(secondLogin, "second account login");
 const secondCookie = cookieOf(secondLogin.response);
+const crossAccountRevoke = await authRequest("/api/account/sessions", {
+  cookie: secondCookie, method: "DELETE", body: { id: ownerCurrent.id },
+});
+assert.equal(crossAccountRevoke.response.status, 404,
+  "A different account was able to target another user's session");
+const ownerAfterCrossRevoke = await authRequest("/api/account/sessions", { cookie });
+assertOkay(ownerAfterCrossRevoke, "original owner must still be signed in");
+
 const separateList = await authRequest("/api/account/favorites", { cookie: secondCookie });
 assertOkay(separateList, "second user's own favorites");
 assert.deepEqual(separateList.data.ids, [], "Other user's favorites leaked into the account");
