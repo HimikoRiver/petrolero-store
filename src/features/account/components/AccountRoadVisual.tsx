@@ -10,7 +10,7 @@ export default function AccountRoadVisual() {
     <div className="pa-road-visual" aria-hidden="true">
       <Image
         className="pa-road-visual__image"
-        src="/account/road-sunset.webp"
+        src="/catalog/fon2.webp"
         alt=""
         fill
         sizes="(max-width: 650px) 100vw, (max-width: 1199px) 80vw, 65vw"
