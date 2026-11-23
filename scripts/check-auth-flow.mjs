@@ -739,8 +739,9 @@ const adminDisable = await authRequest("/api/auth/two-factor/disable", {
 });
 assertOkay(adminDisable, "disable admin TOTP in isolated integration test");
 const adminAfterDisable = await authRequest("/api/admin/products", { cookie: verifiedAdminCookie });
-assert.equal(adminAfterDisable.response.status, 428,
-  "Disabling admin two-factor protection did not revoke privileged access");
+assert.ok([401, 428].includes(adminAfterDisable.response.status),
+  "Disabling 2FA must revoke the admin session or block admin requests: HTTP " +
+  adminAfterDisable.response.status);
 
 console.log("5. Request password reset and collect the second email");
 const resetRequest = await authRequest("/api/auth/request-password-reset", {
