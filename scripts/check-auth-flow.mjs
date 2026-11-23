@@ -540,8 +540,23 @@ const adminConfirmed = await authRequest("/api/auth/two-factor/verify-totp", {
 });
 assertOkay(adminConfirmed, "verify admin TOTP enrollment");
 
+// Enrollment may rotate the Better Auth session cookie. Prefer the newest
+// Set-Cookie value per name, rather than reusing a pre-enrollment session.
+const adminCookieJar = new Map();
+for (const line of [
+  ...adminLogin.response.headers.getSetCookie(),
+  ...adminConfirmed.response.headers.getSetCookie(),
+]) {
+  const pair = line.split(";")[0];
+  adminCookieJar.set(pair.split("=")[0], pair);
+}
+const verifiedAdminCookie = [...adminCookieJar.values()].join("; ");
+const verifiedAdminSession = await authRequest("/api/auth/get-session", { cookie: verifiedAdminCookie });
+assert.equal(verifiedAdminSession.data?.user?.email, adminEmail,
+  "TOTP enrollment did not yield a valid administrator session");
+
 console.log("4f. Check role-based account navigation");
-const adminAccount = await authRequest("/account", { cookie: adminCookie });
+const adminAccount = await authRequest("/account", { cookie: verifiedAdminCookie });
 assertOkay(adminAccount, "admin account navigation");
 assert.ok(String(adminAccount.data).includes('href="/admin"'),
   "Admin navigation link missing for confirmed ADMIN");
@@ -553,7 +568,7 @@ const firstAccountStillBuyer = await authRequest("/account", { cookie });
 assert.ok(!String(firstAccountStillBuyer.data).includes('href="/admin"'),
   "First customer unexpectedly gained admin link");
 
-const adminList = await authRequest("/api/admin/products", { cookie: adminCookie });
+const adminList = await authRequest("/api/admin/products", { cookie: verifiedAdminCookie });
 assertOkay(adminList, "admin product list");
 assert.ok(adminList.data.products.length >= 4);
 const tokenSuffix = randomUUID().slice(0, 8);
@@ -580,12 +595,12 @@ const ordinaryWrite = await authRequest("/api/admin/products", {
   cookie: secondCookie, body: adminItem,
 });
 assert.equal(ordinaryWrite.response.status, 403, "Buyer could create admin products");
-const createDraft = await authRequest("/api/admin/products", { cookie: adminCookie, body: adminItem });
+const createDraft = await authRequest("/api/admin/products", { cookie: verifiedAdminCookie, body: adminItem });
 assert.equal(createDraft.response.status, 201,
   "Admin must be able to create product: " + JSON.stringify(createDraft.data));
 const adminItemId = createDraft.data.product.id;
 assert.ok(adminItemId);
-const noPricePublished = await authRequest("/api/admin/products/" + adminItemId, { cookie: adminCookie, method: "PUT",
+const noPricePublished = await authRequest("/api/admin/products/" + adminItemId, { cookie: verifiedAdminCookie, method: "PUT",
   body: { ...adminItem, priceKopecks: null, published: true },
 });
 assert.equal(noPricePublished.response.status, 400, "Cannot publish without price");
@@ -595,7 +610,7 @@ assertOkay(draftCatalog, "draft catalog page");
 assert.ok(!String(draftCatalog.data).includes(adminItem.title),
   "Draft product leaked into public catalog");
 
-const publishProduct = await authRequest("/api/admin/products/" + adminItemId, { cookie: adminCookie, method: "PUT", body: { ...adminItem, published: true },
+const publishProduct = await authRequest("/api/admin/products/" + adminItemId, { cookie: verifiedAdminCookie, method: "PUT", body: { ...adminItem, published: true },
 });
 assertOkay(publishProduct, "publish product from admin");
 assert.equal(publishProduct.data.product.published, true);
@@ -608,14 +623,14 @@ const unauthorizedDelete = await authRequest("/api/admin/products/" + adminItemI
   cookie: secondCookie, method: "DELETE",
 });
 assert.equal(unauthorizedDelete.response.status, 403);
-const archiveProduct = await authRequest("/api/admin/products/" + adminItemId, { cookie: adminCookie, method: "DELETE",
+const archiveProduct = await authRequest("/api/admin/products/" + adminItemId, { cookie: verifiedAdminCookie, method: "DELETE",
 });
 assertOkay(archiveProduct, "archive product");
 const hiddenCatalog = await authRequest("/catalog");
 assertOkay(hiddenCatalog, "catalog after archiving");
 assert.ok(!String(hiddenCatalog.data).includes(adminItem.title),
   "Archived product remained visible");
-const afterArchive = await authRequest("/api/admin/products", { cookie: adminCookie });
+const afterArchive = await authRequest("/api/admin/products", { cookie: verifiedAdminCookie });
 assertOkay(afterArchive, "admin list after archiving");
 assert.ok(!afterArchive.data.products.some(p => p.id === adminItemId),
   "Archived product remained in active admin product list");
@@ -628,7 +643,7 @@ for (const endpoint of ["/api/admin/orders", "/api/admin/customers"]) {
   assert.equal(buyerAttempt.response.status, 403, "Buyer accessed protected admin endpoint: " + endpoint);
 }
 for (const pagePath of ["/admin/orders", "/admin/customers"]) {
-  const browserPage = await authRequest(pagePath, { cookie: adminCookie });
+  const browserPage = await authRequest(pagePath, { cookie: verifiedAdminCookie });
   assertOkay(browserPage, "Admin page " + pagePath);
   assert.ok(String(browserPage.data).includes(pagePath.endsWith("orders") ? "Заказы" : "Покупатели"));
   const blockedPage = await authRequest(pagePath, { cookie: secondCookie });
@@ -642,13 +657,13 @@ for (const pagePath of ["/admin/orders", "/admin/customers"]) {
   );
 }
 
-const adminOrders = await authRequest("/api/admin/orders", { cookie: adminCookie });
+const adminOrders = await authRequest("/api/admin/orders", { cookie: verifiedAdminCookie });
 assertOkay(adminOrders, "admin orders");
 assert.equal(adminOrders.data.total, 1);
 assert.equal(adminOrders.data.items[0].id, orderId);
 assert.equal(adminOrders.data.items[0].reviewStatus, "NEW");
 
-const adminOrderDetails = await authRequest("/api/admin/orders/" + encodeURIComponent(orderId), { cookie: adminCookie });
+const adminOrderDetails = await authRequest("/api/admin/orders/" + encodeURIComponent(orderId), { cookie: verifiedAdminCookie });
 assertOkay(adminOrderDetails, "admin order detail");
 assert.equal(adminOrderDetails.data.order.items.length, 2);
 assert.equal(adminOrderDetails.data.order.buyer.email, email);
@@ -658,11 +673,11 @@ const foreignAdminDetail = await authRequest("/api/admin/orders/" + encodeURICom
 });
 assert.equal(foreignAdminDetail.response.status, 403);
 
-const attemptChangePrice = await authRequest("/api/admin/orders/" + encodeURIComponent(orderId), { cookie: adminCookie, method: "PATCH",
+const attemptChangePrice = await authRequest("/api/admin/orders/" + encodeURIComponent(orderId), { cookie: verifiedAdminCookie, method: "PATCH",
   body: { reviewStatus: "REVIEWED", staffNote: "Проверено", subtotalKopecks: 1 },
 });
 assert.equal(attemptChangePrice.response.status, 400, "Admin must not tamper with order price");
-const invalidStatus = await authRequest("/api/admin/orders/" + encodeURIComponent(orderId), { cookie: adminCookie, method: "PATCH", body: { reviewStatus: "PAID", staffNote: "Wrong" },
+const invalidStatus = await authRequest("/api/admin/orders/" + encodeURIComponent(orderId), { cookie: verifiedAdminCookie, method: "PATCH", body: { reviewStatus: "PAID", staffNote: "Wrong" },
 });
 assert.equal(invalidStatus.response.status, 400, "Unexpected fulfillment status must be rejected");
 const buyerUpdateOrder = await authRequest("/api/admin/orders/" + encodeURIComponent(orderId), {
@@ -670,16 +685,16 @@ const buyerUpdateOrder = await authRequest("/api/admin/orders/" + encodeURICompo
   body: { reviewStatus: "CLOSED", staffNote: "Unauthorized" },
 });
 assert.equal(buyerUpdateOrder.response.status, 403);
-const updateOrderReview = await authRequest("/api/admin/orders/" + encodeURIComponent(orderId), { cookie: adminCookie, method: "PATCH",
+const updateOrderReview = await authRequest("/api/admin/orders/" + encodeURIComponent(orderId), { cookie: verifiedAdminCookie, method: "PATCH",
   body: { reviewStatus: "REVIEWED", staffNote: "Тестовая проверка заявки" },
 });
 assertOkay(updateOrderReview, "admin review update");
 assert.equal(updateOrderReview.data.order.reviewStatus, "REVIEWED");
 assert.equal(updateOrderReview.data.order.staffNote, "Тестовая проверка заявки");
-const filteredOrders = await authRequest("/api/admin/orders?status=REVIEWED", { cookie: adminCookie });
+const filteredOrders = await authRequest("/api/admin/orders?status=REVIEWED", { cookie: verifiedAdminCookie });
 assertOkay(filteredOrders, "filter reviewed orders");
 assert.equal(filteredOrders.data.total, 1);
-const noNewOrders = await authRequest("/api/admin/orders?status=NEW", { cookie: adminCookie });
+const noNewOrders = await authRequest("/api/admin/orders?status=NEW", { cookie: verifiedAdminCookie });
 assertOkay(noNewOrders, "filter new orders");
 assert.equal(noNewOrders.data.total, 0);
 const buyerOrderAfterAdmin = await authRequest("/api/account/demo-orders/" + encodeURIComponent(orderId), { cookie });
@@ -688,14 +703,14 @@ assert.equal(buyerOrderAfterAdmin.data.order.subtotalKopecks, 1759000);
 assert.ok(!("staffNote" in buyerOrderAfterAdmin.data.order),
   "Internal notes must never be returned to the buyer");
 
-const adminCustomers = await authRequest("/api/admin/customers", { cookie: adminCookie });
+const adminCustomers = await authRequest("/api/admin/customers", { cookie: verifiedAdminCookie });
 assertOkay(adminCustomers, "admin customer list");
 assert.equal(adminCustomers.data.total, 2, "Admins must not appear as customers");
 const second = adminCustomers.data.items.find(item => item.email === secondEmail);
 assert.ok(second?.id, "Customer must be present in admin list");
 assert.equal(second.ordersCount, 0);
 
-const customerDetail = await authRequest("/api/admin/customers/" + encodeURIComponent(second.id), { cookie: adminCookie });
+const customerDetail = await authRequest("/api/admin/customers/" + encodeURIComponent(second.id), { cookie: verifiedAdminCookie });
 assertOkay(customerDetail, "admin customer detail");
 assert.equal(customerDetail.data.customer.email, secondEmail);
 assert.equal(customerDetail.data.customer.emailVerified, true);
@@ -703,27 +718,27 @@ const buyerOwnCustomerData = await authRequest("/api/admin/customers/" + encodeU
   cookie: secondCookie,
 });
 assert.equal(buyerOwnCustomerData.response.status, 403);
-const forbiddenRoleChange = await authRequest("/api/admin/customers/" + encodeURIComponent(second.id), { cookie: adminCookie, method: "PATCH", body: { role: "ADMIN", adminNote: "hi" },
+const forbiddenRoleChange = await authRequest("/api/admin/customers/" + encodeURIComponent(second.id), { cookie: verifiedAdminCookie, method: "PATCH", body: { role: "ADMIN", adminNote: "hi" },
 });
 assert.equal(forbiddenRoleChange.response.status, 400, "Admin UI must not change account roles");
 const buyerCustomerNote = await authRequest("/api/admin/customers/" + encodeURIComponent(second.id), {
   cookie: secondCookie, method: "PATCH", body: { adminNote: "stolen" },
 });
 assert.equal(buyerCustomerNote.response.status, 403);
-const savedNote = await authRequest("/api/admin/customers/" + encodeURIComponent(second.id), { cookie: adminCookie, method: "PATCH", body: { adminNote: "Заметка только для администратора" },
+const savedNote = await authRequest("/api/admin/customers/" + encodeURIComponent(second.id), { cookie: verifiedAdminCookie, method: "PATCH", body: { adminNote: "Заметка только для администратора" },
 });
 assertOkay(savedNote, "save customer staff note");
 assert.equal(savedNote.data.customer.adminNote, "Заметка только для администратора");
-const searchedCustomers = await authRequest("/api/admin/customers?q=" + encodeURIComponent(secondEmail), { cookie: adminCookie,
+const searchedCustomers = await authRequest("/api/admin/customers?q=" + encodeURIComponent(secondEmail), { cookie: verifiedAdminCookie,
 });
 assertOkay(searchedCustomers, "search customer by email");
 assert.equal(searchedCustomers.data.total, 1);
 
 const adminDisable = await authRequest("/api/auth/two-factor/disable", {
-  cookie: adminCookie, body: { password: firstPassword },
+  cookie: verifiedAdminCookie, body: { password: firstPassword },
 });
 assertOkay(adminDisable, "disable admin TOTP in isolated integration test");
-const adminAfterDisable = await authRequest("/api/admin/products", { cookie: adminCookie });
+const adminAfterDisable = await authRequest("/api/admin/products", { cookie: verifiedAdminCookie });
 assert.equal(adminAfterDisable.response.status, 428,
   "Disabling admin two-factor protection did not revoke privileged access");
 
