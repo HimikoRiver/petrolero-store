@@ -580,6 +580,15 @@ const adminLogin = await authRequest("/api/auth/sign-in/email", {
 });
 assertOkay(adminLogin, "admin initial login");
 const adminCookie = cookieOf(adminLogin.response);
+const adminOtherLogin = await authRequest("/api/auth/sign-in/email", {
+  body: { email: adminEmail, password: firstPassword },
+});
+assertOkay(adminOtherLogin, "independent admin device login");
+const adminOtherCookie = cookieOf(adminOtherLogin.response);
+const preEnrollSessions = await authRequest("/api/account/sessions", { cookie: adminCookie });
+assertOkay(preEnrollSessions, "admin devices before TOTP enrollment");
+assert.equal(preEnrollSessions.data.sessions.length, 2,
+  "Expected two admin devices before enrollment");
 
 // Promotion simulates the separate, offline grant-admin.mjs command. It is
 // intentionally NOT available as a public API endpoint.
@@ -622,6 +631,11 @@ const adminConfirmed = await authRequest("/api/auth/two-factor/verify-totp", {
   cookie: adminEnrollmentCookie, body: { code: makeTotp(adminSecret), trustDevice: false },
 });
 assertOkay(adminConfirmed, "verify admin TOTP enrollment");
+const adminOtherAfterEnrollment = await authRequest("/api/account/sessions", {
+  cookie: adminOtherCookie,
+});
+assert.equal(adminOtherAfterEnrollment.response.status, 401,
+  "Enabling TOTP must revoke sessions on other devices");
 
 // Enrollment may rotate the Better Auth session cookie. Prefer the newest
 // Set-Cookie value per name, rather than reusing a pre-enrollment session.
@@ -637,6 +651,13 @@ const verifiedAdminCookie = [...adminCookieJar.values()].join("; ");
 const verifiedAdminSession = await authRequest("/api/auth/get-session", { cookie: verifiedAdminCookie });
 assert.equal(verifiedAdminSession.data?.user?.email, adminEmail,
   "TOTP enrollment did not yield a valid administrator session");
+const adminAfterEnrollSessions = await authRequest("/api/account/sessions", {
+  cookie: verifiedAdminCookie,
+});
+assertOkay(adminAfterEnrollSessions, "administrator's active device after TOTP enrollment");
+assert.equal(adminAfterEnrollSessions.data.sessions.length, 1,
+  "Only the current admin device should remain after TOTP enrollment");
+assert.equal(adminAfterEnrollSessions.data.sessions[0].current, true);
 
 console.log("4f. Check role-based account navigation");
 const adminAccount = await authRequest("/account", { cookie: verifiedAdminCookie });
