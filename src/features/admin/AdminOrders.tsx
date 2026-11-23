@@ -171,6 +171,7 @@ export default function AdminOrders({ preview = false }: { preview?: boolean }) 
       }
       setDetail(updated);
       setNotice(preview ? "" : "Заявка обновлена.");
+      setSelectedId(null);
     } catch (e) {
       setDetailError(e instanceof Error ? e.message : "Не удалось сохранить заявку.");
     } finally {
