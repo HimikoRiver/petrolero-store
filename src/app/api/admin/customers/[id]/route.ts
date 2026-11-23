@@ -6,7 +6,8 @@ import { getPrisma } from "@/lib/prisma";
 type Context = { params: Promise<{ id: string }> };
 const select = {
   id: true, name: true, email: true, phone: true,
-  emailVerified: true, createdAt: true, adminNote: true,
+  emailVerified: true, isBlocked: true, blockedAt: true,
+  createdAt: true, adminNote: true,
   addresses: { orderBy: { isDefault: "desc" as const },
     select: {
       id: true, label: true, recipient: true, phone: true,
@@ -65,6 +66,65 @@ export async function PATCH(request: Request, { params }: Context) {
   const refreshed = await db.user.findUnique({ where: { id }, select });
   if (!refreshed) return jsonError("Покупатель не найден.", 404);
   return Response.json({ customer: adminCustomerDetails(refreshed) }, {
+    headers: { "Cache-Control": "no-store" },
+  });
+}
+
+
+/**
+ * PUT /api/admin/customers/:id
+ * Strict action: { "isBlocked": boolean }. Accounts are never deleted.
+ * The user update and session revocation happen in one DB transaction.
+ */
+export async function PUT(request: Request, { params }: Context) {
+  const admin = await adminIdentity(request.headers);
+  if (!admin.userId) return adminError(admin.status);
+  if (!isTrustedWrite(request)) return jsonError("Недопустимый источник запроса.", 403);
+  const { id } = await params;
+  if (!id || id.length > 128 || id === admin.userId) {
+    return jsonError("Покупатель не найден.", 404);
+  }
+
+  let payload: unknown;
+  try { payload = await readJsonLimited(request); }
+  catch { return jsonError("Некорректные данные.", 400); }
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    return jsonError("Некорректные данные.", 400);
+  }
+  const values = payload as Record<string, unknown>;
+  if (Object.keys(values).length !== 1 || typeof values.isBlocked !== "boolean") {
+    return jsonError("Разрешено изменять только статус блокировки.", 400);
+  }
+
+  const blocked = values.isBlocked;
+  const db = getPrisma();
+  const outcome = await db.$transaction(async (tx) => {
+    const updated = await tx.user.updateMany({
+      where: { id, role: "CUSTOMER", isBlocked: !blocked },
+      data: {
+        isBlocked: blocked,
+        blockedAt: blocked ? new Date() : null,
+        blockedById: blocked ? admin.userId : null,
+        updatedAt: new Date(),
+      },
+    });
+    if (updated.count) {
+      if (blocked) await tx.session.deleteMany({ where: { userId: id } });
+      return "updated" as const;
+    }
+    const existing = await tx.user.findFirst({
+      where: { id, role: "CUSTOMER" }, select: { isBlocked: true },
+    });
+    return !existing ? "missing" as const : "unchanged" as const;
+  });
+
+  if (outcome === "missing") return jsonError("Покупатель не найден.", 404);
+  // Idempotent: repeated requests are safe. Never recreate user sessions.
+  const customer = await db.user.findFirst({
+    where: { id, role: "CUSTOMER" }, select,
+  });
+  if (!customer) return jsonError("Покупатель не найден.", 404);
+  return Response.json({ customer: adminCustomerDetails(customer) }, {
     headers: { "Cache-Control": "no-store" },
   });
 }

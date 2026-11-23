@@ -32,7 +32,7 @@ export async function GET(request: Request) {
       orderBy: { createdAt: "desc" },
       select: {
         id: true, name: true, email: true, phone: true,
-        emailVerified: true, createdAt: true,
+        emailVerified: true, isBlocked: true, blockedAt: true, createdAt: true,
         _count: { select: {
           demoOrders: true, addresses: true, favorites: true,
         } },

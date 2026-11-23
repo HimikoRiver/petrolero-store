@@ -35,12 +35,15 @@ export function adminOrderDetails(row: Parameters<typeof adminOrderSummary>[0] &
 
 export function adminCustomerSummary(row: {
   id: string; name: string; email: string; phone: string | null;
-  emailVerified: boolean; createdAt: Date;
+  emailVerified: boolean; isBlocked: boolean; blockedAt: Date | null;
+  createdAt: Date;
   _count: { demoOrders: number; addresses: number; favorites: number };
 }): AdminCustomerSummary {
   return {
     id: row.id, name: row.name, email: row.email, phone: row.phone,
-    emailVerified: row.emailVerified, createdAt: row.createdAt.toISOString(),
+    emailVerified: row.emailVerified,
+    isBlocked: row.isBlocked, blockedAt: row.blockedAt?.toISOString() ?? null,
+    createdAt: row.createdAt.toISOString(),
     ordersCount: row._count.demoOrders,
     addressesCount: row._count.addresses,
     favoritesCount: row._count.favorites,

@@ -22,6 +22,10 @@ model User {
   demoOrders    DemoOrder[]
   role          String    @default("CUSTOMER")
   adminNote     String?
+  // Account access restriction; never remove orders or account ownership.
+  isBlocked     Boolean   @default(false)
+  blockedAt     DateTime?
+  blockedById   String?
   sessions      Session[]
   accounts      Account[]
   twoFactors    TwoFactor[]

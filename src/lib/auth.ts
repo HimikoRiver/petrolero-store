@@ -1,5 +1,6 @@
 import "server-only";
 import { betterAuth } from "better-auth";
+import { APIError } from "better-auth/api";
 import { twoFactor } from "better-auth/plugins";
 import { prismaAdapter } from "@better-auth/prisma-adapter";
 import { getPrisma } from "./prisma";
@@ -19,6 +20,26 @@ function createAuth() {
   return betterAuth({
     appName: "Petrolero",
     plugins: [twoFactor({ issuer: "Petrolero" })],
+    // Enforce bans at the session creation boundary (password and 2FA flows).
+    // Deleting existing sessions alone cannot stop a fresh sign-in.
+    databaseHooks: {
+      session: {
+        create: {
+          before: async (session) => {
+            const user = await getPrisma().user.findUnique({
+              where: { id: session.userId },
+              select: { isBlocked: true },
+            });
+            if (!user || user.isBlocked) {
+              throw new APIError("FORBIDDEN", {
+                message: "Доступ к аккаунту заблокирован. Свяжитесь с администрацией магазина.",
+              });
+            }
+            return { data: session };
+          },
+        },
+      },
+    },
     // Default Better Auth throttling is off under `next dev` and memory-only
     // under production. Persist counters so restarts/instances cannot reset them.
     rateLimit: {

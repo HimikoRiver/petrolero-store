@@ -37,6 +37,8 @@ export type AdminCustomerSummary = {
   email: string;
   phone: string | null;
   emailVerified: boolean;
+  isBlocked: boolean;
+  blockedAt: string | null;
   createdAt: string;
   ordersCount: number;
   addressesCount: number;
