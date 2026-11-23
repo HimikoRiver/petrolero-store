@@ -77,6 +77,7 @@ export default function AdminCustomers({ preview = false }: { preview?: boolean 
     const abort = new AbortController();
     let active = true;
     const load = async () => {
+      setLoading(true);
       try {
         const params = new URLSearchParams({
           page: String(page), verified, q: deferredQuery,
@@ -88,7 +89,10 @@ export default function AdminCustomers({ preview = false }: { preview?: boolean 
         setResult(data);
         setError("");
       } catch (e) {
-        if (active) setError(e instanceof Error ? e.message : "Не удалось получить покупателей.");
+        if (active) {
+          setError(e instanceof Error ? e.message : "Не удалось получить покупателей.");
+          setResult({ items: [], page: 1, pages: 1, total: 0 });
+        }
       } finally {
         if (active) setLoading(false);
       }
@@ -251,7 +255,12 @@ export default function AdminCustomers({ preview = false }: { preview?: boolean 
           <button type="button" onClick={() => { setLoading(true); setRevision(value => value + 1); }}>Повторить</button>
         </div>}
         {loading ? <p className="pt-admin__placeholder" role="status">Загружаем покупателей…</p>
-          : displayed.length ? (
+          : error ? (
+            <div className="pt-admin__empty">
+              <h2>Не удалось загрузить покупателей</h2>
+              <p>Список не получен с сервера. Данные покупателей не удалены — проверьте сообщение об ошибке выше.</p>
+            </div>
+          ) : displayed.length ? (
             <div className="pt-manage__table" role="list" aria-label="Покупатели">
               <div className="pt-manage__table-head pt-manage__customers-head">
                 <span>ПОКУПАТЕЛЬ</span><span>ТЕЛЕФОН</span><span>РЕГИСТРАЦИЯ</span>

@@ -70,9 +70,11 @@ export default function AccountEntryPage({
       });
 
       if (result.error) {
-        if (result.error.status === 403 || result.error.code === "EMAIL_NOT_VERIFIED") {
+        if (result.error.code === "EMAIL_NOT_VERIFIED") {
           setVerificationEmail(loginEmail);
           setFeedback({ type: "info", text: "Подтвердите адрес электронной почты по ссылке из письма." });
+        } else if (result.error.status === 403) {
+          setFeedback({ type: "error", text: "Доступ к аккаунту ограничен. Если он заблокирован, обратитесь к администрации магазина." });
         } else if (result.error.status === 503) {
           setFeedback({ type: "error", text: "Авторизация пока не настроена на сервере." });
         } else if (result.error.status === 429) {
@@ -188,7 +190,7 @@ export default function AccountEntryPage({
       setMode("login");
       setFeedback({
         type: "success",
-        text: "Если регистрация выполнена, на указанную почту отправлено письмо. Подтвердите адрес, затем войдите.",
+        text: "Если регистрация выполнена, письмо отправлено. Если нового письма нет, адрес уже может быть зарегистрирован — попробуйте войти или восстановить пароль.",
       });
     } catch {
       setFeedback({ type: "error", text: "Не удалось связаться с сервером. Попробуйте снова." });

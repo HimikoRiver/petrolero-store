@@ -1,17 +1,25 @@
 export async function adminApi<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const response = await fetch(path, {
+  let response: Response;
+  try {
+    response = await fetch(path, {
     ...options,
     credentials: "same-origin",
     cache: "no-store",
-    headers: options.body ? { "Content-Type": "application/json" } : undefined,
-  });
+      headers: options.body ? { "Content-Type": "application/json" } : undefined,
+    });
+  } catch {
+    throw new Error("Нет связи с сервером. Проверьте, запущен ли Next.js.");
+  }
 
   let data: unknown;
   try { data = await response.json(); } catch { data = null; }
   if (!response.ok) {
     const message = data && typeof data === "object" && "error" in data
       ? (data as { error?: unknown }).error : null;
-    throw new Error(typeof message === "string" ? message : "Не удалось выполнить запрос.");
+    throw new Error(typeof message === "string" ? message
+      : response.status >= 500
+        ? `Ошибка сервера (HTTP ${response.status}). Проверьте консоль Next.js и состояние PostgreSQL.`
+        : `Не удалось выполнить запрос (HTTP ${response.status}).`);
   }
   return data as T;
 }
