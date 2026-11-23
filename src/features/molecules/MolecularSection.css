@@ -64,19 +64,18 @@
   content: "";
   position: absolute;
   z-index: -1;
-  inset: -12px -50px;
+  inset: -12px -100px;
   pointer-events: none;
-  /* Match the warm near-black backdrop (#0c0a07), keeping the road grain
-     and its yellow markings while removing the cool-black rectangular patch. */
-  background: #0c0a07 url("/home/images/fon8.webp") center / cover no-repeat;
+  /* Place both paint stripes behind text rows, rather than between glyphs.
+     The horizontal feather stays outside the readable paragraph area. */
+  background: #0c0a07 url("/home/images/fon8.webp") center / 125% auto no-repeat;
   background-blend-mode: lighten;
-  /* A broad feather hides the image boundary over the animated molecules. */
   -webkit-mask-image:
-    linear-gradient(to right, transparent 0%, #000 22%, #000 78%, transparent 100%),
-    linear-gradient(to bottom, transparent 0%, #000 25%, #000 75%, transparent 100%);
+    linear-gradient(to right, transparent, #000 11%, #000 89%, transparent),
+    linear-gradient(to bottom, transparent, #000 15%, #000 85%, transparent);
   mask-image:
-    linear-gradient(to right, transparent 0%, #000 22%, #000 78%, transparent 100%),
-    linear-gradient(to bottom, transparent 0%, #000 25%, #000 75%, transparent 100%);
+    linear-gradient(to right, transparent, #000 11%, #000 89%, transparent),
+    linear-gradient(to bottom, transparent, #000 15%, #000 85%, transparent);
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
 }
@@ -85,12 +84,14 @@
   position: relative;
   z-index: 1;
   margin: 0;
-  color: #efb329;
+  /* Match the paint's warm gold: difference blending makes letters almost
+     black on both stripes and keeps them golden on the dark road. */
+  color: #eda30d;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: -0.012em;
   line-height: 1.85;
   text-wrap: pretty;
-  /* Automatically invert over yellow paint at every viewport width. */
   mix-blend-mode: difference;
 }
 
@@ -252,7 +253,14 @@
           }
 
           .petrolero-molecular-description::before {
-            inset: -10px -24px;
+            inset: -10px -65px;
+            background-size: cover;
+            -webkit-mask-image:
+              linear-gradient(to right, transparent, #000 11%, #000 89%, transparent),
+              linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+            mask-image:
+              linear-gradient(to right, transparent, #000 11%, #000 89%, transparent),
+              linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
           }
 }
 
@@ -272,7 +280,14 @@
           }
 
           .petrolero-molecular-description::before {
-            inset: -8px -10px;
+            inset: -8px -26px;
+            background-size: cover;
+            -webkit-mask-image:
+              linear-gradient(to right, transparent, #000 8%, #000 92%, transparent),
+              linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+            mask-image:
+              linear-gradient(to right, transparent, #000 8%, #000 92%, transparent),
+              linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
           }
 
           .petrolero-molecular-description p {
