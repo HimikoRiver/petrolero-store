@@ -1,4 +1,4 @@
-import { accountPrisma, authAccount, field, isTrustedWrite, jsonError, validPhone } from "@/lib/account-api";
+import { accountPrisma, authAccount, field, isTrustedWrite, jsonError, validPhone, readJsonLimited } from "@/lib/account-api";
 
 export async function PATCH(request: Request) {
   if (!isTrustedWrite(request)) return jsonError("Недопустимый источник запроса.", 403);
@@ -6,7 +6,7 @@ export async function PATCH(request: Request) {
   if (!auth.userId) return jsonError("Требуется авторизация.", auth.status);
 
   let input: unknown;
-  try { input = await request.json(); } catch { return jsonError("Некорректные данные.", 400); }
+  try { input = await readJsonLimited(request); } catch { return jsonError("Некорректные данные.", 400); }
   if (!input || typeof input !== "object" || Array.isArray(input)) return jsonError("Некорректные данные.", 400);
   const data = input as Record<string, unknown>;
   const name = field(data.name, 100);

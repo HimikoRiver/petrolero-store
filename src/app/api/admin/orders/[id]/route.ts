@@ -1,5 +1,5 @@
 import { adminError, adminIdentity } from "@/lib/admin-auth";
-import { jsonError, isTrustedWrite } from "@/lib/account-api";
+import { jsonError, isTrustedWrite, readJsonLimited } from "@/lib/account-api";
 import { adminOrderDetails } from "@/lib/admin-management";
 import { getPrisma } from "@/lib/prisma";
 import { REVIEW_STATUSES } from "@/features/admin/data/types";
@@ -41,7 +41,7 @@ export async function PATCH(request: Request, { params }: Context) {
   if (!id || id.length > 128) return jsonError("Заявка не найдена.", 404);
 
   let body: unknown;
-  try { body = await request.json(); } catch { return jsonError("Некорректные данные.", 400); }
+  try { body = await readJsonLimited(request); } catch { return jsonError("Некорректные данные.", 400); }
   if (!body || typeof body !== "object" || Array.isArray(body)) {
     return jsonError("Некорректные данные.", 400);
   }

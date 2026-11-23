@@ -19,6 +19,30 @@ function createAuth() {
   return betterAuth({
     appName: "Petrolero",
     plugins: [twoFactor({ issuer: "Petrolero" })],
+    // Default Better Auth throttling is off under `next dev` and memory-only
+    // under production. Persist counters so restarts/instances cannot reset them.
+    rateLimit: {
+      enabled: true,
+      storage: "database",
+      window: 60,
+      max: 240,
+      customRules: {
+        "/sign-in/email": { window: 60, max: 12 },
+        "/sign-up/email": { window: 60, max: 5 },
+        "/forget-password": { window: 60, max: 5 },
+        "/reset-password": { window: 60, max: 5 },
+        // Better Auth's twoFactor plugin has stricter rules of its own.
+      },
+    },
+    advanced: {
+      // Never trust raw X-Forwarded-For: callers can forge it. When deploying,
+      // configure a header that a trusted edge proxy REPLACES on every request.
+      ipAddress: {
+        ipAddressHeaders: process.env.PETROLERO_TRUSTED_IP_HEADER
+          ? [process.env.PETROLERO_TRUSTED_IP_HEADER.toLowerCase()]
+          : [],
+      },
+    },
     baseURL: process.env.BETTER_AUTH_URL!,
     secret: process.env.BETTER_AUTH_SECRET!,
     database: prismaAdapter(getPrisma(), { provider: "postgresql" }),

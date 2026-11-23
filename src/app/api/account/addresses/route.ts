@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { accountPrisma, addressInput, authAccount, isTrustedWrite, jsonError } from "@/lib/account-api";
+import { accountPrisma, addressInput, authAccount, isTrustedWrite, jsonError, readJsonLimited } from "@/lib/account-api";
 
 const select = {
   id: true, label: true, recipient: true, phone: true,
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
   if (!userId) return error!;
 
   let data: unknown;
-  try { data = await request.json(); } catch { return jsonError("Некорректные данные.", 400); }
+  try { data = await readJsonLimited(request); } catch { return jsonError("Некорректные данные.", 400); }
   const input = addressInput(data);
   if (!input) return jsonError("Проверьте адрес и контактные данные.", 400);
 
@@ -59,7 +59,7 @@ export async function PATCH(request: Request) {
   if (!userId) return error!;
 
   let data: unknown;
-  try { data = await request.json(); } catch { return jsonError("Некорректные данные.", 400); }
+  try { data = await readJsonLimited(request); } catch { return jsonError("Некорректные данные.", 400); }
   const input = addressInput(data);
   const id = data && typeof data === "object" && !Array.isArray(data) &&
     typeof (data as Record<string, unknown>).id === "string"
@@ -90,7 +90,7 @@ export async function DELETE(request: Request) {
   if (!userId) return error!;
 
   let data: unknown;
-  try { data = await request.json(); } catch { return jsonError("Некорректные данные.", 400); }
+  try { data = await readJsonLimited(request); } catch { return jsonError("Некорректные данные.", 400); }
   const id = data && typeof data === "object" && !Array.isArray(data) &&
     typeof (data as Record<string, unknown>).id === "string"
     ? (data as { id: string }).id : "";

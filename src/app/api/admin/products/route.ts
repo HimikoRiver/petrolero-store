@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { adminError, adminIdentity } from "@/lib/admin-auth";
-import { isTrustedWrite, jsonError } from "@/lib/account-api";
+import { isTrustedWrite, jsonError, readJsonLimited } from "@/lib/account-api";
 import { getPrisma } from "@/lib/prisma";
 import { parseProduct } from "@/lib/product-validation";
 
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
   if (!isTrustedWrite(request)) return jsonError("Недопустимый источник запроса.", 403);
 
   let body: unknown;
-  try { body = await request.json(); } catch { return jsonError("Некорректные данные.", 400); }
+  try { body = await readJsonLimited(request); } catch { return jsonError("Некорректные данные.", 400); }
   const parsed = parseProduct(body);
   if (!parsed.data) return jsonError(parsed.error || "Ошибка проверки карточки.", 400);
 

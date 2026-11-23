@@ -1,5 +1,5 @@
 import { adminError, adminIdentity } from "@/lib/admin-auth";
-import { isTrustedWrite, jsonError } from "@/lib/account-api";
+import { isTrustedWrite, jsonError, readJsonLimited } from "@/lib/account-api";
 import { getPrisma } from "@/lib/prisma";
 import { parseProduct } from "@/lib/product-validation";
 
@@ -13,7 +13,7 @@ export async function PUT(request: Request, { params }: Context) {
   if (!id || id.length > 128) return jsonError("Товар не найден.", 404);
 
   let body: unknown;
-  try { body = await request.json(); } catch { return jsonError("Некорректные данные.", 400); }
+  try { body = await readJsonLimited(request); } catch { return jsonError("Некорректные данные.", 400); }
   const parsed = parseProduct(body);
   if (!parsed.data) return jsonError(parsed.error || "Ошибка проверки карточки.", 400);
   const db = getPrisma();

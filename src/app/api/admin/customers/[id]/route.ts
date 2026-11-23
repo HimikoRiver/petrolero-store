@@ -1,5 +1,5 @@
 import { adminError, adminIdentity } from "@/lib/admin-auth";
-import { isTrustedWrite, jsonError } from "@/lib/account-api";
+import { isTrustedWrite, jsonError, readJsonLimited } from "@/lib/account-api";
 import { adminCustomerDetails } from "@/lib/admin-management";
 import { getPrisma } from "@/lib/prisma";
 
@@ -46,7 +46,7 @@ export async function PATCH(request: Request, { params }: Context) {
   const { id } = await params;
   if (!id || id.length > 128) return jsonError("Покупатель не найден.", 404);
   let body: unknown;
-  try { body = await request.json(); } catch { return jsonError("Некорректные данные.", 400); }
+  try { body = await readJsonLimited(request); } catch { return jsonError("Некорректные данные.", 400); }
   if (!body || typeof body !== "object" || Array.isArray(body) ||
       Object.keys(body).length !== 1 || !("adminNote" in body)) {
     return jsonError("Разрешено изменять только внутреннюю заметку.", 400);

@@ -1,4 +1,4 @@
-import { accountPrisma, authAccount, isTrustedWrite, jsonError } from "@/lib/account-api";
+import { accountPrisma, authAccount, isTrustedWrite, jsonError, readJsonLimited } from "@/lib/account-api";
 import { getCatalogProducts } from "@/lib/product-repository";
 
 async function allowedIds() {
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
   if (!auth.userId) return jsonError("Требуется авторизация.", auth.status);
 
   let body: unknown;
-  try { body = await request.json(); } catch { return jsonError("Некорректный запрос.", 400); }
+  try { body = await readJsonLimited(request); } catch { return jsonError("Некорректный запрос.", 400); }
   if (!body || Array.isArray(body) || typeof body !== "object") {
     return jsonError("Некорректный запрос.", 400);
   }
@@ -69,7 +69,7 @@ export async function DELETE(request: Request) {
   if (!auth.userId) return jsonError("Требуется авторизация.", auth.status);
 
   let body: unknown;
-  try { body = await request.json(); } catch { return jsonError("Некорректный запрос.", 400); }
+  try { body = await readJsonLimited(request); } catch { return jsonError("Некорректный запрос.", 400); }
   const id = body && typeof body === "object" && !Array.isArray(body)
     ? (body as Record<string, unknown>).id : null;
   if (body && typeof body === "object" && !Array.isArray(body) &&

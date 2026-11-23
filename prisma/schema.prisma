@@ -43,6 +43,16 @@ model TwoFactor {
   @@map("twoFactor")
 }
 
+// Shared database-backed counters for Better Auth brute-force protection.
+model RateLimit {
+  id          String @id
+  key         String @unique
+  count       Int
+  lastRequest BigInt
+
+  @@map("rateLimit")
+}
+
 model Session {
   id        String   @id
   expiresAt DateTime

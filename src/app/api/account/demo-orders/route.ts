@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { accountPrisma, authAccount, field, isTrustedWrite, jsonError, validPhone } from "@/lib/account-api";
+import { accountPrisma, authAccount, field, isTrustedWrite, jsonError, validPhone, readJsonLimited } from "@/lib/account-api";
 import { getCatalogProducts } from "@/lib/product-repository";
 import { findDemoOrders } from "@/lib/demo-orders";
 
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
   if (!isTrustedWrite(request)) return jsonError("Недопустимый источник запроса.", 403);
 
   let raw: unknown;
-  try { raw = await request.json(); } catch { return jsonError("Некорректный запрос.", 400); }
+  try { raw = await readJsonLimited(request); } catch { return jsonError("Некорректный запрос.", 400); }
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
     return jsonError("Некорректный запрос.", 400);
   }
