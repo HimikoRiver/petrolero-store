@@ -1,12 +1,42 @@
 "use client";
 
-import { useEffect, useId, useRef, type PointerEvent } from "react";
+import { useEffect, useId, useRef, type CSSProperties, type PointerEvent } from "react";
 import "../styles/oilImpulse.css";
 
-/**
- * Close-up of dark oil catching narrow moving gold reflections.
- * SVG and CSS only: no external image, heavy WebGL scene or render loop.
- */
+type BubbleVariant = "glass" | "smoke" | "chrome" | "amber";
+
+type Bubble = {
+  x: number;
+  y: number;
+  diameter: number;
+  variant: BubbleVariant;
+  duration: number;
+  delay: number;
+  travelX: number;
+  travelY: number;
+  opacity?: number;
+};
+
+/** Stable positioning prevents layout shifts and hydration inconsistencies. */
+const BUBBLES: readonly Bubble[] = [
+  { x: 51,  y: 69,  diameter: 31, variant: "glass",  duration: 12.1, delay: -2.0, travelX: 8,   travelY: -12 },
+  { x: 121, y: 104, diameter: 73, variant: "smoke",  duration: 15.4, delay: -8.0, travelX: -9,  travelY: 16 },
+  { x: 207, y: 55,  diameter: 49, variant: "glass",  duration: 11.9, delay: -4.4, travelX: 8,   travelY: -10 },
+  { x: 283, y: 94,  diameter: 93, variant: "chrome", duration: 17.3, delay: -9.3, travelX: -10, travelY: 12 },
+  { x: 387, y: 58,  diameter: 46, variant: "smoke",  duration: 13.8, delay: -3.6, travelX: -7,  travelY: 12 },
+  { x: 450, y: 110, diameter: 58, variant: "glass",  duration: 15.8, delay: -6.5, travelX: -10, travelY: -12 },
+  { x: 62,  y: 186, diameter: 43, variant: "glass",  duration: 13.7, delay: -7.3, travelX: 13,  travelY: 11 },
+  { x: 153, y: 196, diameter: 62, variant: "chrome", duration: 16.0, delay: -1.7, travelX: -6,  travelY: -13 },
+  { x: 198, y: 129, diameter: 36, variant: "amber",  duration: 10.8, delay: -2.5, travelX: 10,  travelY: -9 },
+  { x: 354, y: 177, diameter: 76, variant: "amber",  duration: 15.5, delay: -6.3, travelX: 12,  travelY: -10 },
+  { x: 256, y: 221, diameter: 44, variant: "glass",  duration: 12.3, delay: -4.9, travelX: -9,  travelY: 11 },
+  { x: 446, y: 234, diameter: 56, variant: "smoke",  duration: 16.6, delay: -8.4, travelX: 8,   travelY: -14 },
+  { x: 326, y: 23,  diameter: 26, variant: "glass",  duration: 11.7, delay: -5.1, travelX: 6,   travelY: 7 },
+  { x: 95,  y: 247, diameter: 25, variant: "amber",  duration: 10.9, delay: -4.5, travelX: 6,   travelY: -10 },
+  { x: 389, y: 266, diameter: 32, variant: "glass",  duration: 12.6, delay: -9.4, travelX: -11, travelY: -9 },
+  { x: 236, y: 169, diameter: 30, variant: "smoke",  duration: 12.9, delay: -1.2, travelX: 7,   travelY: 10 },
+];
+
 export default function AccountOilImpulse() {
   const rootRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<number | null>(null);
@@ -32,16 +62,17 @@ export default function AccountOilImpulse() {
 
   const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
     if (event.pointerType !== "mouse") return;
+
     const rect = event.currentTarget.getBoundingClientRect();
     if (!rect.width || !rect.height) return;
 
-    const x = Math.max(-1, Math.min(1, ((event.clientX - rect.left) / rect.width) * 2 - 1));
-    const y = Math.max(-1, Math.min(1, ((event.clientY - rect.top) / rect.height) * 2 - 1));
+    const x = Math.max(-1, Math.min(1, (event.clientX - rect.left) / rect.width * 2 - 1));
+    const y = Math.max(-1, Math.min(1, (event.clientY - rect.top) / rect.height * 2 - 1));
 
     if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
     frameRef.current = requestAnimationFrame(() => {
-      rootRef.current?.style.setProperty("--pa-oil-x", (x * 5).toFixed(1) + "px");
-      rootRef.current?.style.setProperty("--pa-oil-y", (y * 3).toFixed(1) + "px");
+      rootRef.current?.style.setProperty("--pa-bubbles-x", (x * 7).toFixed(1) + "px");
+      rootRef.current?.style.setProperty("--pa-bubbles-y", (y * 5).toFixed(1) + "px");
       frameRef.current = null;
     });
   };
@@ -49,140 +80,177 @@ export default function AccountOilImpulse() {
   const onPointerLeave = () => {
     if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
     frameRef.current = requestAnimationFrame(() => {
-      rootRef.current?.style.setProperty("--pa-oil-x", "0px");
-      rootRef.current?.style.setProperty("--pa-oil-y", "0px");
+      rootRef.current?.style.setProperty("--pa-bubbles-x", "0px");
+      rootRef.current?.style.setProperty("--pa-bubbles-y", "0px");
       frameRef.current = null;
     });
   };
 
-  const ambient = id + "-ambient";
-  const depth = id + "-depth";
-  const metal = id + "-metal";
-  const reflected = id + "-reflected";
-  const ripple = id + "-ripple";
-  const bloom = id + "-bloom";
-  const soften = id + "-soften";
+  const gradient = (name: string) => "url(#" + id + "-" + name + ")";
 
   return (
     <div
       ref={rootRef}
       className="pa-oil-impulse"
+      aria-hidden="true"
       onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}
-      aria-hidden="true"
     >
       <svg
         className="pa-oil-impulse__svg"
-        viewBox="0 0 450 260"
+        viewBox="0 0 500 285"
         preserveAspectRatio="xMidYMid meet"
         focusable="false"
       >
         <defs>
-          <radialGradient id={ambient} cx="50%" cy="65%" r="64%">
-            <stop offset="0%" stopColor="#7d512c" stopOpacity=".14" />
-            <stop offset="50%" stopColor="#4a321f" stopOpacity=".055" />
-            <stop offset="100%" stopColor="#0e0d0c" stopOpacity="0" />
+          <radialGradient id={id + "-aura"} cx="54%" cy="49%" r="58%">
+            <stop offset="0%" stopColor="#ba8c5b" stopOpacity=".21" />
+            <stop offset="58%" stopColor="#9d7448" stopOpacity=".08" />
+            <stop offset="100%" stopColor="#17110c" stopOpacity="0" />
           </radialGradient>
-          <linearGradient id={depth} x1="0" y1="0" x2="0.65" y2="1">
-            <stop offset="0%" stopColor="#281c13" stopOpacity="0" />
-            <stop offset="22%" stopColor="#221b15" stopOpacity=".34" />
-            <stop offset="54%" stopColor="#141312" stopOpacity=".48" />
-            <stop offset="86%" stopColor="#0d0d0d" stopOpacity=".18" />
-            <stop offset="100%" stopColor="#0b0b0b" stopOpacity="0" />
+
+          <radialGradient id={id + "-glass"} cx="40%" cy="29%" r="75%" fx="36%" fy="23%">
+            <stop offset="0%" stopColor="#f8e0bb" stopOpacity=".24" />
+            <stop offset="32%" stopColor="#bfb3a8" stopOpacity=".12" />
+            <stop offset="58%" stopColor="#302b29" stopOpacity=".24" />
+            <stop offset="80%" stopColor="#d8b68a" stopOpacity=".42" />
+            <stop offset="94%" stopColor="#29201a" stopOpacity=".72" />
+            <stop offset="100%" stopColor="#cfad7e" stopOpacity=".6" />
+          </radialGradient>
+
+          <radialGradient id={id + "-smoke"} cx="32%" cy="22%" r="85%" fx="22%" fy="12%">
+            <stop offset="0%" stopColor="#eed9ba" stopOpacity=".57" />
+            <stop offset="18%" stopColor="#99928c" stopOpacity=".88" />
+            <stop offset="37%" stopColor="#363433" stopOpacity=".98" />
+            <stop offset="63%" stopColor="#131313" stopOpacity=".99" />
+            <stop offset="83%" stopColor="#4d4035" stopOpacity=".96" />
+            <stop offset="96%" stopColor="#d3a877" stopOpacity=".8" />
+            <stop offset="100%" stopColor="#33291f" stopOpacity=".88" />
+          </radialGradient>
+
+          <radialGradient id={id + "-chrome"} cx="44%" cy="23%" r="87%" fx="40%" fy="19%">
+            <stop offset="0%" stopColor="#ffefd2" stopOpacity=".78" />
+            <stop offset="19%" stopColor="#a9a7a1" stopOpacity=".94" />
+            <stop offset="34%" stopColor="#3e3b38" />
+            <stop offset="59%" stopColor="#101011" />
+            <stop offset="77%" stopColor="#75624e" />
+            <stop offset="92%" stopColor="#dfb78d" />
+            <stop offset="100%" stopColor="#27221e" />
+          </radialGradient>
+
+          <radialGradient id={id + "-amber"} cx="41%" cy="27%" r="84%" fx="34%" fy="16%">
+            <stop offset="0%" stopColor="#fff0ca" stopOpacity=".69" />
+            <stop offset="24%" stopColor="#cdb58e" stopOpacity=".58" />
+            <stop offset="49%" stopColor="#4d3627" stopOpacity=".86" />
+            <stop offset="75%" stopColor="#1d1715" stopOpacity=".98" />
+            <stop offset="94%" stopColor="#a47746" stopOpacity=".91" />
+            <stop offset="100%" stopColor="#2b211b" />
+          </radialGradient>
+
+          <linearGradient id={id + "-rim"} x1="0%" y1="0%" x2="100%" y2="95%">
+            <stop offset="0%" stopColor="#fff2d7" stopOpacity=".75" />
+            <stop offset="28%" stopColor="#e4c8a2" stopOpacity=".2" />
+            <stop offset="55%" stopColor="#171414" stopOpacity=".11" />
+            <stop offset="80%" stopColor="#a47e52" stopOpacity=".68" />
+            <stop offset="100%" stopColor="#f0d1a4" stopOpacity=".36" />
           </linearGradient>
-          <linearGradient id={metal} x1="0" y1="0" x2="1" y2=".12">
-            <stop offset="0%" stopColor="#8a5b33" stopOpacity="0" />
-            <stop offset="18%" stopColor="#a67540" stopOpacity=".2" />
-            <stop offset="36%" stopColor="#f0c483" stopOpacity=".72" />
-            <stop offset="45%" stopColor="#fff0c9" stopOpacity=".9" />
-            <stop offset="58%" stopColor="#c18b4c" stopOpacity=".68" />
-            <stop offset="82%" stopColor="#bb864b" stopOpacity=".2" />
-            <stop offset="100%" stopColor="#7a4b26" stopOpacity="0" />
+
+          <linearGradient id={id + "-mirror"} x1="0%" y1="0%" x2="42%" y2="100%">
+            <stop offset="0%" stopColor="#d9b48a" stopOpacity="0" />
+            <stop offset="35%" stopColor="#e7ddce" stopOpacity=".14" />
+            <stop offset="49%" stopColor="#fff3dd" stopOpacity=".62" />
+            <stop offset="58%" stopColor="#ab7f57" stopOpacity=".37" />
+            <stop offset="100%" stopColor="#31231a" stopOpacity="0" />
           </linearGradient>
-          <linearGradient id={reflected} x1=".05" y1="0" x2=".94" y2=".24">
-            <stop offset="0%" stopColor="#9a6e3b" stopOpacity="0" />
-            <stop offset="25%" stopColor="#d6a665" stopOpacity=".29" />
-            <stop offset="46%" stopColor="#f8dba0" stopOpacity=".8" />
-            <stop offset="60%" stopColor="#dfab6e" stopOpacity=".32" />
-            <stop offset="100%" stopColor="#b27e43" stopOpacity="0" />
-          </linearGradient>
-          <linearGradient id={ripple} x1="0" y1="0" x2="1" y2=".1">
-            <stop offset="0%" stopColor="#b17a39" stopOpacity=".03" />
-            <stop offset="30%" stopColor="#d3a36b" stopOpacity=".52" />
-            <stop offset="54%" stopColor="#ffe0aa" stopOpacity=".85" />
-            <stop offset="76%" stopColor="#b57c40" stopOpacity=".35" />
-            <stop offset="100%" stopColor="#a16b37" stopOpacity=".02" />
-          </linearGradient>
-          <filter id={bloom} x="-30%" y="-170%" width="160%" height="440%">
-            <feGaussianBlur stdDeviation="5.2" />
-          </filter>
-          <filter id={soften} x="-25%" y="-120%" width="150%" height="340%">
-            <feGaussianBlur stdDeviation="2.5" />
-          </filter>
+
+          <radialGradient id={id + "-gleam"} cx="50%" cy="48%" r="60%">
+            <stop offset="0%" stopColor="#fff9e9" stopOpacity=".95" />
+            <stop offset="55%" stopColor="#f4e4c6" stopOpacity=".41" />
+            <stop offset="100%" stopColor="#fff1d7" stopOpacity="0" />
+          </radialGradient>
+
+          <clipPath id={id + "-clip"}>
+            <circle r="48.5" />
+          </clipPath>
         </defs>
 
         <g className="pa-oil-impulse__scene">
-          <rect width="450" height="260" fill={"url(#" + ambient + ")"} />
+          <ellipse cx="256" cy="152" rx="252" ry="150" fill={gradient("aura")} />
 
-          <g className="pa-oil-impulse__surface">
-            <path
-              d="M-25 179C62 156 103 190 175 175C230 163 274 158 326 171C379 185 412 168 481 153L481 264H-25Z"
-              fill={"url(#" + depth + ")"}
-            />
-            <path
-              d="M-19 174C62 152 118 185 171 174C222 164 265 156 317 169C373 184 418 164 471 157"
-              fill="none" stroke={"url(#" + metal + ")"}
-              strokeWidth="6" opacity=".16" filter={"url(#" + bloom + ")"}
-            />
-            <path
-              className="pa-oil-impulse__sweep pa-oil-impulse__sweep--a"
-              d="M-19 174C62 152 118 185 171 174C222 164 265 156 317 169C373 184 418 164 471 157"
-              fill="none" stroke={"url(#" + metal + ")"}
-              strokeWidth="1.55" strokeLinecap="round" opacity=".72"
-            />
-            <path
-              className="pa-oil-impulse__sweep pa-oil-impulse__sweep--b"
-              d="M-12 198C57 188 112 212 169 197C215 186 261 184 310 194C380 209 407 188 464 181"
-              fill="none" stroke={"url(#" + reflected + ")"}
-              strokeWidth="1.1" strokeLinecap="round" opacity=".54"
-            />
-            <path
-              d="M3 217C76 227 129 222 174 211C230 198 272 203 325 215C372 225 427 215 463 205"
-              fill="none" stroke={"url(#" + metal + ")"}
-              strokeWidth="5" opacity=".18" filter={"url(#" + soften + ")"}
-            />
-            <path
-              className="pa-oil-impulse__sweep pa-oil-impulse__sweep--c"
-              d="M3 217C76 227 129 222 174 211C230 198 272 203 325 215C372 225 427 215 463 205"
-              fill="none" stroke={"url(#" + metal + ")"}
-              strokeWidth=".85" opacity=".34"
-            />
-            <path
-              d="M20 229C92 235 142 220 200 221C258 222 326 242 417 221"
-              fill="none" stroke={"url(#" + reflected + ")"}
-              strokeWidth=".8" opacity=".18"
-            />
-          </g>
+          {BUBBLES.map((bubble, index) => {
+            const isGlass = bubble.variant === "glass";
+            const isChrome = bubble.variant === "chrome";
+            const bubbleStyle = {
+              "--pa-bubble-duration": bubble.duration + "s",
+              "--pa-bubble-delay": bubble.delay + "s",
+              "--pa-bubble-travel-x": bubble.travelX + "px",
+              "--pa-bubble-travel-y": bubble.travelY + "px",
+            } as CSSProperties;
 
-          <g className="pa-oil-impulse__ripples" fill="none" stroke={"url(#" + ripple + ")"}>
-            <ellipse className="pa-oil-impulse__wave pa-oil-impulse__wave--1"
-              cx="228" cy="179" rx="32" ry="7.2" strokeWidth="1.35" />
-            <ellipse className="pa-oil-impulse__wave pa-oil-impulse__wave--2"
-              cx="228" cy="179" rx="32" ry="7.2" strokeWidth="1.1" />
-            <ellipse className="pa-oil-impulse__wave pa-oil-impulse__wave--3"
-              cx="228" cy="179" rx="32" ry="7.2" strokeWidth=".9" />
-          </g>
-          <path
-            className="pa-oil-impulse__highlight"
-            d="M186 178C208 174 219 173 234 175C253 178 264 181 284 177"
-            fill="none" stroke={"url(#" + metal + ")"}
-            strokeWidth="1.25" strokeLinecap="round"
-          />
-          <ellipse className="pa-oil-impulse__glint"
-            cx="229" cy="176" rx="11" ry="2"
-            fill="#e8bd78" opacity=".28"
-            filter={"url(#" + soften + ")"}
-          />
+            return (
+              <g
+                key={index}
+                transform={"translate(" + bubble.x + " " + bubble.y + ") scale(" + bubble.diameter / 100 + ")"}
+              >
+                <g className="pa-oil-impulse__bubble" style={bubbleStyle}>
+                  <circle r="49" fill={gradient(bubble.variant)} opacity={bubble.opacity ?? 1} />
+
+                  <g clipPath={gradient("clip")}>
+                    <path
+                      d="M-61 -15C-30 -35 4 -18 14 -23C32 -32 51 -28 61 -8L61 11C32 -8 13 1 -8 10C-28 18 -41 7 -61 12Z"
+                      fill={gradient("mirror")}
+                      opacity={isGlass ? .35 : .6}
+                    />
+                    <path
+                      d="M-52 25C-20 9 2 26 20 15C36 6 52 12 58 17L58 37C30 27 13 37 -5 34C-31 30 -43 38 -52 36Z"
+                      fill={gradient("mirror")}
+                      opacity={isGlass ? .13 : isChrome ? .54 : .29}
+                    />
+                    {!isGlass && (
+                      <ellipse
+                        cx="10" cy="37" rx="43" ry="10"
+                        fill="#e6b47e" opacity={isChrome ? .15 : .09}
+                        transform="rotate(-9 10 37)"
+                      />
+                    )}
+                    <ellipse
+                      cx="-18" cy="-31" rx="21" ry="7.5"
+                      fill={gradient("gleam")}
+                      transform="rotate(-25 -18 -31)"
+                      opacity={isGlass ? .52 : .77}
+                    />
+                  </g>
+
+                  <circle
+                    r="48.6"
+                    fill="none"
+                    stroke={gradient("rim")}
+                    strokeWidth={isGlass ? "1.3" : "1.1"}
+                    opacity={isGlass ? .92 : .82}
+                  />
+                  <path
+                    d="M-38 -11C-43 -25 -29 -42 -11 -46"
+                    fill="none" stroke="#fff4e0"
+                    strokeWidth={isGlass ? "1.8" : "2.8"}
+                    strokeLinecap="round"
+                    opacity={isGlass ? .31 : .56}
+                  />
+                  <path
+                    d="M14 45C26 43 38 31 43 18"
+                    fill="none" stroke="#f3c58d"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    opacity={isGlass ? .17 : .42}
+                  />
+                  <ellipse
+                    cx="-29" cy="-28" rx="7" ry="3.2"
+                    fill="#fff6e7" opacity={isGlass ? .25 : .55}
+                    transform="rotate(-34 -29 -28)"
+                  />
+                </g>
+              </g>
+            );
+          })}
         </g>
       </svg>
     </div>
