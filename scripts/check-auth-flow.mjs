@@ -842,6 +842,93 @@ const searchedCustomers = await authRequest("/api/admin/customers?q=" + encodeUR
 assertOkay(searchedCustomers, "search customer by email");
 assert.equal(searchedCustomers.data.total, 1);
 
+console.log("4h. Block and unblock a buyer; preserve records and prevent new sessions");
+const targetPath = "/api/admin/customers/" + encodeURIComponent(second.id);
+const deniedBlock = await authRequest(targetPath, {
+  cookie: secondCookie, method: "PUT", body: { isBlocked: true },
+});
+assert.equal(deniedBlock.response.status, 403,
+  "A buyer must not be able to block their own account");
+const deniedAnonBlock = await authRequest(targetPath, {
+  method: "PUT", body: { isBlocked: true },
+});
+assert.equal(deniedAnonBlock.response.status, 401);
+const deniedAdminSelfBlock = await authRequest(
+  "/api/admin/customers/" + encodeURIComponent(verifiedAdminSession.data.user.id), {
+    cookie: verifiedAdminCookie, method: "PUT", body: { isBlocked: true },
+  },
+);
+assert.equal(deniedAdminSelfBlock.response.status, 404,
+  "An admin account must not be blockable using the customer endpoint");
+const malformedBlock = await authRequest(targetPath, {
+  cookie: verifiedAdminCookie, method: "PUT",
+  body: { isBlocked: true, role: "ADMIN" },
+});
+assert.equal(malformedBlock.response.status, 400,
+  "Only the access status can be changed through this endpoint");
+const blockedCrossSite = await fetch(origin + targetPath, {
+  method: "PUT",
+  headers: {
+    origin: "https://attacker.invalid",
+    cookie: verifiedAdminCookie, "content-type": "application/json",
+  },
+  body: JSON.stringify({ isBlocked: true }),
+});
+assert.equal(blockedCrossSite.status, 403,
+  "Cross-site access restriction changes must be rejected");
+
+const block = await authRequest(targetPath, {
+  cookie: verifiedAdminCookie, method: "PUT", body: { isBlocked: true },
+});
+assertOkay(block, "block buyer");
+assert.equal(block.data.customer.isBlocked, true);
+assert.ok(block.data.customer.blockedAt);
+assert.equal(block.data.customer.adminNote, "Заметка только для администратора");
+assert.equal(block.data.customer.favoritesCount, 1,
+  "Blocking must preserve saved favorites");
+const staleBlockedSession = await authRequest("/api/account/favorites", {
+  cookie: secondCookie,
+});
+assert.equal(staleBlockedSession.response.status, 401,
+  "Blocking must immediately invalidate existing sessions");
+const blockedSignIn = await authRequest("/api/auth/sign-in/email", {
+  body: { email: secondEmail, password: firstPassword },
+});
+assert.equal(blockedSignIn.response.status, 403,
+  "A blocked buyer must not create a new session");
+const blockedList = await authRequest("/api/admin/customers", {
+  cookie: verifiedAdminCookie,
+});
+assertOkay(blockedList, "list blocked buyer");
+assert.equal(blockedList.data.items.find(item => item.id === second.id)?.isBlocked, true);
+const repeatedBlock = await authRequest(targetPath, {
+  cookie: verifiedAdminCookie, method: "PUT", body: { isBlocked: true },
+});
+assertOkay(repeatedBlock, "idempotent repeated block");
+const unblock = await authRequest(targetPath, {
+  cookie: verifiedAdminCookie, method: "PUT", body: { isBlocked: false },
+});
+assertOkay(unblock, "unblock buyer");
+assert.equal(unblock.data.customer.isBlocked, false);
+assert.equal(unblock.data.customer.blockedAt, null);
+assert.equal(unblock.data.customer.adminNote, "Заметка только для администратора");
+assert.equal(unblock.data.customer.favoritesCount, 1);
+const staleAfterUnblock = await authRequest("/api/account/favorites", {
+  cookie: secondCookie,
+});
+assert.equal(staleAfterUnblock.response.status, 401,
+  "Unlock must never revive revoked old session tokens");
+const reloginAfterUnblock = await authRequest("/api/auth/sign-in/email", {
+  body: { email: secondEmail, password: firstPassword },
+});
+assertOkay(reloginAfterUnblock, "unblocked buyer can sign in again");
+const regainedCookie = cookieOf(reloginAfterUnblock.response);
+const regainedFavorites = await authRequest("/api/account/favorites", {
+  cookie: regainedCookie,
+});
+assertOkay(regainedFavorites, "unblocked buyer's favorites still present");
+assert.deepEqual(regainedFavorites.data.ids, ["demo-elite"]);
+
 const adminDisable = await authRequest("/api/auth/two-factor/disable", {
   cookie: verifiedAdminCookie, body: { password: firstPassword },
 });
