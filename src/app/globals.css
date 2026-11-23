@@ -24,3 +24,38 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/*
+ * Chromium / Edge paints saved credentials with an internal pale background.
+ * Inset paint takes precedence over that browser fill while keeping every
+ * field's own border, dimensions, spacing, and disabled behavior unchanged.
+ * The account login deliberately keeps its existing transparent override.
+ */
+:where(.pa-workspace) {
+  --petrolero-autofill-bg: #141210;
+  --petrolero-autofill-fg: #f3ebdf;
+}
+:where(.pt-admin) {
+  --petrolero-autofill-bg: #111212;
+  --petrolero-autofill-fg: #f3e8d9;
+}
+:where(.pt-checkout) {
+  --petrolero-autofill-bg: #151310;
+  --petrolero-autofill-fg: #f4e9da;
+}
+:where(.petrolero-catalog-page) {
+  --petrolero-autofill-bg: #121110;
+  --petrolero-autofill-fg: #f5e2c5;
+}
+
+:where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]), textarea, select) {
+  color-scheme: dark;
+}
+
+:where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]), textarea, select):is(:-webkit-autofill, :autofill) {
+  -webkit-text-fill-color: var(--petrolero-autofill-fg, #f4e9da) !important;
+  caret-color: var(--petrolero-autofill-fg, #f4e9da);
+  -webkit-box-shadow: 0 0 0 1000px var(--petrolero-autofill-bg, #141210) inset !important;
+  box-shadow: 0 0 0 1000px var(--petrolero-autofill-bg, #141210) inset !important;
+  transition: background-color 9999s ease-out 0s;
+}
