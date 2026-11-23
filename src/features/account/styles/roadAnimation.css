@@ -1,0 +1,105 @@
+/* Perspective road for the account greeting: deep graphite, ivory edge
+   markings and slow golden lane reflections; SVG geometry stays deterministic. */
+.pa-workspace .pa-welcome {
+  gap: clamp(12px, 2.2vw, 28px);
+}
+.pa-workspace .pa-welcome__copy {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 350px;
+  min-width: 0;
+}
+.pa-workspace .pa-road {
+  --pa-road-shift-x: 0px;
+  --pa-road-shift-y: 0px;
+  position: relative;
+  z-index: 1;
+  flex: 0 1 480px;
+  width: min(44vw, 480px);
+  max-width: 49%;
+  aspect-ratio: 500 / 300;
+  overflow: hidden;
+  align-self: center;
+  user-select: none;
+  opacity: 1;
+}
+.pa-workspace .pa-road__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.pa-workspace .pa-road__parallax {
+  transform: translate3d(var(--pa-road-shift-x), var(--pa-road-shift-y), 0);
+  transition: transform 650ms cubic-bezier(.19,.75,.22,1);
+}
+.pa-workspace .pa-road__landscape {
+  transform-origin: 60% 65%;
+  transform-box: view-box;
+  animation: pa-road-breathe 15s ease-in-out infinite alternate;
+}
+.pa-workspace .pa-road__mark {
+  opacity: .88;
+  animation: pa-road-mark-shimmer 5.5s ease-in-out infinite;
+}
+.pa-workspace .pa-road__inside-glint {
+  animation: pa-road-shoulder-glint 8.5s ease-in-out infinite;
+}
+@keyframes pa-road-breathe {
+  from { transform: scale(1); }
+  to { transform: scale(1.018); }
+}
+@keyframes pa-road-mark-shimmer {
+  0%, 100% { opacity: .76; }
+  32% { opacity: 1; }
+  70% { opacity: .84; }
+}
+@keyframes pa-road-shoulder-glint {
+  0%, 100% { opacity: .11; }
+  45% { opacity: .36; }
+}
+@media (hover:hover) and (pointer:fine) {
+  .pa-workspace .pa-road:hover .pa-road__parallax {
+    transition-duration: 280ms;
+  }
+  .pa-workspace .pa-road:hover .pa-road__mark {
+    animation-duration: 3.7s;
+  }
+}
+.pa-workspace .pa-road[data-visible="false"] :is(.pa-road__landscape,.pa-road__mark,.pa-road__inside-glint) {
+  animation-play-state: paused;
+}
+@media (max-width: 1199px) {
+  .pa-workspace .pa-road {
+    flex-basis: 335px;
+    width: min(39vw, 335px);
+    max-width: 47%;
+  }
+}
+@media (max-width: 650px) {
+  .pa-workspace .pa-welcome {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+  .pa-workspace .pa-welcome__copy { flex: 1 1 auto; }
+  .pa-workspace .pa-road {
+    flex: none;
+    align-self: center;
+    width: min(100%, 390px);
+    max-width: 100%;
+    aspect-ratio: 500 / 245;
+    margin-block: -5px -7px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pa-workspace .pa-road__landscape,
+  .pa-workspace .pa-road__mark,
+  .pa-workspace .pa-road__inside-glint {
+    animation: none;
+  }
+  .pa-workspace .pa-road__parallax {
+    transform: none;
+    transition: none;
+  }
+}
