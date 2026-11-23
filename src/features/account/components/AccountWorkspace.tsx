@@ -3,7 +3,7 @@ import SignOutButton from "@/features/auth/components/SignOutButton";
 import { ACCOUNT_NAVIGATION, accountSectionPath, type AccountSection } from "../data/accountNavigation";
 import AccountIcon from "./AccountIcon";
 import AccountGoldGears from "./AccountGoldGears";
-import AccountRoadAnimation from "./AccountRoadAnimation";
+import AccountRoadVisual from "./AccountRoadVisual";
 import AccountFavorites from "./AccountFavorites";
 import AccountProfile from "./AccountProfile";
 import AccountAddresses from "./AccountAddresses";
@@ -132,7 +132,7 @@ function AccountScreen({
               <h2>{preview ? "Добро пожаловать в Petrolero" : name ? "Здравствуйте, " + name : "Добро пожаловать"}</h2>
               <p>Переходите к заказам, сохраняйте продукцию и управляйте данными для доставки.</p>
             </div>
-            <AccountRoadAnimation />
+            <AccountRoadVisual />
           </div>
           <div className="pa-tiles">
             <Tile id="orders" preview={preview} icon="orders" title="Мои заказы" caption="Покупки и статусы" />

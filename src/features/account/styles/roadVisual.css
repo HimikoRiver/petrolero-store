@@ -1,0 +1,70 @@
+/* Real road photo in the account welcome: restrained golden ambience, no fake 3D. */
+.pa-workspace .pa-welcome {
+  gap: clamp(16px, 2.6vw, 36px);
+}
+.pa-workspace .pa-welcome__copy {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 350px;
+  min-width: 0;
+}
+.pa-workspace .pa-road-visual {
+  position: relative;
+  isolation: isolate;
+  flex: 0 1 480px;
+  width: min(44vw, 480px);
+  max-width: 49%;
+  aspect-ratio: 5 / 3;
+  align-self: center;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #211b14;
+  box-shadow:
+    0 0 0 1px rgba(193, 147, 82, .16),
+    0 12px 38px rgba(0, 0, 0, .30),
+    0 0 58px rgba(169, 115, 56, .08);
+}
+.pa-workspace .pa-road-visual__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.pa-workspace .pa-road-visual::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(11, 11, 10, .12), transparent 19%),
+    linear-gradient(0deg, rgba(9, 9, 9, .16), transparent 30%);
+}
+@media (max-width: 1199px) {
+  .pa-workspace .pa-road-visual {
+    flex-basis: 335px;
+    width: min(40vw, 335px);
+    max-width: 47%;
+  }
+}
+@media (max-width: 650px) {
+  .pa-workspace .pa-welcome {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+  .pa-workspace .pa-welcome__copy {
+    flex: 1 1 auto;
+  }
+  .pa-workspace .pa-road-visual {
+    flex: none;
+    align-self: center;
+    width: 100%;
+    max-width: 440px;
+    aspect-ratio: 5 / 2.4;
+  }
+  .pa-workspace .pa-road-visual__image {
+    object-position: center 54%;
+  }
+}
