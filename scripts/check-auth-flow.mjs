@@ -827,9 +827,18 @@ const incorrect = await authRequest("/api/auth/two-factor/verify-totp", {
 });
 assert.ok(!incorrect.response.ok, "Invalid TOTP was accepted");
 
-const completed = await authRequest("/api/auth/two-factor/verify-totp", {
+let completed = await authRequest("/api/auth/two-factor/verify-totp", {
   cookie: challengeCookie, body: { code: makeTotp(secret), trustDevice: false },
 });
+if (completed.response.status === 429) {
+  // The test admin and user share one CI loopback IP. Keep the production
+  // 2FA brute-force limit strict; wait for its rate window instead of raising it.
+  console.log("Waiting for shared-IP TOTP rate limit to reset...");
+  await sleep(65_000);
+  completed = await authRequest("/api/auth/two-factor/verify-totp", {
+    cookie: challengeCookie, body: { code: makeTotp(secret), trustDevice: false },
+  });
+}
 assertOkay(completed, "2FA completed");
 const completedCookie = cookieOf(completed.response);
 const completedSession = await authRequest("/api/auth/get-session", { cookie: completedCookie });
