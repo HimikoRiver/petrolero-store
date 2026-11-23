@@ -83,9 +83,9 @@ export default function MolecularSection() {
         </h2>
 
         <div
-          className="petrolero-molecular-description mx-auto mt-7 max-w-[860px] px-2 text-center sm:mt-9"
+          className="petrolero-molecular-description mx-auto mt-7 w-full text-center sm:mt-9"
         >
-          <p className="text-[13px] leading-[1.85] text-white/75 sm:text-[15px] lg:text-base">
+          <p>
             Присадки Petrolero — это сбалансированные комплексы компонентов, разработанные для дополнительной защиты двигателя. В основе их формул — технологии DuoZinc и REACORE, современные противоизносные, моющие и антифрикционные компоненты. Они помогают снижать трение, поддерживать прочность масляной плёнки и чистоту деталей двигателя. Каждый состав разработан для определённых условий эксплуатации и вязкости моторного масла — от повседневных поездок до высоких нагрузок спортивных двигателей.
           </p>
         </div>
