@@ -160,6 +160,8 @@ const accountAfterHome = await authRequest("/account", { cookie });
 assertOkay(accountAfterHome, "account remains accessible after visiting homepage");
 assert.ok(String(accountAfterHome.data).includes("Личный кабинет"),
   "Active session must be usable after visiting the homepage");
+assert.ok(!String(accountAfterHome.data).includes('href="/admin"'),
+  "A customer must not see the admin navigation link");
 
 console.log("4a. Check profile, owned addresses and unauthorized access");
 const unauthProfile = await authRequest("/api/account/profile", {
@@ -432,6 +434,16 @@ try {
 } finally {
   await promoteDb.end();
 }
+
+console.log("4f. Check role-based account navigation");
+const adminAccount = await authRequest("/account", { cookie });
+assertOkay(adminAccount, "admin account navigation");
+assert.ok(String(adminAccount.data).includes('href="/admin"'),
+  "Admin navigation link missing for confirmed ADMIN");
+const customerAccount = await authRequest("/account", { cookie: secondCookie });
+assertOkay(customerAccount, "buyer account navigation");
+assert.ok(!String(customerAccount.data).includes('href="/admin"'),
+  "Admin navigation link leaked to a buyer");
 
 const adminList = await authRequest("/api/admin/products", { cookie });
 assertOkay(adminList, "admin product list");

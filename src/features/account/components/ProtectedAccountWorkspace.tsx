@@ -18,12 +18,13 @@ async function AuthorizedWorkspace({ section, orderId }: { section: AccountSecti
     redirect("/account/login?next=" + encodeURIComponent(requested));
   }
 
-  const twoFactorSettings = section === "security"
-    ? await getPrisma().user.findUnique({
-        where: { id: session.user.id },
-        select: { twoFactorEnabled: true },
-      })
-    : null;
+  // Resolve permissions from the persisted user record on every request.
+  // The session may predate an offline grant-admin role change.
+  const accountUser = await getPrisma().user.findUnique({
+    where: { id: session.user.id },
+    select: { role: true, emailVerified: true, twoFactorEnabled: true },
+  });
+  const isAdmin = accountUser?.emailVerified === true && accountUser.role === "ADMIN";
   const catalogProducts = section === "favorites" ? await getCatalogProducts() : [];
   const profile = section === "profile"
     ? await getPrisma().user.findUnique({ where: { id: session.user.id }, select: { phone: true } })
@@ -48,8 +49,9 @@ async function AuthorizedWorkspace({ section, orderId }: { section: AccountSecti
       section={section}
       name={session.user.name}
       email={session.user.email}
-      emailVerified={session.user.emailVerified}
-      twoFactorEnabled={twoFactorSettings?.twoFactorEnabled ?? false}
+      emailVerified={accountUser?.emailVerified ?? session.user.emailVerified}
+      twoFactorEnabled={accountUser?.twoFactorEnabled ?? false}
+      isAdmin={isAdmin}
       phone={profile?.phone ?? null}
       addresses={addresses}
       catalogProducts={catalogProducts}

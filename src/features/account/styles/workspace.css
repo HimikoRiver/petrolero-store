@@ -281,6 +281,27 @@
   background: linear-gradient(105deg,#312417,#1c1812 70%);
 }
 .pa-workspace .pa-navlink:hover {border-color:rgba(182,140,89,.3);}
+.pa-workspace .pa-navlink--admin {
+  margin-bottom: 9px;
+  color: #efd5ac;
+  border-color: rgba(211, 171, 105, .5);
+  background: linear-gradient(110deg, rgba(79, 53, 28, .48), rgba(32, 25, 18, .82));
+  font-weight: 500;
+}
+.pa-workspace .pa-navlink--admin .pa-navlink__icon,
+.pa-workspace .pa-navlink--admin .pa-navlink__admin-arrow {
+  color: #e1b77c;
+}
+.pa-workspace .pa-navlink--admin:hover {
+  border-color: #e5bc81;
+  color: #fff0d6;
+}
+@media (max-width: 850px) {
+  .pa-workspace .pa-navlink--admin {
+    margin-bottom: 0;
+    margin-right: 6px;
+  }
+}
 .pa-workspace .pa-navlink::before,
 .pa-workspace .pa-tile::before,
 .pa-workspace .pa-link-panel::before {

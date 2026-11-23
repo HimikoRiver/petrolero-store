@@ -24,6 +24,7 @@ type AccountWorkspaceProps = {
   email?: string | null;
   emailVerified?: boolean;
   twoFactorEnabled?: boolean;
+  isAdmin?: boolean;
   phone?: string | null;
   addresses?: DeliveryAddress[];
   catalogProducts?: readonly CatalogProduct[];
@@ -301,7 +302,7 @@ function AccountScreen({
 }
 
 export default function AccountWorkspace({
-  section, preview = false, name = null, email = null, emailVerified = false, twoFactorEnabled = false, phone = null, addresses = [], orders = [], order = null, catalogProducts = CATALOG_PRODUCTS,
+  section, preview = false, name = null, email = null, emailVerified = false, twoFactorEnabled = false, isAdmin = false, phone = null, addresses = [], orders = [], order = null, catalogProducts = CATALOG_PRODUCTS,
 }: AccountWorkspaceProps) {
   const page = PAGE_COPY[section];
   const currentNav = section === "order-detail" ? "orders" : section;
@@ -321,6 +322,13 @@ export default function AccountWorkspace({
           </div>
           <div className="pa-sidebar__title">РАЗДЕЛЫ КАБИНЕТА</div>
           <nav className="pa-navigation" aria-label="Разделы личного кабинета">
+            {!preview && isAdmin && (
+              <Link href="/admin" className="pa-navlink pa-navlink--admin">
+                <span className="pa-navlink__icon"><AccountIcon name="shield" size={19} /></span>
+                <span className="pa-navlink__label">Админ-панель</span>
+                <AccountIcon name="arrow" size={16} className="pa-navlink__admin-arrow" />
+              </Link>
+            )}
             {ACCOUNT_NAVIGATION.map((item, index) => (
               <Link
                 key={item.id}
