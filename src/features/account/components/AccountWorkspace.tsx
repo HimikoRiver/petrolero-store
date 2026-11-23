@@ -8,6 +8,7 @@ import AccountFavorites from "./AccountFavorites";
 import AccountProfile from "./AccountProfile";
 import AccountAddresses from "./AccountAddresses";
 import TwoFactorSettings from "./TwoFactorSettings";
+import AccountSessions from "./AccountSessions";
 import type { DeliveryAddress } from "../data/accountDetails";
 import { CATALOG_PRODUCTS, type CatalogProduct } from "@/features/catalog/data/catalogData";
 import type { DemoOrder } from "@/features/checkout/types";
@@ -264,6 +265,7 @@ function AccountScreen({
             </div>
           </section>
           {!preview && <TwoFactorSettings enabled={twoFactorEnabled} />}
+          {!preview && <AccountSessions />}
           <section className="pa-surface pa-surface--short">
             <span className="pa-kicker">ВОССТАНОВЛЕНИЕ</span>
             <h3>Забыли пароль?</h3>
