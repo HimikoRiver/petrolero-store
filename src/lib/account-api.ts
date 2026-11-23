@@ -10,6 +10,10 @@ export function jsonError(message: string, status: number) {
 }
 
 export function isTrustedWrite(request: Request) {
+  // Browsers set Fetch Metadata themselves. Refuse explicit cross-site writes
+  // even if a client presents a superficially matching Origin header.
+  const fetchSite = request.headers.get("sec-fetch-site");
+  if (fetchSite && fetchSite !== "same-origin" && fetchSite !== "none") return false;
   const origin = request.headers.get("origin");
   const trustedOrigin = process.env.BETTER_AUTH_URL;
   if (!origin || !trustedOrigin) return false;

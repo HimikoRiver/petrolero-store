@@ -193,6 +193,28 @@ const incorrectContentType = await fetch(origin + "/api/account/profile", {
 });
 assert.equal(incorrectContentType.status, 400, "Only JSON request bodies are accepted");
 
+// Chunked JSON with no Content-Length is subject to the same byte limit.
+const oversizedJson = JSON.stringify({
+  name: "X".repeat(70_000),
+  phone: "+7 900 111 22 33",
+});
+const chunkedStream = new ReadableStream({
+  start(controller) {
+    for (let offset = 0; offset < oversizedJson.length; offset += 8_000) {
+      controller.enqueue(new TextEncoder().encode(oversizedJson.slice(offset, offset + 8_000)));
+    }
+    controller.close();
+  },
+});
+const chunkedResponse = await fetch(origin + "/api/account/profile", {
+  method: "PATCH",
+  headers: { origin, cookie, "content-type": "application/json" },
+  body: chunkedStream,
+  duplex: "half",
+});
+assert.equal(chunkedResponse.status, 400,
+  "Oversized chunked JSON must be rejected even without Content-Length");
+
 const addressPayload = {
   label: "Дом",
   recipient: "Petrolero Customer",

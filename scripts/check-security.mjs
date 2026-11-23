@@ -46,6 +46,18 @@ for (const headers of [
     "CSRF attempt was not rejected (HTTP " + forbidden.status + ")");
 }
 
+const forgedMetadata = await request("/api/account/profile", {
+  method: "PATCH",
+  headers: {
+    origin,
+    "sec-fetch-site": "cross-site",
+    "content-type": "application/json",
+  },
+  body: JSON.stringify({ name: "Forged browser metadata", phone: "" }),
+});
+assert.equal(forgedMetadata.status, 403,
+  "Cross-site Fetch Metadata was not rejected even when Origin matched");
+
 console.log("Security 4/4: enforce rate limit even with spoofed forwarded IPs");
 let throttled = false;
 for (let index = 0; index < 24; index++) {
