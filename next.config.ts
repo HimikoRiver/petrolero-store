@@ -11,9 +11,17 @@ const nextConfig: NextConfig = {
       { key: "X-DNS-Prefetch-Control", value: "off" },
       { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
       { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), usb=()" },
-      // Safe with Next.js inline hydration scripts and the existing WebGL hero.
-      // A strict script-src CSP requires a separate nonce-based deployment.
-      { key: "Content-Security-Policy", value: "base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'" },
+      // Next.js relies on inline hydration scripts. Restrict external scripts
+      // to our origin, disallow inline HTML event handlers, and keep a safe
+      // upgrade path to nonce-based CSP after Cache Components validation.
+      { key: "Content-Security-Policy", value: [
+        "base-uri 'self'",
+        "object-src 'none'",
+        "frame-ancestors 'none'",
+        "form-action 'self'",
+        "script-src 'self' 'unsafe-inline'" + (process.env.NODE_ENV !== "production" ? " 'unsafe-eval'" : ""),
+        "script-src-attr 'none'",
+      ].join("; ") },
     ];
     if (process.env.BETTER_AUTH_URL?.startsWith("https://")) {
       securityHeaders.push({ key: "Strict-Transport-Security", value: "max-age=31536000" });

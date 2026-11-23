@@ -28,6 +28,7 @@ async function AdminContent() {
   }
   const admin = await adminIdentity(await headers());
   if (admin.status === 401) redirect("/account/login?next=%2Fadmin");
+  if (admin.status === 428) redirect("/account/security");
   if (admin.status !== 200) notFound();
   return <AdminProducts />;
 }

@@ -29,6 +29,7 @@ export default async function AdminGate({
   if (admin.status === 401) {
     redirect("/account/login?next=" + encodeURIComponent(next));
   }
+  if (admin.status === 428) redirect("/account/security");
   if (admin.status !== 200) notFound();
   return children;
 }
