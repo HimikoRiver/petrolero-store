@@ -66,13 +66,17 @@
   z-index: -1;
   inset: -12px -50px;
   pointer-events: none;
-  background: url("/home/images/fon7.webp") center / cover no-repeat;
+  /* Match the warm near-black backdrop (#0c0a07), keeping the road grain
+     and its yellow markings while removing the cool-black rectangular patch. */
+  background: #0c0a07 url("/home/images/fon7.webp") center / cover no-repeat;
+  background-blend-mode: lighten;
+  /* A broad feather hides the image boundary over the animated molecules. */
   -webkit-mask-image:
-    linear-gradient(to right, transparent, #000 9%, #000 91%, transparent),
-    linear-gradient(to bottom, transparent, #000 9%, #000 91%, transparent);
+    linear-gradient(to right, transparent 0%, #000 22%, #000 78%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 25%, #000 75%, transparent 100%);
   mask-image:
-    linear-gradient(to right, transparent, #000 9%, #000 91%, transparent),
-    linear-gradient(to bottom, transparent, #000 9%, #000 91%, transparent);
+    linear-gradient(to right, transparent 0%, #000 22%, #000 78%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 25%, #000 75%, transparent 100%);
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
 }
