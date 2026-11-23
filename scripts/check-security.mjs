@@ -21,7 +21,13 @@ for (const [header, value] of [
   assert.equal(page.headers.get(header), value, "Missing security header " + header);
 }
 const csp = page.headers.get("content-security-policy") ?? "";
-for (const directive of ["frame-ancestors 'none'", "object-src 'none'", "base-uri 'self'"]) {
+for (const directive of [
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "script-src-attr 'none'",
+]) {
   assert.ok(csp.includes(directive), "Missing CSP directive " + directive);
 }
 assert.equal(page.headers.get("x-powered-by"), null, "Framework details exposed");
