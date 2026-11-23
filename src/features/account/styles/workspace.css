@@ -102,15 +102,8 @@
   min-height:194px;overflow:hidden;border:1px solid rgba(201,171,120,.21);
   background: radial-gradient(ellipse 75% 140% at 100% 5%,rgba(139,97,49,.15),transparent),linear-gradient(130deg,#1b1a18,#111314);
 }
-.pa-welcome::before {
-  content:"";position:absolute;z-index:-1;inset:-110px -80px auto auto;width:340px;height:340px;
-  border:1px solid rgba(189,154,103,.12);border-radius:50%;
-  box-shadow:0 0 0 55px rgba(189,154,103,.035),0 0 0 114px rgba(189,154,103,.025);
-}
 .pa-welcome h2 {font-size:clamp(23px,2.5vw,35px);font-weight:400;letter-spacing:-.025em;line-height:1.25;margin:13px 0 12px;}
 .pa-welcome p {max-width:480px;font-size:13px;line-height:1.7;color:#aaa8a3;}
-.pa-welcome__mark {font-size:clamp(90px,12vw,170px);line-height:1;font-weight:250;color:rgba(183,147,93,.13);letter-spacing:-.1em;flex:none;padding-right:.15em;}
-.pa-welcome__mark span{color:rgba(197,155,92,.35);}
 .pa-tiles {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;}
 .pa-tile {
   display:flex;min-width:0;min-height:164px;flex-direction:column;
@@ -209,7 +202,6 @@
   .pa-tile__body span{font-size:10px;}
   .pa-tile__icon svg{width:24px;}
   .pa-welcome{padding:24px;min-height:190px;}
-  .pa-welcome__mark{display:none;}
   .pa-surface{padding:20px 15px;}
   .pa-surface__heading{align-items:flex-start;}
   .pa-order-head{display:none;}
@@ -346,8 +338,7 @@
 .pa-workspace .pa-settings-row {grid-template-columns:44px minmax(0,1fr);}
 /* Continuous, bright metallic gold with a visibly moving highlight. */
 .pa-workspace .pa-page-heading__number,
-.pa-workspace .pa-navlink__number,
-.pa-workspace .pa-welcome__mark {
+.pa-workspace .pa-navlink__number {
   color:#e8ba79;
   background:linear-gradient(105deg, #c48b46 0%, #f0c789 15%, #fff2c4 27%, #d29b5c 43%, #ffdfa0 56%, #b67d3a 72%, #f9d69c 87%, #c48b46 100%);
   background-size:210% 100%;
@@ -362,7 +353,6 @@
   filter:drop-shadow(0 0 12px rgba(215,165,91,.25));
 }
 .pa-workspace .pa-navlink__number {opacity:1;animation-duration:5.8s;}
-.pa-workspace .pa-welcome__mark {opacity:.48;animation-duration:8s;}
 @keyframes pa-metal-shimmer {
   0% {background-position:100% 50%;}
   100% {background-position:-110% 50%;}
@@ -415,7 +405,6 @@
   .pa-workspace .pa-favorite__visual {width:110px;height:125px;}
   .pa-workspace .pa-favorite__visual .pa-favorite__image {padding:7px !important;}
   .pa-workspace .pa-favorite .pa-button {grid-column:1/-1;width:100%;margin-top:0;}
-  .pa-workspace .pa-welcome__mark {display:none;}
   .pa-workspace .pa-page-heading h1 {font-size:clamp(25px,6vw,33px);}
 }
 @media(max-width:380px) {
@@ -427,8 +416,7 @@
   .pa-workspace .pa-tile::before,
   .pa-workspace .pa-link-panel::before {transition:none;}
   .pa-workspace .pa-page-heading__number,
-  .pa-workspace .pa-navlink__number,
-  .pa-workspace .pa-welcome__mark {animation:none;}
+  .pa-workspace .pa-navlink__number {animation:none;}
 }
 
 
