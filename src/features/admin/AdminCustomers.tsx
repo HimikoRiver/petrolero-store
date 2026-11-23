@@ -13,6 +13,7 @@ const previewCustomers: AdminCustomerDetails[] = [
   {
     id: "preview-customer-1", name: "Александр К.", email: "demo-buyer@example.test",
     phone: "+7 900 000-11-22", emailVerified: true,
+    isBlocked: false, blockedAt: null,
     createdAt: "2026-11-10T09:00:00Z",
     ordersCount: 1, addressesCount: 1, favoritesCount: 3,
     adminNote: "Предпочтительный способ связи — телефон.",
@@ -31,6 +32,7 @@ const previewCustomers: AdminCustomerDetails[] = [
   {
     id: "preview-customer-2", name: "Елена В.", email: "buyer-two@example.test",
     phone: null, emailVerified: false,
+    isBlocked: true, blockedAt: "2026-11-19T12:30:00Z",
     createdAt: "2026-11-17T15:00:00Z",
     ordersCount: 1, addressesCount: 0, favoritesCount: 0,
     adminNote: null, addresses: [],
@@ -60,6 +62,7 @@ export default function AdminCustomers({ preview = false }: { preview?: boolean 
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [accessError, setAccessError] = useState("");
   const [adminNote, setAdminNote] = useState("");
   const closeButton = useRef<HTMLButtonElement>(null);
 
@@ -100,6 +103,7 @@ export default function AdminCustomers({ preview = false }: { preview?: boolean 
     const load = async () => {
       setDetailLoading(true);
       setDetailError("");
+      setAccessError("");
       setDetail(null);
       try {
         const customer = preview
@@ -166,6 +170,44 @@ export default function AdminCustomers({ preview = false }: { preview?: boolean 
     }
   };
 
+
+  const toggleAccess = async () => {
+    if (!detail || saving) return;
+    const nextBlocked = !detail.isBlocked;
+    const question = nextBlocked
+      ? "Заблокировать покупателя «" + detail.email + "»? Все его активные сеансы будут завершены, а новый вход запрещён. Заказы и данные сохранятся."
+      : "Разблокировать покупателя «" + detail.email + "»? Он сможет войти снова, используя свои данные.";
+    if (!window.confirm(question)) return;
+    setSaving(true);
+    setAccessError("");
+    setNotice("");
+    try {
+      let updated: AdminCustomerDetails;
+      if (preview) {
+        updated = {
+          ...detail,
+          isBlocked: nextBlocked,
+          blockedAt: nextBlocked ? new Date().toISOString() : null,
+        };
+        setSample(items => items.map(item => item.id === detail.id ? updated : item));
+      } else {
+        updated = (await adminApi<{ customer: AdminCustomerDetails }>(
+          "/api/admin/customers/" + encodeURIComponent(detail.id),
+          { method: "PUT", body: JSON.stringify({ isBlocked: nextBlocked }) },
+        )).customer;
+        setRevision(value => value + 1);
+      }
+      setDetail(updated);
+      setNotice(preview ? "" : nextBlocked
+        ? "Покупатель заблокирован. Все его сеансы завершены."
+        : "Покупатель разблокирован. Он может войти снова.");
+    } catch (e) {
+      setAccessError(e instanceof Error ? e.message : "Не удалось изменить доступ к аккаунту.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const displayed = preview ? matching.slice((page - 1) * 25, page * 25) : result.items;
   const total = preview ? matching.length : result.total;
   const pages = preview ? Math.max(1, Math.ceil(total / 25)) : result.pages;
@@ -219,6 +261,9 @@ export default function AdminCustomers({ preview = false }: { preview?: boolean 
                 <article className="pt-manage__row pt-manage__customer-row" role="listitem" key={customer.id}>
                   <div className="pt-manage__main">
                     <strong>{customer.name}</strong><small>{customer.email}</small>
+                    {customer.isBlocked && (
+                      <small className="pt-manage__blocked-badge">Доступ заблокирован</small>
+                    )}
                   </div>
                   <span>{customer.phone || "—"}</span>
                   <span className="pt-manage__muted">{formatDate(customer.createdAt)}</span>
@@ -269,6 +314,31 @@ export default function AdminCustomers({ preview = false }: { preview?: boolean 
                     <div><small>Активность</small><strong>{detail.ordersCount} заявок</strong>
                       <span>{detail.favoritesCount} в избранном · {detail.addressesCount} адресов</span></div>
                   </div>
+                  <section className="pt-manage__detail-section pt-manage__access">
+                    <div className="pt-manage__access-heading">
+                      <h3>Доступ к аккаунту</h3>
+                      <span className="pt-manage__status"
+                        data-status={detail.isBlocked ? "BLOCKED" : "REVIEWED"}>
+                        {detail.isBlocked ? "Заблокирован" : "Активен"}
+                      </span>
+                    </div>
+                    <p className="pt-manage__fine">
+                      {detail.isBlocked
+                        ? "Вход покупателю запрещён. Все ранее активные сеансы завершены."
+                        : "Покупатель может входить в аккаунт и оформлять тестовые заказы."}
+                      {detail.isBlocked && detail.blockedAt
+                        ? " Дата блокировки: " + formatDate(detail.blockedAt) + "."
+                        : ""}
+                    </p>
+                    <button type="button"
+                      className="pt-manage__access-action"
+                      data-blocked={detail.isBlocked}
+                      onClick={() => void toggleAccess()}
+                      disabled={saving}>
+                      {saving ? "Обработка…" : detail.isBlocked ? "Разблокировать покупателя" : "Заблокировать покупателя"}
+                    </button>
+                    {accessError && <p className="pt-manage__error" role="alert">{accessError}</p>}
+                  </section>
                   <section className="pt-manage__detail-section">
                     <h3>Сохранённые адреса</h3>
                     {detail.addresses.length ? (
@@ -302,7 +372,7 @@ export default function AdminCustomers({ preview = false }: { preview?: boolean 
                   </section>
                   <form className="pt-manage__edit-form" onSubmit={save}>
                     <h3>Внутренняя заметка</h3>
-                    <p className="pt-manage__fine">Заметка доступна только администраторам. Профиль, пароль и права покупателя здесь не изменяются.</p>
+                    <p className="pt-manage__fine">Заметка доступна только администраторам. Профиль, пароль и роль покупателя здесь не изменяются.</p>
                     <label>
                       <span>Комментарий для сотрудников</span>
                       <textarea maxLength={2000} rows={4} disabled={saving}
