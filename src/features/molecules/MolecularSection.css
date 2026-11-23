@@ -68,7 +68,7 @@
   pointer-events: none;
   /* Match the warm near-black backdrop (#0c0a07), keeping the road grain
      and its yellow markings while removing the cool-black rectangular patch. */
-  background: #0c0a07 url("/home/images/fon7.webp") center / cover no-repeat;
+  background: #0c0a07 url("/home/images/fon8.webp") center / cover no-repeat;
   background-blend-mode: lighten;
   /* A broad feather hides the image boundary over the animated molecules. */
   -webkit-mask-image:
