@@ -51,13 +51,43 @@
   pointer-events: none;
 }
 
+/* Keep the paragraph accessible/selectable; the asphalt lives underneath. */
 .petrolero-molecular-description {
   position: relative;
-  max-width: 860px;
+  isolation: isolate;
+  width: 100%;
+  max-width: 960px;
+  padding: 24px 34px;
+}
+
+.petrolero-molecular-description::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -12px -50px;
+  pointer-events: none;
+  background: url("/home/images/fon7.webp") center / cover no-repeat;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 9%, #000 91%, transparent),
+    linear-gradient(to bottom, transparent, #000 9%, #000 91%, transparent);
+  mask-image:
+    linear-gradient(to right, transparent, #000 9%, #000 91%, transparent),
+    linear-gradient(to bottom, transparent, #000 9%, #000 91%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
 }
 
 .petrolero-molecular-description p {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: #efb329;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.85;
   text-wrap: pretty;
+  /* Automatically invert over yellow paint at every viewport width. */
+  mix-blend-mode: difference;
 }
 
 /* Бутылочки */
@@ -213,7 +243,12 @@
           }
 
           .petrolero-molecular-description {
-            max-width: 720px;
+            max-width: 760px;
+            padding: 22px 25px;
+          }
+
+          .petrolero-molecular-description::before {
+            inset: -10px -24px;
           }
 }
 
@@ -229,6 +264,11 @@
 
           .petrolero-molecular-description {
             margin-top: 22px;
+            padding: 20px 12px;
+          }
+
+          .petrolero-molecular-description::before {
+            inset: -8px -10px;
           }
 
           .petrolero-molecular-description p {
@@ -278,31 +318,3 @@
 }
 
 
-/* Local shadow behind the explanatory additive copy: legible over moving
-   molecules without dimming the bottles or the rest of the section. */
-.petrolero-molecular-description {
-  isolation: isolate;
-}
-
-.petrolero-molecular-description::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: -8px -22px;
-  border-radius: 50%;
-  background: radial-gradient(
-    ellipse closest-side,
-    rgba(0, 0, 0, .76) 0%,
-    rgba(0, 0, 0, .50) 58%,
-    transparent 100%
-  );
-  filter: blur(13px);
-  pointer-events: none;
-}
-
-.petrolero-molecular-description p {
-  text-shadow:
-    0 2px 3px rgba(0, 0, 0, .97),
-    0 3px 14px rgba(0, 0, 0, .94),
-    0 0 28px rgba(0, 0, 0, .8);
-}
