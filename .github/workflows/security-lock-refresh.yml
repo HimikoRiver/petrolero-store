@@ -46,4 +46,7 @@ jobs:
             exit 0
           fi
           git -c core.hooksPath=/dev/null commit -m "Refresh audited lockfile for Next, Nodemailer and pinned safe transitives"
-          git -c core.hooksPath=/dev/null -c http.extraheader="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 -w0)" push origin HEAD:feature/storefront-catalog
+          AUTH_HEADER="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH_HEADER" fetch origin feature/storefront-catalog
+          git -c core.hooksPath=/dev/null rebase FETCH_HEAD
+          git -c core.hooksPath=/dev/null -c http.extraheader="$AUTH_HEADER" push origin HEAD:feature/storefront-catalog
