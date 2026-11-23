@@ -178,6 +178,21 @@ assertOkay(updateProfile, "update profile");
 assert.equal(updateProfile.data.profile.name, "Petrolero Customer");
 assert.equal(updateProfile.data.profile.phone, "+7 900 111 22 33");
 
+console.log("4a. Bound JSON requests to prevent oversized body exhaustion");
+const oversizedProfile = await authRequest("/api/account/profile", {
+  cookie,
+  method: "PATCH",
+  body: { name: "X".repeat(70_000), phone: "+7 900 111 22 33" },
+});
+assert.equal(oversizedProfile.response.status, 400,
+  "Oversized request should be rejected before JSON parsing");
+const incorrectContentType = await fetch(origin + "/api/account/profile", {
+  method: "PATCH",
+  headers: { origin, cookie, "content-type": "text/plain" },
+  body: JSON.stringify({ name: "Wrong Content Type", phone: "+7 900 111 22 33" }),
+});
+assert.equal(incorrectContentType.status, 400, "Only JSON request bodies are accepted");
+
 const addressPayload = {
   label: "Дом",
   recipient: "Petrolero Customer",

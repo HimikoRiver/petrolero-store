@@ -73,6 +73,8 @@ jobs:
           echo $! > /tmp/petrolero-auth-next.pid
       - name: Verify signup, emails, verification, login and password reset
         run: node scripts/check-auth-flow.mjs
+      - name: Verify headers, CSRF, isolation and rate limiting
+        run: node scripts/check-security.mjs
       - name: Next.js logs on failure
         if: failure()
         run: tail -150 /tmp/petrolero-auth-next.log || true
