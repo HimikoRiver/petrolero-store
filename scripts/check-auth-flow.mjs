@@ -247,6 +247,10 @@ const stillCurrent = await authRequest("/api/account/sessions", { cookie });
 assertOkay(stillCurrent, "current device remains active");
 assert.equal(stillCurrent.data.sessions.length, 1);
 assert.equal(stillCurrent.data.sessions[0].id, ownerCurrent.id);
+const securityWorkspace = await authRequest("/account/security", { cookie });
+assertOkay(securityWorkspace, "security workspace with device management");
+assert.ok(String(securityWorkspace.data).includes("Активные устройства"),
+  "Device management must render on the security page");
 
 console.log("4. Check account navigation and session across the homepage");
 const authenticatedHome = await authRequest("/", { cookie });
